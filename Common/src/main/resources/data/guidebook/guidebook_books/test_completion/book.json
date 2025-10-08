@@ -1,0 +1,7 @@
+{
+  "name": "item.guidebook:test_completion.name",
+  "landing_text": "item.guidebook:test_completion.landing",
+  "model": "guidebook:book_completion",
+  "version": "GRADLE:VERSION",
+  "use_resource_pack": true
+}

@@ -1,0 +1,16 @@
+{
+  "name": "Relations",
+  "category": "guidebook:page_types",
+  "icon": "minecraft:vindicator_spawn_egg",
+  "pages": [
+    {
+      "type": "guidebook:relations",
+      "entries": [
+        "guidebook:page_types/link",
+        "guidebook:multiblocks/dense"
+      ],
+      "title": "Check These Out",
+      "text": "Very cool."
+    }
+  ]
+}

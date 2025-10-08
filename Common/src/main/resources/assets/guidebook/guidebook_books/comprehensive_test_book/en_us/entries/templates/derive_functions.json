@@ -1,0 +1,13 @@
+{
+  "name": "Derivation Functions",
+  "category": "guidebook:templates",
+  "icon": "minecraft:written_book",
+  "pages": [
+    {
+      "type": "guidebook:derive_ingr_to_stack",
+      "input": {
+        "tag": "minecraft:music_discs"
+      }
+    }
+  ]
+}

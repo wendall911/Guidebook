@@ -1,0 +1,8 @@
+{
+	"name": "item.guidebook:intro_book.name",
+	"landing_text": "item.guidebook:intro_book.landing",
+	"subtitle": "item.guidebook:intro_book.subtitle",
+	"creative_tab": "minecraft:natural_blocks",
+	"advancements_tab": "guidebook",
+	"use_resource_pack": true
+}

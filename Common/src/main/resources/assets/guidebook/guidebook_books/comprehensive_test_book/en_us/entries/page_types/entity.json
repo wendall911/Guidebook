@@ -1,0 +1,23 @@
+{
+  "name": "Entities",
+  "category": "guidebook:page_types",
+  "icon": "minecraft:creeper_spawn_egg",
+  "pages": [
+    {
+      "type": "guidebook:entity",
+      "entity": "minecraft:creeper"
+    },
+    {
+      "type": "guidebook:entity",
+      "entity": "minecraft:creeper{powered:1}"
+    },
+    {
+      "type": "guidebook:entity",
+      "entity": "minecraft:snow_golem"
+    },
+    {
+      "type": "guidebook:entity",
+      "entity": "minecraft:slime{Size:2}"
+    }
+  ]
+}

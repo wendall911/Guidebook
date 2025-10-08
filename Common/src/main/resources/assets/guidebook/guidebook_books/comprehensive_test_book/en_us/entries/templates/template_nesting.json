@@ -1,0 +1,13 @@
+{
+  "name": "Template Nesting",
+  "category": "guidebook:templates",
+  "icon": "minecraft:written_book",
+  "pages": [
+    {
+      "type": "guidebook:nesting",
+      "texttext": "Text component text defined in entry json",
+      "child1.item": "minecraft:barrier",
+      "child1.image": "minecraft:textures/item/end_crystal.png"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Burned",
+  "icon": "minecraft:writable_book",
+  "category": "guidebook:testcat",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Out"
+    }
+  ]
+}

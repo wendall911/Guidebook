@@ -1,0 +1,15 @@
+{
+    "components": [
+        {
+            "type": "guidebook:header",
+            "text": "#icount",
+            "x": 8
+        }, 
+        {
+            "type": "guidebook:text",
+            "text": "#iname",
+            "color": "000000",
+            "y": 12
+        }
+    ]
+}

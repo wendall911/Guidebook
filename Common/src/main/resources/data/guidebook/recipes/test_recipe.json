@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:dirt"
+    }
+  },
+  "result": {
+    "components": {
+      "guidebook:book": "guidebook:comprehensive_test_book"
+    },
+    "count": 1,
+    "id": "guidebook:guide_book"
+  }
+}
