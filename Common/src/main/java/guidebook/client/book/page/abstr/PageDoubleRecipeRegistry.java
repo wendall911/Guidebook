@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -21,10 +22,12 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
         this.recipeType = recipeType;
     }
 
+    @SuppressWarnings("unchecked")
     @Nullable
     private T getRecipe(Level level, ResourceLocation id) {
         RecipeManager manager = level.getRecipeManager();
-        var recipeHolder = manager.byKey(id).filter(recipe -> recipe.value().getType() == recipeType).orElse(null);
+        RecipeHolder<?> recipeHolder = manager.byKey(id).filter(recipe -> recipe.value().getType() == recipeType).orElse(null);
+
         return recipeHolder != null ? (T) recipeHolder.value() : null;
     }
 
@@ -43,10 +46,12 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
             if (linkRecipe) {
                 entry.addRelevantStack(builder, tempRecipe.getResultItem(level.registryAccess()), pageNum);
             }
+
             return tempRecipe;
         }
 
         GuidebookAPI.LOGGER.warn("Recipe {} (of type {}) not found", res, BuiltInRegistries.RECIPE_TYPE.getKey(recipeType));
+
         return null;
     }
 

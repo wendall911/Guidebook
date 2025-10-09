@@ -60,13 +60,14 @@ public class PageQuest extends PageWithText {
     }
 
     protected void questButtonClicked(Button button) {
-        var res = entry.getId();
+        ResourceLocation entryId = entry.getId();
         BookData data = PersistentData.data.getBookData(parent.book);
 
-        if (data.completedManualQuests.contains(res)) {
-            data.completedManualQuests.remove(res);
-        } else {
-            data.completedManualQuests.add(res);
+        if (data.completedManualQuests.contains(entryId)) {
+            data.completedManualQuests.remove(entryId);
+        }
+        else {
+            data.completedManualQuests.add(entryId);
         }
         PersistentData.save();
 

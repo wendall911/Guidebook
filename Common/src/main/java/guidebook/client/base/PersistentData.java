@@ -1,5 +1,7 @@
 package guidebook.client.base;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
@@ -12,6 +14,7 @@ import java.util.Map;
 
 import com.google.common.base.Charsets;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.minecraft.resources.ResourceLocation;
@@ -29,16 +32,20 @@ public final class PersistentData {
 	public static DataHolder data = new DataHolder(new JsonObject());
 
 	public static void setup() {
-		try (var r = Files.newBufferedReader(saveFile, Charsets.UTF_8)) {
-			var root = SerializationUtil.RAW_GSON.fromJson(r, JsonObject.class);
+		try (BufferedReader reader = Files.newBufferedReader(saveFile, Charsets.UTF_8)) {
+            JsonObject root = SerializationUtil.RAW_GSON.fromJson(reader, JsonObject.class);
+
 			data = new DataHolder(root);
-		} catch (IOException e) {
+		}
+        catch (IOException e) {
 			if (!(e instanceof NoSuchFileException)) {
 				GuidebookAPI.LOGGER.warn("Unable to load guidebook_data.json, replacing with default", e);
 			}
+
 			data = new DataHolder(new JsonObject());
 			save();
-		} catch (Exception e) {
+		}
+        catch (Exception e) {
 			GuidebookAPI.LOGGER.warn("Corrupted guidebook_data.json, replacing with default", e);
 			data = new DataHolder(new JsonObject());
 			save();
@@ -46,9 +53,10 @@ public final class PersistentData {
 	}
 
 	public static void save() {
-		var json = data.serialize();
-		try (var w = Files.newBufferedWriter(saveFile, Charsets.UTF_8)) {
-			SerializationUtil.PRETTY_GSON.toJson(json, w);
+        JsonObject json = data.serialize();
+
+		try (BufferedWriter writer = Files.newBufferedWriter(saveFile, Charsets.UTF_8)) {
+			SerializationUtil.PRETTY_GSON.toJson(json, writer);
 		}
         catch (IOException e) {
 			GuidebookAPI.LOGGER.warn("Unable to save guidebook_data.json", e);
@@ -64,10 +72,13 @@ public final class PersistentData {
 		public DataHolder(JsonObject root) {
 			this.bookGuiScale = GsonHelper.getAsInt(root, "bookGuiScale", 0);
 			this.clickedVisualize = GsonHelper.getAsBoolean(root, "clickedVisualize", false);
-			var obj = GsonHelper.getAsJsonObject(root, "bookData", new JsonObject());
+			JsonObject jsonObject = GsonHelper.getAsJsonObject(root, "bookData", new JsonObject());
 
-			for (var e : obj.entrySet()) {
-				this.bookData.put(ResourceLocation.tryParse(e.getKey()), new BookData(e.getValue().getAsJsonObject()));
+			for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
+				this.bookData.put(
+                    ResourceLocation.tryParse(entry.getKey()),
+                    new BookData(entry.getValue().getAsJsonObject())
+                );
 			}
 		}
 
@@ -76,16 +87,19 @@ public final class PersistentData {
 		}
 
 		public JsonObject serialize() {
-			var ret = new JsonObject();
-			ret.addProperty("bookGuiScale", this.bookGuiScale);
-			ret.addProperty("clickedVisualize", this.clickedVisualize);
+            JsonObject jsonObject = new JsonObject();
+            JsonObject books = new JsonObject();
 
-			var books = new JsonObject();
-			for (var e : bookData.entrySet()) {
-				books.add(e.getKey().toString(), e.getValue().serialize());
+			jsonObject.addProperty("bookGuiScale", this.bookGuiScale);
+			jsonObject.addProperty("clickedVisualize", this.clickedVisualize);
+
+			for (Map.Entry<ResourceLocation, PersistentData.BookData> bookDataEntry : bookData.entrySet()) {
+				books.add(bookDataEntry.getKey().toString(), bookDataEntry.getValue().serialize());
 			}
-			ret.add("bookData", books);
-			return ret;
+
+			jsonObject.add("bookData", books);
+
+			return jsonObject;
 		}
 	}
 
@@ -108,10 +122,12 @@ public final class PersistentData {
 		}
 
 		public JsonObject serialize() {
-			var ret = new JsonObject();
-			ret.addProperty("entry", this.entry.toString());
-			ret.addProperty("page", this.spread); // Serialized as page for legacy reasons
-			return ret;
+            JsonObject jsonObject = new JsonObject();
+
+			jsonObject.addProperty("entry", this.entry.toString());
+			jsonObject.addProperty("page", this.spread); // Serialized as page for legacy reasons
+
+			return jsonObject;
 		}
 	}
 
@@ -122,36 +138,38 @@ public final class PersistentData {
 		public final List<ResourceLocation> completedManualQuests = new ArrayList<>();
 
 		public BookData(JsonObject root) {
-			var emptyArray = new JsonArray();
-			for (var e : GsonHelper.getAsJsonArray(root, "viewedEntries", emptyArray)) {
-				viewedEntries.add(ResourceLocation.tryParse(e.getAsString()));
+            JsonArray emptyArray = new JsonArray();
+
+			for (JsonElement element: GsonHelper.getAsJsonArray(root, "viewedEntries", emptyArray)) {
+				viewedEntries.add(ResourceLocation.tryParse(element.getAsString()));
 			}
-			for (var e : GsonHelper.getAsJsonArray(root, "bookmarks", emptyArray)) {
-				bookmarks.add(new Bookmark(e.getAsJsonObject()));
+			for (JsonElement element: GsonHelper.getAsJsonArray(root, "bookmarks", emptyArray)) {
+				bookmarks.add(new Bookmark(element.getAsJsonObject()));
 			}
-			for (var e : GsonHelper.getAsJsonArray(root, "history", emptyArray)) {
-				history.add(ResourceLocation.tryParse(e.getAsString()));
+			for (JsonElement element : GsonHelper.getAsJsonArray(root, "history", emptyArray)) {
+				history.add(ResourceLocation.tryParse(element.getAsString()));
 			}
-			for (var e : GsonHelper.getAsJsonArray(root, "completedManualQuests", emptyArray)) {
-				completedManualQuests.add(ResourceLocation.tryParse(e.getAsString()));
+			for (JsonElement element : GsonHelper.getAsJsonArray(root, "completedManualQuests", emptyArray)) {
+				completedManualQuests.add(ResourceLocation.tryParse(element.getAsString()));
 			}
 		}
 
 		public JsonObject serialize() {
-			var ret = new JsonObject();
-			var viewed = new JsonArray();
+            JsonObject jsonObject = new JsonObject();
+            JsonArray viewed = new JsonArray();
+            JsonArray bookmarks = new JsonArray();
+            JsonArray completed = new JsonArray();
+
 			this.viewedEntries.stream().map(Object::toString).forEach(viewed::add);
-			ret.add("viewedEntries", viewed);
+			jsonObject.add("viewedEntries", viewed);
 
-			var bookmarks = new JsonArray();
 			this.bookmarks.stream().map(Bookmark::serialize).forEach(bookmarks::add);
-			ret.add("bookmarks", bookmarks);
+			jsonObject.add("bookmarks", bookmarks);
 
-			var completed = new JsonArray();
 			this.completedManualQuests.stream().map(Object::toString).forEach(completed::add);
-			ret.add("completedManualQuests", completed);
+			jsonObject.add("completedManualQuests", completed);
 
-			return ret;
+			return jsonObject;
 		}
 	}
 

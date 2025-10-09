@@ -71,10 +71,12 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
         this.book = book;
         this.addedBy = addedBy;
 
-        var categoryId = GsonHelper.getAsString(root, "category");
+        String categoryId = GsonHelper.getAsString(root, "category");
+
         if (categoryId.contains(":")) { // full category ID
             this.categoryId = ResourceLocation.tryParse(categoryId);
-        } else {
+        }
+        else {
             String hint = String.format("`%s:%s`", book.id.getNamespace(), categoryId);
             throw new IllegalArgumentException("`category` must be fully qualified (domain:name). Hint: Try " + hint);
         }
@@ -88,21 +90,26 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
         this.advancement = SerializationUtil.getAsResourceLocation(root, "advancement", null);
         this.turnin = SerializationUtil.getAsResourceLocation(root, "turnin", null);
         this.sortnum = GsonHelper.getAsInt(root, "sortnum", 0);
-        var entryColor = GsonHelper.getAsString(root, "entry_color", null);
+
+        String entryColor = GsonHelper.getAsString(root, "entry_color", null);
+
         if (entryColor != null) {
             this.entryColor = Integer.parseInt(entryColor, 16);
-        } else {
+        }
+        else {
             this.entryColor = book.textColor;
         }
+
         this.pages = ClientBookRegistry.INSTANCE.gson.fromJson(GsonHelper.getAsJsonArray(root, "pages"), BookPage[].class);
 
-        var extraRecipeMap = GsonHelper.getAsJsonObject(root, "extra_recipe_mappings", null);
+        JsonObject extraRecipeMap = GsonHelper.getAsJsonObject(root, "extra_recipe_mappings", null);
+
         if (extraRecipeMap == null) {
             extraRecipeMappings = Collections.emptyMap();
-        } else {
+        }
+        else {
             extraRecipeMappings = ClientBookRegistry.INSTANCE.gson.fromJson(extraRecipeMap, new TypeToken<Map<String, Integer>>() {}.getType());
         }
-
     }
 
     public MutableComponent getName() {
@@ -117,6 +124,7 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
 
     public int getPageFromAnchor(String anchor) {
         List<BookPage> pages = getPages();
+
         for (int i = 0; i < pages.size(); i++) {
             BookPage page = pages.get(i);
             if (anchor.equals(page.anchor)) {
@@ -139,10 +147,12 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
 
     public void initCategory(ResourceLocation file, Function<ResourceLocation, BookCategory> categories) {
         this.category = categories.apply(this.categoryId);
+
         if (this.category == null) {
             String msg = String.format("Entry in file %s does not have a valid category.", file);
             throw new RuntimeException(msg);
-        } else {
+        }
+        else {
             this.category.addEntry(this);
         }
     }
@@ -174,6 +184,7 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
         if (isSecret()) {
             return locked;
         }
+
         return getBook().advancementsEnabled() && locked;
     }
 
@@ -255,9 +266,11 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
                 String key = entry.getKey();
                 List<ItemStack> stacks;
                 int pageNumber = entry.getValue();
+
                 try {
                     stacks = ItemStackUtil.loadStackListFromString(key, RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     GuidebookAPI.LOGGER.warn("Invalid extra recipe mapping: {} to page {} in entry {}: {}", key, pageNumber, id, e.getMessage());
                     continue;
                 }
@@ -265,7 +278,8 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
                     for (ItemStack stack : stacks) {
                         addRelevantStack(builder, stack, pageNumber);
                     }
-                } else {
+                }
+                else {
                     GuidebookAPI.LOGGER.warn("Invalid extra recipe mapping: {} to page {} in entry {}: Empty entry or page out of bounds", key, pageNumber, id);
                 }
             }
@@ -278,6 +292,7 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
         if (stack.isEmpty()) {
             return;
         }
+
         StackWrapper wrapper = ItemStackUtil.wrapStack(stack);
         relevantStacks.add(wrapper);
 
@@ -300,6 +315,7 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
     @Override
     protected EntryDisplayState computeReadState() {
         BookData data = PersistentData.data.getBookData(book);
+
         if (data != null && getId() != null && !readByDefault && !isLocked() && !data.viewedEntries.contains(getId())) {
             return EntryDisplayState.UNREAD;
         }

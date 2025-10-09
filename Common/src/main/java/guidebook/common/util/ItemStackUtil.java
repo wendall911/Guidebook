@@ -53,18 +53,21 @@ public final class ItemStackUtil {
     }
 
     public static ItemStack loadFromParsed(Triple<Holder<Item>, DataComponentPatch, Integer> parsed) {
-        var holder = parsed.getLeft();
-        var components = parsed.getMiddle();
-        var count = parsed.getRight();
+        Holder<Item> holder = parsed.getLeft();
+        DataComponentPatch components = parsed.getMiddle();
+        Integer count = parsed.getRight();
+
         if (!holder.isBound() && holder.unwrapKey().isPresent()) {
             throw new RuntimeException("Unknown item ID: " + holder.unwrapKey().get().location());
         }
+
         Item item = holder.value();
         ItemStack stack = new ItemStack(item, count);
 
         if (!components.isEmpty()) {
             stack.applyComponents(components);
         }
+
         return stack;
     }
 
@@ -79,16 +82,26 @@ public final class ItemStackUtil {
     public static List<ItemStack> loadStackListFromString(String ingredientString, HolderLookup.Provider registries) {
         String[] stacksSerialized = splitStacksFromSerializedIngredient(ingredientString);
         List<ItemStack> stacks = new ArrayList<>();
+
         for (String s : stacksSerialized) {
             if (s.isEmpty())
                 continue;
             if (s.startsWith("tag:")) {
-                var key = TagKey.create(Registries.ITEM, ResourceLocation.tryParse(s.substring(4)));
+                ResourceLocation location = ResourceLocation.tryParse(s.substring(4));
+
+                if (location == null) {
+                    throw new IllegalArgumentException("Invalid tag ID: " + s.substring(4));
+                }
+
+                TagKey<Item> key = TagKey.create(Registries.ITEM, location);
+
                 registries.lookupOrThrow(Registries.ITEM).get(key).stream().flatMap(HolderSet::stream).forEach(item -> stacks.add(new ItemStack(item)));
-            } else {
+            }
+            else {
                 stacks.add(loadStackFromString(s, registries));
             }
         }
+
         return stacks;
     }
 
@@ -103,6 +116,7 @@ public final class ItemStackUtil {
         }
 
         Collection<Book> books = BookRegistry.INSTANCE.books.values();
+
         for (Book b : books) {
             if (ItemStack.isSameItem(b.getBookItem(), stack)) {
                 return b;
@@ -191,7 +205,8 @@ public final class ItemStackUtil {
     public static ItemStack loadStackFromJson(JsonObject json, HolderLookup.Provider registries) {
         String itemName = json.get("item").getAsString();
 
-        Item item = BuiltInRegistries.ITEM.getOptional(ResourceLocation.tryParse(itemName)).orElseThrow(() -> new IllegalArgumentException("Unknown item '" + itemName + "'")
+        Item item = BuiltInRegistries.ITEM.getOptional(
+            ResourceLocation.tryParse(itemName)).orElseThrow(() -> new IllegalArgumentException("Unknown item '" + itemName + "'")
         );
 
         ItemStack stack = new ItemStack(item, GsonHelper.getAsInt(json, "count", 1));

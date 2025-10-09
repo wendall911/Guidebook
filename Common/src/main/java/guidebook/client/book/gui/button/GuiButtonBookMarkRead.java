@@ -1,8 +1,12 @@
 package guidebook.client.book.gui.button;
 
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 import guidebook.client.base.PersistentData;
 import guidebook.client.book.BookCategory;
@@ -17,6 +21,7 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 
 	public GuiButtonBookMarkRead(GuiBook parent, int x, int y) {
 		super(parent, x, y, 308, 31, 11, 11, Button::onPress, getTooltip(parent.book));
+
 		this.book = parent.book;
 	}
 
@@ -24,12 +29,20 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 	public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		int px = getX() + 1;
 		int py = (int) (getY() + 0.5);
+        Minecraft mc = parent.getMinecraft();
+
+        if (mc == null) {
+            return;
+        }
+
 		GuiBook.drawFromTexture(graphics, book, getX(), getY(), 285, 160, 13, 10);
 		GuiBook.drawFromTexture(graphics, book, px, py, u, v, width, height);
+
 		if (isHoveredOrFocused()) {
 			GuiBook.drawFromTexture(graphics, book, px, py, u + 11, v, width, height);
 			parent.setTooltip(getTooltipLines());
 		}
+
 		graphics.drawString(parent.getMinecraft().font, "+", px, py, 0x00FF01, true);
 	}
 
@@ -38,7 +51,8 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 		for (BookEntry entry : this.book.getContents().entries.values()) {
 			if (isMainPage(this.book)) {
 				markEntry(entry);
-			} else {
+			}
+            else {
 				markCategoryAsRead(entry, entry.getCategory(), this.book.getContents().entries.size());
 			}
 		}
@@ -47,14 +61,19 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 	private void markCategoryAsRead(BookEntry entry, BookCategory category, int maxRecursion) {
 		if (category.getName().equals(this.book.getContents().getCurrentGui().getTitle())) {
 			markEntry(entry);
-		} else if (!category.isRootCategory() && maxRecursion > 0) {
-			markCategoryAsRead(entry, entry.getCategory().getParentCategory(), maxRecursion - 1);
+		}
+        else if (!category.isRootCategory() && maxRecursion > 0) {
+            @Nullable BookCategory parentEntry = entry.getCategory().getParentCategory();
+
+            if (parentEntry != null) {
+                markCategoryAsRead(entry, entry.getCategory().getParentCategory(), maxRecursion - 1);
+            }
 		}
 	}
 
 	private void markEntry(BookEntry entry) {
 		boolean dirty = false;
-		var key = entry.getId();
+        ResourceLocation key = entry.getId();
 
 		if (!entry.isLocked() && entry.getReadState().equals(EntryDisplayState.UNREAD)) {
 			PersistentData.BookData data = PersistentData.data.getBookData(book);
@@ -73,6 +92,7 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 
 	private static Component getTooltip(Book book) {
 		String text = isMainPage(book) ? "guidebook.gui.lexicon.button.mark_all_read" : "guidebook.gui.lexicon.button.mark_category_read";
+
 		return Component.translatable(text);
 	}
 

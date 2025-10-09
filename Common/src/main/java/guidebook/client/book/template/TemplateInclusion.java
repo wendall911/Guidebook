@@ -128,8 +128,9 @@ public class TemplateInclusion {
 
             @Override
             public IVariable get(String key, HolderLookup.Provider registries) {
-                IVariable vari = attemptVariableLookup(key, registries);
-                return vari == null ? provider.get(qualifyName(key), registries) : vari;
+                IVariable iVariable = attemptVariableLookup(key, registries);
+
+                return iVariable == null ? provider.get(qualifyName(key), registries) : iVariable;
             }
         };
     }

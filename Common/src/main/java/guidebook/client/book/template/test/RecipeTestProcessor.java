@@ -21,6 +21,7 @@ public class RecipeTestProcessor implements IComponentProcessor {
         // TODO probably add a recipe serializer?
         String recipeId = variables.get("recipe", level.registryAccess()).asString();
         RecipeManager manager = level.getRecipeManager();
+
         recipe = manager.byKey(ResourceLocationHelper.tryParse(recipeId)).orElseThrow(IllegalArgumentException::new).value();
     }
 

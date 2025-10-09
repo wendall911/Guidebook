@@ -7,6 +7,8 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.resources.language.I18n;
@@ -15,20 +17,19 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 
-import org.apache.commons.lang3.text.WordUtils;
-
 import guidebook.api.IComponentProcessor;
 import guidebook.api.IVariable;
 import guidebook.api.IVariableProvider;
 import guidebook.api.IVariablesAvailableCallback;
 import guidebook.common.util.EntityUtil;
 
+@SuppressWarnings("deprecation")
 public class VariableAssigner {
 
     private static final Pattern INLINE_VAR_PATTERN = Pattern.compile("([^#]*)(#[^#]+)#(.*)");
     private static final Pattern FUNCTION_PATTERN = Pattern.compile("(.+)->(.+)");
-
     private static final Map<String, BiFunction<IVariable, HolderLookup.Provider, IVariable>> FUNCTIONS = new HashMap<>();
+
     static {
         FUNCTIONS.put("iname", VariableAssigner::iname);
         FUNCTIONS.put("icount", VariableAssigner::icount);
@@ -45,41 +46,45 @@ public class VariableAssigner {
         FUNCTIONS.put("stacks", VariableAssigner::stacks);
     }
 
-    public static void assignVariableHolders(Level level, IVariablesAvailableCallback object, IVariableProvider variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
-        Context c = new Context(variables, processor, encapsulation);
+    public static void assignVariableHolders(Level level, IVariablesAvailableCallback object,
+            IVariableProvider variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
+        Context context = new Context(variables, processor, encapsulation);
+
         object.onVariablesAvailable(input -> {
             if (input == null) {
                 return IVariable.empty();
             }
-            if (input.unwrap().isJsonPrimitive() && input.unwrap().getAsJsonPrimitive().isString()) {
-                IVariable resolved = resolveString(level, input.asString(), c);
+            else if (input.unwrap().isJsonPrimitive() && input.unwrap().getAsJsonPrimitive().isString()) {
+                IVariable resolved = resolveString(level, input.asString(), context);
                 if (resolved != null) {
                     return resolved;
                 }
             }
+
             return input;
         }, level.registryAccess());
     }
 
-    private static IVariable resolveString(Level level, @Nullable String curr, Context c) {
-        if (curr == null || curr.isEmpty()) {
+    private static IVariable resolveString(Level level, @Nullable String inputText, Context context) {
+        if (inputText == null || inputText.isEmpty()) {
             return null;
         }
 
-        String s = curr;
-        Matcher m = INLINE_VAR_PATTERN.matcher(s);
-        while (m.matches()) {
-            String before = m.group(1);
-            String var = m.group(2);
-            String after = m.group(3);
+        String inputTextCopy = inputText;
+        Matcher matcher = INLINE_VAR_PATTERN.matcher(inputTextCopy);
 
-            String resolved = resolveStringFunctions(level, var, c).asString();
+        while (matcher.matches()) {
+            String before = matcher.group(1);
+            String current = matcher.group(2);
+            String after = matcher.group(3);
 
-            s = String.format("%s%s%s", before, resolved, after);
-            m = INLINE_VAR_PATTERN.matcher(s);
+            String resolved = resolveStringFunctions(level, current, context).asString();
+
+            inputTextCopy = String.format("%s%s%s", before, resolved, after);
+            matcher = INLINE_VAR_PATTERN.matcher(inputTextCopy);
         }
 
-        return resolveStringFunctions(level, s, c);
+        return resolveStringFunctions(level, inputTextCopy, context);
     }
 
     private static IVariable resolveStringFunctions(Level level, String curr, Context c) {

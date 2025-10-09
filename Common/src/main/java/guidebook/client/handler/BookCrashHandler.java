@@ -20,13 +20,15 @@ public class BookCrashHandler implements Supplier<String> {
     private static final String LABEL = "Guidebook open book context";
 
     public static void appendToCrashReport(SystemReport report) {
-        var mc = Minecraft.getInstance();
-        if (mc == null || !(mc.screen instanceof GuiBook)) {
+        Minecraft mc = Minecraft.getInstance();
+
+        if (!(mc.screen instanceof GuiBook)) {
             return;
         }
         try {
             report.setDetail(LABEL, new BookCrashHandler());
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             GuidebookAPI.LOGGER.error("Failed to extend crash report system info", e);
         }
     }

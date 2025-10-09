@@ -121,18 +121,23 @@ public class ClientBookRegistry {
         public BookPage deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             if (json instanceof JsonPrimitive prim && prim.isString()) {
                 // Shortcut: make strings instead of objects shortcut to text pages
-                var out = new PageText();
+                PageText out = new PageText();
+
                 out.setText(prim.getAsString());
+
                 return out;
             }
 
             JsonObject obj = json.getAsJsonObject();
             String string = GsonHelper.getAsString(obj, "type");
+
             if (string.indexOf(':') < 0) {
                 string = GuidebookAPI.MODID + ":" + string;
             }
+
             ResourceLocation type = ResourceLocation.tryParse(string);
             Class<? extends BookPage> clazz = ClientBookRegistry.INSTANCE.pageTypes.get(type);
+
             if (clazz == null) {
                 clazz = PageTemplate.class;
             }

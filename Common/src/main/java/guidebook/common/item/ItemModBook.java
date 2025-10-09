@@ -66,18 +66,22 @@ public class ItemModBook extends Item {
 
     // SoftImplement IForgeItem
     public String getCreatorModId(ItemStack stack) {
-        var book = getBook(stack);
+        Book book = getBook(stack);
+
         if (book != null) {
             return book.owner.getId();
         }
+
         return BuiltInRegistries.ITEM.getKey(this).getNamespace();
     }
 
     public static Book getBook(ItemStack stack) {
         ResourceLocation res = getBookId(stack);
+
         if (res == null) {
             return null;
         }
+
         return BookRegistry.INSTANCE.books.get(res);
     }
 
@@ -92,6 +96,7 @@ public class ItemModBook extends Item {
     @Override
     public Component getName(ItemStack stack) {
         Book book = getBook(stack);
+
         if (book != null) {
             return Component.translatable(book.name);
         }
@@ -104,11 +109,13 @@ public class ItemModBook extends Item {
         super.appendHoverText(stack, context, tooltip, flagIn);
 
         ResourceLocation rl = getBookId(stack);
+
         if (flagIn.isAdvanced()) {
             tooltip.add(Component.literal("Book ID: " + rl).withStyle(ChatFormatting.GRAY));
         }
 
         Book book = getBook(stack);
+
         if (book != null && !book.getContents().isErrored()) {
             tooltip.add(book.getSubtitle().withStyle(ChatFormatting.GRAY));
         }
@@ -128,6 +135,7 @@ public class ItemModBook extends Item {
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         Book book = getBook(stack);
+
         if (book == null) {
             return new InteractionResultHolder<>(InteractionResult.FAIL, stack);
         }

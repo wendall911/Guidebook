@@ -154,17 +154,22 @@ public final class BookCategory extends AbstractReadStateHolder implements Compa
         }
 
         if (!isRootCategory()) {
-            if (parent.contains(":")) {
-                var parentCat = builder.getCategory(ResourceLocation.tryParse(parent));
+            if (parent != null && parent.contains(":")) {
+                @Nullable BookCategory parentCat = builder.getCategory(ResourceLocation.tryParse(parent));
+
                 if (parentCat == null) {
-                    var msg = String.format("Category %s specifies parent %s, but it could not be found", id, parent);
+                    String msg = String.format("Category %s specifies parent %s, but it could not be found", id, parent);
+
                     throw new RuntimeException(msg);
-                } else {
+                }
+                else {
                     parentCat.addChildCategory(this);
                     this.parentCategory = parentCat;
                 }
-            } else {
+            }
+            else {
                 String hint = String.format("`%s:%s`", book.id.getNamespace(), parent);
+
                 throw new IllegalArgumentException("`parent` must be fully qualified (domain:name). Hint: Try " + hint);
             }
         }
@@ -180,6 +185,7 @@ public final class BookCategory extends AbstractReadStateHolder implements Compa
     protected EntryDisplayState computeReadState() {
         Stream<EntryDisplayState> entryStream = entries.stream().filter(e -> !e.isLocked()).map(BookEntry::getReadState);
         Stream<EntryDisplayState> childrenStream = children.stream().map(BookCategory::getReadState);
+
         return mostImportantState(Streams.concat(entryStream, childrenStream));
     }
 

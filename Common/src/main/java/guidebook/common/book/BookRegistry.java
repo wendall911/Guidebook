@@ -15,6 +15,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
+
+import org.jetbrains.annotations.NotNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -77,21 +80,22 @@ public class BookRegistry {
             ResourceLocation res = pair.getRight();
 
             try (InputStream stream = Files.newInputStream(mod.getPath(file))) {
-                loadBook(mod, res, stream, false);
-            } catch (Exception e) {
+                loadBook(mod, res, stream);
+            }
+            catch (Exception e) {
                 GuidebookAPI.LOGGER.error("Failed to load book {} defined by mod {}, skipping",
                         res, mod.getId(), e);
             }
         });
 
-        BookFolderLoader.findBooks();
         Services.BOOK_HELPER.signalBooksLoaded();
     }
 
-    public void loadBook(CommonModContainer mod, ResourceLocation res, InputStream stream, boolean external) {
+    public void loadBook(CommonModContainer mod, ResourceLocation res, InputStream stream) {
         Reader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
-        var tree = GSON.fromJson(reader, JsonObject.class);
-        books.put(res, new Book(tree, mod, res, external));
+        JsonObject tree = GSON.fromJson(reader, JsonObject.class);
+
+        books.put(res, new Book(tree, mod, res));
     }
 
     /**
@@ -99,17 +103,12 @@ public class BookRegistry {
      */
     public void reloadContents(Level level) {
         GuidebookConfig.reloadBuiltinFlags();
+
         for (Book book : books.values()) {
             book.reloadContents(level, false);
         }
+
         ClientBookRegistry.INSTANCE.reloadLocks(false);
-    }
-
-    // HELPER
-
-    public static void findFiles(CommonModContainer mod, String base, Predicate<Path> rootFilter,
-            BiFunction<Path, Path, Boolean> processor, boolean visitAllFiles) {
-        findFiles(mod, base, rootFilter, processor, visitAllFiles, Integer.MAX_VALUE);
     }
 
     public static void findFiles(CommonModContainer mod, String base, Predicate<Path> rootFilter,
@@ -119,10 +118,11 @@ public class BookRegistry {
         }
 
         try {
-            for (var root : mod.getRootPaths()) {
+            for (Path root : mod.getRootPaths()) {
                 walk(root.resolve(base), rootFilter, processor, visitAllFiles, maxDepth);
             }
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
     }
@@ -134,7 +134,7 @@ public class BookRegistry {
         }
 
         if (processor != null) {
-            try (var stream = Files.walk(root, maxDepth)) {
+            try (Stream<@NotNull Path> stream = Files.walk(root, maxDepth)) {
                 Iterator<Path> itr = stream.iterator();
 
                 while (itr.hasNext()) {

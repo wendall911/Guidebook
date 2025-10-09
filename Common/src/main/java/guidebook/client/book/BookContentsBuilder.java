@@ -135,9 +135,6 @@ public class BookContentsBuilder {
     }
 
     protected BookContentLoader getContentLoader() {
-        if (book.isExternal) {
-            return BookContentExternalLoader.INSTANCE;
-        }
         // A quick reload should not reuse stale data, it is initiated by the user anyways
         return singleBookReload
                 ? BookContentResourceDirectLoader.INSTANCE
@@ -148,10 +145,12 @@ public class BookContentsBuilder {
     private static BookCategory loadCategory(Book book, BookContentLoader loader, ResourceLocation id, ResourceLocation file) {
         BookContentLoader.LoadResult result = loadLocalizedJson(book, loader, file);
         // TODO: Render the "added by" text in the category UI somewhere
-        var category = new BookCategory(result.json().getAsJsonObject(), id, book);
+        BookCategory category = new BookCategory(result.json().getAsJsonObject(), id, book);
+
         if (category.canAdd()) {
             return category;
         }
+
         return null;
     }
 
@@ -159,12 +158,13 @@ public class BookContentsBuilder {
     private static BookEntry loadEntry(Book book, BookContentLoader loader, ResourceLocation id,
             ResourceLocation file, Function<ResourceLocation, BookCategory> categories) {
         BookContentLoader.LoadResult result = loadLocalizedJson(book, loader, file);
-        var entry = new BookEntry(result.json().getAsJsonObject(), id, book, result.addedBy());
+        BookEntry entry = new BookEntry(result.json().getAsJsonObject(), id, book, result.addedBy());
 
         if (entry.canAdd()) {
             entry.initCategory(file, categories);
             return entry;
         }
+
         return null;
     }
 
@@ -175,6 +175,7 @@ public class BookContentsBuilder {
 
         // test supplier
         BookTemplate template = supplier.get();
+
         if (template == null) {
             throw new IllegalArgumentException(res + " could not be instantiated by the supplier.");
         }

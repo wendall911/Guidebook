@@ -26,12 +26,14 @@ public class ComponentCustomTest implements ICustomComponent {
     @Override
     public void render(GuiGraphics graphics, IComponentRenderContext context, float pticks, int mouseX, int mouseY) {
         Component toRender = Component.literal(text).setStyle(context.getFont());
+
         graphics.drawString(Minecraft.getInstance().font, toRender, x, y, -1, true);
     }
 
     @Override
     public boolean mouseClicked(IComponentRenderContext context, double mouseX, double mouseY, int mouseButton) {
         GuidebookAPI.LOGGER.debug("Custom Component Test clicked at ({}, {}) button {}", mouseX, mouseY, mouseButton);
+
         return false;
     }
 

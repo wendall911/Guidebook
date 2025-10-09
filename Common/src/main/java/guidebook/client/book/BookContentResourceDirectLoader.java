@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -56,7 +57,8 @@ public final class BookContentResourceDirectLoader implements BookContentLoader 
         GuidebookAPI.LOGGER.debug("Loading {}", file);
         ResourceManager manager = Minecraft.getInstance().getResourceManager();
         try {
-            var resourceOpt = manager.getResource(file);
+            Optional<Resource> resourceOpt = manager.getResource(file);
+
             if (resourceOpt.isPresent()) {
                 Resource resource = resourceOpt.get();
                 return new LoadResult(

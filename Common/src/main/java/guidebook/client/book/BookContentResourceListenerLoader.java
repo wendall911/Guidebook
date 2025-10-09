@@ -3,6 +3,7 @@ package guidebook.client.book;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jetbrains.annotations.Nullable;
@@ -42,34 +43,40 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager manager, ProfilerFiller profiler) {
         Map<ResourceLocation, Map<ResourceLocation, JsonElement>> data = new HashMap<>();
-        for (var entry : map.entrySet()) {
+        for (Map.Entry<ResourceLocation, JsonElement> entry : map.entrySet()) {
             // namespace:book_name/en_us/entries/entry
-            var key = entry.getKey();
-            var matcher = ID_READER.matcher(key.getPath());
+            ResourceLocation key = entry.getKey();
+            Matcher matcher = ID_READER.matcher(key.getPath());
+
             if (!matcher.matches()) {
                 GuidebookAPI.LOGGER.trace("Ignored file {}", key);
+
                 continue;
             }
-            var bookId = ResourceLocation.fromNamespaceAndPath(key.getNamespace(), matcher.group("bookId"));
+
+            ResourceLocation bookId = ResourceLocation.fromNamespaceAndPath(key.getNamespace(), matcher.group("bookId"));
 
             data.computeIfAbsent(bookId, id -> new HashMap<>()).put(entry.getKey(), entry.getValue());
         }
 
         int count = data.values().stream().mapToInt(Map::size).sum();
+
         GuidebookAPI.LOGGER.info("{} preloaded {} jsons", getClass().getSimpleName(), count);
         this.data = data;
     }
 
     @Override
     public void findFiles(Book book, String dir, List<ResourceLocation> list) {
-        var stopwatch = Stopwatch.createStarted();
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        Map<ResourceLocation, JsonElement> map = data.get(book.id);
 
-        var map = data.get(book.id);
         if (map == null) {
             return;
         }
+
         for (ResourceLocation id : map.keySet()) {
-            var matcher = ID_READER.matcher(id.getPath());
+            Matcher matcher = ID_READER.matcher(id.getPath());
+
             if (!matcher.matches()) {
                 continue;
             }
@@ -86,10 +93,12 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
     @Override
     public LoadResult loadJson(Book book, ResourceLocation file) {
         GuidebookAPI.LOGGER.trace("Loading {}", file);
-        var map = data.get(book.id);
+        Map<ResourceLocation, JsonElement> map = data.get(book.id);
+
         if (map == null) {
             return null;
         }
+
         String path = file.getPath();
         // Drop guidebook_books/ and json suffix
         String relativizedPath = path.substring(0, path.length() - 5).split("/", 2)[1];

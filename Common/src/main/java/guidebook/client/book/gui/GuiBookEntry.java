@@ -55,7 +55,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
         super.onFirstOpened();
 
         boolean dirty = false;
-        var key = entry.getId();
+        ResourceLocation key = entry.getId();
 
         BookData data = PersistentData.data.getBookData(book);
 
@@ -71,7 +71,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
                 data.history.remove(key);
             }
 
-            data.history.add(0, key);
+            data.history.addFirst(key);
             while (data.history.size() > GuiBookEntryList.ENTRIES_PER_PAGE) {
                 data.history.remove(GuiBookEntryList.ENTRIES_PER_PAGE);
             }
@@ -178,7 +178,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
             return false;
         }
 
-        String entryKey = entry.getId().toString();
+        ResourceLocation entryKey = entry.getId();
         BookData data = PersistentData.data.getBookData(book);
 
         for (Bookmark bookmark : data.bookmarks) {
@@ -192,7 +192,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
     @Override
     public void bookmarkThis() {
-        var entryKey = entry.getId();
+        ResourceLocation entryKey = entry.getId();
         BookData data = PersistentData.data.getBookData(book);
         data.bookmarks.add(new Bookmark(entryKey, spread));
         PersistentData.save();
@@ -207,7 +207,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
             BookData data = PersistentData.data.getBookData(book);
 
             if (gui.isBookmarkedAlready()) {
-                String key = entry.getId().toString();
+                ResourceLocation key = entry.getId();
                 data.bookmarks.removeIf((bm) -> bm.entry.equals(key) && bm.spread == 0);
                 PersistentData.save();
                 currGui.needsBookmarkUpdate = true;
@@ -249,6 +249,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
     @Override
     public void renderIngredient(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, Ingredient ingr) {
         ItemStack[] stacks = ingr.getItems();
+
         if (stacks.length > 0) {
             renderItemStack(graphics, x, y, mouseX, mouseY, stacks[(ticksInBook / 20) % stacks.length]);
         }
@@ -272,10 +273,12 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
     @Override
     public boolean navigateToEntry(ResourceLocation entry, int page, boolean push) {
         BookEntry bookEntry = book.getContents().entries.get(entry);
+
         if (bookEntry != null && !bookEntry.isLocked()) {
             displayLexiconGui(new GuiBookEntry(book, bookEntry, page), push);
             return true;
         }
+
         return false;
     }
 
@@ -298,6 +301,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
             this.onClose();
             return true;
         }
+
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
@@ -330,4 +334,5 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
     public int getTicksInBook() {
         return ticksInBook;
     }
+
 }

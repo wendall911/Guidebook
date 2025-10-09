@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.client.Minecraft;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
@@ -20,6 +22,7 @@ import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 
 import guidebook.api.GuidebookAPI;
+import guidebook.client.book.BookCategory;
 import guidebook.client.book.BookEntry;
 import guidebook.client.book.gui.GuiBook;
 import guidebook.client.book.gui.GuiBookCategory;
@@ -81,7 +84,11 @@ public class BookTextParser {
             state.tooltip = EMPTY_STRING_COMPONENT;
             return "";
         }, "/t");
-        register(state -> state.gui.getMinecraft().player.getName().getString(), "playername"); // TODO 1.16: dropped format codes
+        register(state -> {
+            assert state.gui.getMinecraft() != null;
+            assert state.gui.getMinecraft().player != null;
+            return state.gui.getMinecraft().player.getName().getString();
+        }, "playername"); // TODO 1.16: dropped format codes
         register(state -> {
             state.modifyStyle(s -> s.applyFormat(ChatFormatting.OBFUSCATED));
             return "";
@@ -148,31 +155,40 @@ public class BookTextParser {
                 GuiBook gui = state.gui;
                 Book book = state.book;
                 BookEntry entry = book.getContents().entries.get(href);
-                var category = book.getContents().categories.get(href);
+                BookCategory category = book.getContents().categories.get(href);
+
                 if (entry != null) {
+                    int page = 0;
+
                     state.tooltip = entry.isLocked()
                             ? Component.translatable("guidebook.gui.lexicon.locked").withStyle(ChatFormatting.GRAY)
                             : entry.getName();
-                    int page = 0;
+
                     if (anchor != null) {
                         int anchorPage = entry.getPageFromAnchor(anchor);
+
                         if (anchorPage >= 0) {
                             page = anchorPage / 2;
-                        } else {
+                        }
+                        else {
                             state.tooltip.append(" (INVALID ANCHOR:" + anchor + ")");
                         }
                     }
+
                     int finalPage = page;
+
                     state.onClick = () -> {
                         GuiBookEntry entryGui = new GuiBookEntry(book, entry, finalPage);
                         gui.displayLexiconGui(entryGui, true);
                         GuiBook.playBookFlipSound(book);
                         return true;
                     };
-                } else if (category != null) {
+                }
+                else if (category != null) {
                     if (anchor != null) {
                         state.tooltip = Component.literal("BAD LINK: Cannot specify anchor when linking to a category");
-                    } else {
+                    }
+                    else {
                         state.tooltip = category.getName();
                         state.onClick = () -> {
                             gui.displayLexiconGui(new GuiBookCategory(book, category), true);
@@ -180,29 +196,42 @@ public class BookTextParser {
                             return true;
                         };
                     }
-                } else {
+                }
+                else {
                     state.tooltip = Component.literal("BAD LINK: " + parameter);
                 }
             }
+
             return "";
         }, "l");
         register((parameter, state) -> {
             state.tooltip = Component.literal(parameter);
             state.cluster = new LinkedList<>();
+
             return "";
         }, "tooltip", "t");
         register((parameter, state) -> {
             state.pushStyle(Style.EMPTY.withColor(TextColor.fromRgb(state.book.linkColor)));
             state.cluster = new LinkedList<>();
+
             if (!parameter.startsWith("/")) {
                 state.tooltip = Component.literal("INVALID COMMAND (must begin with /)");
-            } else {
+            }
+            else {
                 state.tooltip = Component.literal(parameter.length() < 20 ? parameter : parameter.substring(0, 20) + "...");
             }
             state.onClick = () -> {
-                state.gui.getMinecraft().player.connection.sendCommand(parameter.substring(1));
-                return true;
+                Minecraft mc = state.gui.getMinecraft();
+
+                if (mc != null && mc.player != null) {
+                    mc.player.connection.sendCommand(parameter.substring(1));
+
+                    return true;
+                }
+
+                return false;
             };
+
             return "";
         }, "command", "c");
         register(state -> {
@@ -210,6 +239,7 @@ public class BookTextParser {
             state.cluster = null;
             state.tooltip = EMPTY_STRING_COMPONENT;
             state.onClick = null;
+
             return "";
         }, "/c");
     }
@@ -233,21 +263,25 @@ public class BookTextParser {
     public List<Span> parse(Component text) {
         List<Span> spans = new ArrayList<>();
         SpanState state = new SpanState(gui, book, baseStyle);
+
         text.visit((style, string) -> {
             spans.addAll(processCommands(expandMacros(string), state, style));
             return Optional.empty();
         }, baseStyle);
+
         return spans;
     }
 
     public String expandMacros(@Nullable String text) {
         String actualText = text;
+
         if (actualText == null) {
             actualText = "[ERROR]";
         }
 
         int i = 0;
         int expansionCap = 10;
+
         for (; i < expansionCap; i++) {
             String newText = actualText;
             for (Map.Entry<String, String> e : book.macros.entrySet()) {
@@ -268,7 +302,7 @@ public class BookTextParser {
         return actualText;
     }
 
-    private Pattern COMMAND_PATTERN = Pattern.compile("\\$\\(([^)]*)\\)");
+    private final Pattern COMMAND_PATTERN = Pattern.compile("\\$\\(([^)]*)\\)");
 
     /**
      * Takes in the raw book source and computes a collection of spans from it.
@@ -293,7 +327,8 @@ public class BookTextParser {
                         state.tooltip = EMPTY_STRING_COMPONENT;
                     }
                 }
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 spans.add(Span.error(state, "[ERROR]"));
             }
         }
@@ -324,6 +359,7 @@ public class BookTextParser {
     private static Optional<String> colorCodeProcessor(String functionName, SpanState state) {
         if (functionName.length() == 1 && functionName.matches("^[0123456789abcdef]$")) {
             state.modifyStyle(s -> s.applyFormat(ChatFormatting.getByCode(functionName.charAt(0))));
+
             return Optional.of("");
         }
         return Optional.empty();
@@ -344,6 +380,7 @@ public class BookTextParser {
             state.color(color);
             return Optional.of("");
         }
+
         return Optional.empty();
     }
 
@@ -356,13 +393,16 @@ public class BookTextParser {
             state.lineBreaks = 1;
             state.spacingLeft = pad;
             state.spacingRight = state.spaceWidth;
+
             return Optional.of(ChatFormatting.BLACK.toString() + bullet);
         }
+
         return Optional.empty();
     }
 
     private static Optional<String> lookupFunctionProcessor(String functionName, SpanState state) {
         int index = functionName.indexOf(':');
+
         if (index > 0) {
             String fname = functionName.substring(0, index), param = functionName.substring(index + 1);
             return Optional.of(
@@ -370,6 +410,7 @@ public class BookTextParser {
                             .map(f -> f.process(param, state))
                             .orElse("[MISSING FUNCTION: " + fname + "]"));
         }
+
         return Optional.empty();
     }
 
@@ -379,8 +420,13 @@ public class BookTextParser {
 
     private static KeyMapping getKeybindKey(SpanState state, String keybind) {
         String alt = "key." + keybind;
+        Minecraft mc = state.gui.getMinecraft();
 
-        KeyMapping[] keys = state.gui.getMinecraft().options.keyMappings;
+        if (mc == null) {
+            return null;
+        }
+
+        KeyMapping[] keys = mc.options.keyMappings;
         for (KeyMapping k : keys) {
             String name = k.getName();
             if (name.equals(keybind) || name.equals(alt)) {

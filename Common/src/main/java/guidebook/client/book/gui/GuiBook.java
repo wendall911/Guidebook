@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.blaze3d.platform.Window;
@@ -142,8 +143,8 @@ public abstract class GuiBook extends Screen {
         if (scaleFactor != 1) {
             graphics.pose().scale(scaleFactor, scaleFactor, scaleFactor);
 
-            mouseX /= scaleFactor;
-            mouseY /= scaleFactor;
+            mouseX /= (int) scaleFactor;
+            mouseY /= (int) scaleFactor;
         }
 
         drawScreenAfterScale(graphics, mouseX, mouseY, partialTicks);
@@ -168,9 +169,7 @@ public abstract class GuiBook extends Screen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-
-    }
+    public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {}
 
     public void addBookmarkButtons() {
         removeDrawablesIf((b) -> b instanceof GuiButtonBookBookmark);
@@ -203,7 +202,7 @@ public abstract class GuiBook extends Screen {
     }
 
     @Override // make public
-    public <T extends GuiEventListener & Renderable & NarratableEntry> T addRenderableWidget(T drawableElement) {
+    public <T extends GuiEventListener & Renderable & NarratableEntry> @NotNull T addRenderableWidget(@NotNull T drawableElement) {
         return super.addRenderableWidget(drawableElement);
     }
 
@@ -245,7 +244,7 @@ public abstract class GuiBook extends Screen {
     void drawForegroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {}
 
     final void drawTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
-        if (tooltipStack != null) {
+        if (minecraft != null && tooltipStack != null) {
             List<Component> tooltip = Screen.getTooltipFromItem(this.minecraft, tooltipStack);
 
             Pair<BookEntry, Integer> provider = book.getContents().getEntryForStack(tooltipStack);
@@ -542,6 +541,10 @@ public abstract class GuiBook extends Screen {
     }
 
     private int getMaxAllowedScale() {
+        if (minecraft == null) {
+            return 1;
+        }
+
         return minecraft.getWindow().calculateScale(0, minecraft.isEnforceUnicode());
     }
 
@@ -595,7 +598,8 @@ public abstract class GuiBook extends Screen {
     }
 
     public static void openWebLink(Screen prevScreen, String address) {
-        var mc = Minecraft.getInstance();
+        Minecraft mc = Minecraft.getInstance();
+
         mc.setScreen(new ConfirmLinkScreen(yes -> {
             if (yes) {
                 Util.getPlatform().openUri(address);

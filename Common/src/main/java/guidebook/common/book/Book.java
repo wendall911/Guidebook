@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.base.Suppliers;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.minecraft.Util;
@@ -62,8 +63,6 @@ public class Book {
 
     public final int textColor, headerColor, nameplateColor, linkColor, linkHoverColor, progressBarColor, progressBarBackground;
 
-    public final boolean isExternal;
-
     // JSON Loaded properties
 
     public final String name;
@@ -105,7 +104,7 @@ public class Book {
         return 0xFF000000 | Integer.parseInt(GsonHelper.getAsString(root, key, defaultColor), 16);
     }
 
-    public Book(JsonObject root, CommonModContainer owner, ResourceLocation id, boolean external) {
+    public Book(JsonObject root, CommonModContainer owner, ResourceLocation id) {
         this.name = GsonHelper.getAsString(root, "name");
         this.landingText = GsonHelper.getAsString(root, "landing_text", "guidebook.gui.lexicon.landing_info");
         this.bookTexture = SerializationUtil.getAsResourceLocation(root, "book_texture", DEFAULT_BOOK_TEXTURE);
@@ -116,7 +115,6 @@ public class Book {
 
         this.owner = owner;
         this.id = id;
-        this.isExternal = external;
         this.textColor = parseColor(root, "text_color", "000000");
         this.headerColor = parseColor(root, "header_color", "333333");
         this.nameplateColor = parseColor(root, "nameplate_color", "FFDD00");
@@ -139,25 +137,8 @@ public class Book {
         this.i18n = GsonHelper.getAsBoolean(root, "i18n", false);
         this.overflowMode = SerializationUtil.getAsEnum(root, "text_overflow_mode", GuidebookConfig.TextOverflowMode.class, null);
 
-        boolean useResourcePack = GsonHelper.getAsBoolean(root, "use_resource_pack", false);
-        if (!this.isExternal && !useResourcePack) {
-            String message = "Book %s has use_resource_pack set to false. ".formatted(this.id)
-                    + "This behaviour was removed in 1.20. "
-                    + "The book author should enable this flag and move all book contents clientside to /assets/, "
-                    + "leaving the book.json in /data/. See https://vazkiimods.github.io/Guidebook/docs/upgrading/upgrade-guide-120 for details.";
-            throw new IllegalArgumentException(message);
-        }
+        String customBookItem = GsonHelper.getAsString(root, "custom_book_item", "");
 
-        // Check legacy extensions flag
-        ResourceLocation extensionTargetID = SerializationUtil.getAsResourceLocation(root, "extend", null);
-        if (extensionTargetID != null) {
-            String message = "Book %s is declared to extend %s. ".formatted(this.id, extensionTargetID)
-                    + "This behaviour was removed in 1.20. "
-                    + "The author should simply ship the extra content they want to add or override in a resource pack.";
-            throw new IllegalArgumentException(message);
-        }
-
-        var customBookItem = GsonHelper.getAsString(root, "custom_book_item", "");
         if (noBook) {
             // Need lazy parsing for mods that load after Guidebook, as parser looks up item and components
             // in registries; wrap in try-catch in case of faulty item definition
@@ -165,18 +146,22 @@ public class Book {
                 try {
                     return ItemStackUtil.loadFromParsed(
                             ItemStackUtil.deserializeStack(customBookItem, VanillaRegistries.createLookup()));
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     GuidebookAPI.LOGGER.warn("Failed to parse item \"{}\" for book {} defined by mod {}, skipping",
-                            customBookItem, id, owner.getId(), e);
+                        customBookItem, id, owner.getId(), e);
+
                     return ItemStack.EMPTY;
                 }
             });
-        } else {
+        }
+        else {
             bookItem = Suppliers.memoize(() -> ItemModBook.forBook(id));
         }
 
         macros.putAll(DEFAULT_MACROS);
-        for (var e : GsonHelper.getAsJsonObject(root, "macros", new JsonObject()).entrySet()) {
+
+        for (Map.Entry<String, JsonElement> e : GsonHelper.getAsJsonObject(root, "macros", new JsonObject()).entrySet()) {
             macros.put(e.getKey(), GsonHelper.convertToString(e.getValue(), "macro value"));
         }
     }
