@@ -9,21 +9,21 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 import guidebook.client.book.ClientBookRegistry;
-import guidebook.network.MessageReloadBookContents;
 
 public class FabricMessageReloadBookContents {
 
-	public static void sendToAll(MinecraftServer server) {
-		PlayerLookup.all(server).forEach(FabricMessageReloadBookContents::send);
-	}
+    public static void sendToAll(MinecraftServer server) {
+        PlayerLookup.all(server).forEach(FabricMessageReloadBookContents::send);
+    }
 
-	public static void send(ServerPlayer player) {
-		ServerPlayNetworking.send(player, new MessageReloadBookContents());
-	}
+    public static void send(ServerPlayer player) {
+        ServerPlayNetworking.send(player, new MessageReloadBookContents());
+    }
 
-	public static void handle(MessageReloadBookContents message, ClientPlayNetworking.Context handler) {
-		Minecraft client = handler.client();
-		client.submit(() -> ClientBookRegistry.INSTANCE.reload());
-	}
+    public static void handle(MessageReloadBookContents message, ClientPlayNetworking.Context handler) {
+        Minecraft client = handler.client();
+
+        client.submit(ClientBookRegistry.INSTANCE::reload);
+    }
 
 }

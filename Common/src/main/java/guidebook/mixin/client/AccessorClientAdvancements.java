@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(ClientAdvancements.class)
 public interface AccessorClientAdvancements {
 
-	@Accessor("progress")
-	Map<AdvancementHolder, AdvancementProgress> getProgress();
+    @Accessor("progress")
+    Map<AdvancementHolder, AdvancementProgress> getProgress();
 
 }

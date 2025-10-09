@@ -10,9 +10,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(KeyMapping.class)
 public interface AccessorKeyMapping {
 
-	@Accessor("ALL")
-	static Map<String, KeyMapping> getAllKeyMappings() {
-		throw new IllegalStateException();
-	}
+    @Accessor("ALL")
+    static Map<String, KeyMapping> getAllKeyMappings() {
+        throw new IllegalStateException();
+    }
 
 }

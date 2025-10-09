@@ -27,101 +27,101 @@ import guidebook.common.util.EntityUtil;
 
 public class PageEntity extends PageWithText {
 
-	@SerializedName("entity") public String entityId;
+    @SerializedName("entity") public String entityId;
 
-	float scale = 1F;
-	@SerializedName("offset") float extraOffset = 0F;
-	String name;
+    float scale = 1F;
+    @SerializedName("offset") float extraOffset = 0F;
+    String name;
 
-	boolean rotate = true;
-	@SerializedName("default_rotation") float defaultRotation = -45f;
+    boolean rotate = true;
+    @SerializedName("default_rotation") float defaultRotation = -45f;
 
-	transient boolean errored;
-	transient Entity entity;
-	transient Function<Level, Entity> creator;
-	transient float renderScale, offset;
+    transient boolean errored;
+    transient Entity entity;
+    transient Function<Level, Entity> creator;
+    transient float renderScale, offset;
 
-	@Override
-	public void build(Level level, BookEntry entry, BookContentsBuilder builder, int pageNum) {
-		super.build(level, entry, builder, pageNum);
+    @Override
+    public void build(Level level, BookEntry entry, BookContentsBuilder builder, int pageNum) {
+        super.build(level, entry, builder, pageNum);
 
-		creator = EntityUtil.loadEntity(entityId);
-	}
+        creator = EntityUtil.loadEntity(entityId);
+    }
 
-	@Override
-	public void onDisplayed(GuiBookEntry parent, int left, int top) {
-		super.onDisplayed(parent, left, top);
+    @Override
+    public void onDisplayed(GuiBookEntry parent, int left, int top) {
+        super.onDisplayed(parent, left, top);
 
-		loadEntity(parent.getMinecraft().level);
-	}
+        loadEntity(parent.getMinecraft().level);
+    }
 
-	@Override
-	public int getTextHeight() {
-		return 115;
-	}
+    @Override
+    public int getTextHeight() {
+        return 115;
+    }
 
-	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
-		int x = GuiBook.PAGE_WIDTH / 2 - 53;
-		int y = 7;
-		RenderSystem.enableBlend();
-		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-		GuiBook.drawFromTexture(graphics, book, x, y, 405, 149, 106, 106);
+    @Override
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
+        int x = GuiBook.PAGE_WIDTH / 2 - 53;
+        int y = 7;
+        RenderSystem.enableBlend();
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+        GuiBook.drawFromTexture(graphics, book, x, y, 405, 149, 106, 106);
 
-		if (name == null || name.isEmpty()) {
-			if (entity != null) {
-				parent.drawCenteredStringNoShadow(graphics, entity.getName().getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
-			}
-		} else {
-			parent.drawCenteredStringNoShadow(graphics, name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
-		}
+        if (name == null || name.isEmpty()) {
+            if (entity != null) {
+                parent.drawCenteredStringNoShadow(graphics, entity.getName().getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+            }
+        } else {
+            parent.drawCenteredStringNoShadow(graphics, name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+        }
 
-		if (errored) {
-			graphics.drawString(fontRenderer, I18n.get("guidebook.gui.lexicon.loading_error"), 58, 60, 0xFF0000, true);
-		}
+        if (errored) {
+            graphics.drawString(fontRenderer, I18n.get("guidebook.gui.lexicon.loading_error"), 58, 60, 0xFF0000, true);
+        }
 
-		if (entity != null) {
-			float rotation = rotate ? ClientTicker.total : defaultRotation;
-			renderEntity(graphics, entity, 58, 60, rotation, renderScale, offset);
-		}
+        if (entity != null) {
+            float rotation = rotate ? ClientTicker.total : defaultRotation;
+            renderEntity(graphics, entity, 58, 60, rotation, renderScale, offset);
+        }
 
-		super.render(graphics, mouseX, mouseY, pticks);
-	}
+        super.render(graphics, mouseX, mouseY, pticks);
+    }
 
-	public static void renderEntity(GuiGraphics graphics, Entity entity, float x, float y, float rotation, float renderScale, float offset) {
-		PoseStack ms = graphics.pose();
-		ms.pushPose();
-		ms.translate(x, y, 50);
-		ms.scale(renderScale, renderScale, renderScale);
-		ms.translate(0, offset, 0);
-		ms.mulPose(Axis.ZP.rotationDegrees(180));
-		ms.mulPose(Axis.YP.rotationDegrees(rotation));
-		EntityRenderDispatcher erd = Minecraft.getInstance().getEntityRenderDispatcher();
-		MultiBufferSource.BufferSource immediate = Minecraft.getInstance().renderBuffers().bufferSource();
-		erd.setRenderShadow(false);
-		erd.render(entity, 0, 0, 0, 0, 1, ms, immediate, 0xF000F0);
-		erd.setRenderShadow(true);
-		immediate.endBatch();
-		ms.popPose();
-	}
+    public static void renderEntity(GuiGraphics graphics, Entity entity, float x, float y, float rotation, float renderScale, float offset) {
+        PoseStack ms = graphics.pose();
+        ms.pushPose();
+        ms.translate(x, y, 50);
+        ms.scale(renderScale, renderScale, renderScale);
+        ms.translate(0, offset, 0);
+        ms.mulPose(Axis.ZP.rotationDegrees(180));
+        ms.mulPose(Axis.YP.rotationDegrees(rotation));
+        EntityRenderDispatcher erd = Minecraft.getInstance().getEntityRenderDispatcher();
+        MultiBufferSource.BufferSource immediate = Minecraft.getInstance().renderBuffers().bufferSource();
+        erd.setRenderShadow(false);
+        erd.render(entity, 0, 0, 0, 0, 1, ms, immediate, 0xF000F0);
+        erd.setRenderShadow(true);
+        immediate.endBatch();
+        ms.popPose();
+    }
 
-	private void loadEntity(Level world) {
-		if (!errored && (entity == null || !entity.isAlive() || entity.level() != world)) {
-			try {
-				entity = creator.apply(world);
+    private void loadEntity(Level world) {
+        if (!errored && (entity == null || !entity.isAlive() || entity.level() != world)) {
+            try {
+                entity = creator.apply(world);
 
-				float width = entity.getBbWidth();
-				float height = entity.getBbHeight();
+                float width = entity.getBbWidth();
+                float height = entity.getBbHeight();
 
-				float entitySize = Math.max(1F, Math.max(width, height));
+                float entitySize = Math.max(1F, Math.max(width, height));
 
-				renderScale = 100F / entitySize * 0.8F * scale;
-				offset = Math.max(height, entitySize) * 0.5F + extraOffset;
-			} catch (Exception e) {
-				errored = true;
-				GuidebookAPI.LOGGER.error("Failed to load entity", e);
-			}
-		}
-	}
+                renderScale = 100F / entitySize * 0.8F * scale;
+                offset = Math.max(height, entitySize) * 0.5F + extraOffset;
+            } catch (Exception e) {
+                errored = true;
+                GuidebookAPI.LOGGER.error("Failed to load entity", e);
+            }
+        }
+    }
 
 }

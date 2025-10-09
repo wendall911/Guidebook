@@ -7,8 +7,8 @@ import guidebook.client.book.page.abstr.PageSimpleProcessingRecipe;
 
 public class PageBlasting extends PageSimpleProcessingRecipe<BlastingRecipe> {
 
-	public PageBlasting() {
-		super(RecipeType.BLASTING);
-	}
+    public PageBlasting() {
+        super(RecipeType.BLASTING);
+    }
 
 }

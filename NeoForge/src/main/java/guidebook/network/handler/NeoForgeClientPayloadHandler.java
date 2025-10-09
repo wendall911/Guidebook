@@ -9,28 +9,28 @@ import guidebook.network.MessageReloadBookContents;
 
 public class NeoForgeClientPayloadHandler {
 
-	private static final NeoForgeClientPayloadHandler INSTANCE = new NeoForgeClientPayloadHandler();
+    private static final NeoForgeClientPayloadHandler INSTANCE = new NeoForgeClientPayloadHandler();
 
-	public static NeoForgeClientPayloadHandler getInstance() {
-		return INSTANCE;
-	}
+    public static NeoForgeClientPayloadHandler getInstance() {
+        return INSTANCE;
+    }
 
-	public void handleData(final MessageOpenBookGui data, final IPayloadContext context) {
-		try {
-			ClientBookRegistry.INSTANCE.displayBookGui(data.book(), data.entry(), data.page());
-		}
+    public void handleData(final MessageOpenBookGui data, final IPayloadContext context) {
+        try {
+            ClientBookRegistry.INSTANCE.displayBookGui(data.book(), data.entry(), data.page());
+        }
         catch (Exception e) {
-			context.disconnect(Component.translatable("guidebook.networking.open_book.failed", e.getMessage()));
-		}
-	}
+            context.disconnect(Component.translatable("guidebook.networking.open_book.failed", e.getMessage()));
+        }
+    }
 
-	public void handleData(final MessageReloadBookContents data, final IPayloadContext context) {
-		try {
-			ClientBookRegistry.INSTANCE.reload();
-		}
+    public void handleData(final MessageReloadBookContents data, final IPayloadContext context) {
+        try {
+            ClientBookRegistry.INSTANCE.reload();
+        }
         catch (Exception e) {
-			context.disconnect(Component.translatable("guidebook.networking.reload_contents.failed", e.getMessage()));
-		}
-	}
+            context.disconnect(Component.translatable("guidebook.networking.reload_contents.failed", e.getMessage()));
+        }
+    }
 
 }

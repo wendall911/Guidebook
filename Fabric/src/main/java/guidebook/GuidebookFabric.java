@@ -28,38 +28,38 @@ import guidebook.network.MessageReloadBookContents;
 
 public class GuidebookFabric implements ModInitializer {
 
-	@Override
-	public void onInitialize() {
-		GuidebookSounds.submitRegistrations((id, e) -> Registry.register(BuiltInRegistries.SOUND_EVENT, id, e));
-		GuidebookDataComponents.submitDataComponentRegistrations((id, e) -> Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id, e));
-		GuidebookItems.submitItemRegistrations((id, e) -> Registry.register(BuiltInRegistries.ITEM, id, e));
-		GuidebookCriteriaTriggers.submitTriggerRegistrations((id, e) -> Registry.register(BuiltInRegistries.TRIGGER_TYPES, id, e));
-		CommandRegistrationCallback.EVENT.register((disp, buildCtx, selection) -> OpenBookCommand.register(disp));
-		UseBlockCallback.EVENT.register(LecternEventHandler::rightClick);
+    @Override
+    public void onInitialize() {
+        GuidebookSounds.submitRegistrations((id, e) -> Registry.register(BuiltInRegistries.SOUND_EVENT, id, e));
+        GuidebookDataComponents.submitDataComponentRegistrations((id, e) -> Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id, e));
+        GuidebookItems.submitItemRegistrations((id, e) -> Registry.register(BuiltInRegistries.ITEM, id, e));
+        GuidebookCriteriaTriggers.submitTriggerRegistrations((id, e) -> Registry.register(BuiltInRegistries.TRIGGER_TYPES, id, e));
+        CommandRegistrationCallback.EVENT.register((disp, buildCtx, selection) -> OpenBookCommand.register(disp));
+        UseBlockCallback.EVENT.register(LecternEventHandler::rightClick);
 
-		PayloadTypeRegistry.playS2C().register(MessageOpenBookGui.TYPE, MessageOpenBookGui.CODEC);
-		PayloadTypeRegistry.playS2C().register(MessageReloadBookContents.TYPE, MessageReloadBookContents.CODEC);
+        PayloadTypeRegistry.playS2C().register(MessageOpenBookGui.TYPE, MessageOpenBookGui.CODEC);
+        PayloadTypeRegistry.playS2C().register(MessageReloadBookContents.TYPE, MessageReloadBookContents.CODEC);
 
-		BookRegistry.INSTANCE.init();
+        BookRegistry.INSTANCE.init();
 
-		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, _r, success) -> {
-			if (success) {
-				ReloadContentsHandler.dataReloaded(server);
-			}
-		});
+        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, _r, success) -> {
+            if (success) {
+                ReloadContentsHandler.dataReloaded(server);
+            }
+        });
 
-		BookRegistry.INSTANCE.books.values().forEach(b -> {
-			if (!b.noBook) {
-				if (b.creativeTab != null) {
-					ResourceKey<CreativeModeTab> key = ResourceKey.create(Registries.CREATIVE_MODE_TAB, b.creativeTab);
-					ItemGroupEvents.modifyEntriesEvent(key)
-							.register(entries -> entries.accept(ItemModBook.forBook(b)));
-				}
-				ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.SEARCH).register(entries -> {
-					entries.accept(ItemModBook.forBook(b));
-				});
-			}
-		});
-	}
+        BookRegistry.INSTANCE.books.values().forEach(b -> {
+            if (!b.noBook) {
+                if (b.creativeTab != null) {
+                    ResourceKey<CreativeModeTab> key = ResourceKey.create(Registries.CREATIVE_MODE_TAB, b.creativeTab);
+                    ItemGroupEvents.modifyEntriesEvent(key)
+                            .register(entries -> entries.accept(ItemModBook.forBook(b)));
+                }
+                ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.SEARCH).register(entries -> {
+                    entries.accept(ItemModBook.forBook(b));
+                });
+            }
+        });
+    }
 
 }

@@ -20,6 +20,15 @@ import guidebook.api.GuidebookAPI;
 import guidebook.client.book.BookContentsBuilder;
 import guidebook.client.book.BookEntry;
 import guidebook.client.book.BookPage;
+import guidebook.client.book.template.component.ComponentCustom;
+import guidebook.client.book.template.component.ComponentEntity;
+import guidebook.client.book.template.component.ComponentFrame;
+import guidebook.client.book.template.component.ComponentHeader;
+import guidebook.client.book.template.component.ComponentImage;
+import guidebook.client.book.template.component.ComponentItemStack;
+import guidebook.client.book.template.component.ComponentSeparator;
+import guidebook.client.book.template.component.ComponentText;
+import guidebook.client.book.template.component.ComponentTooltip;
 import guidebook.client.book.gui.GuiBookEntry;
 import guidebook.common.book.Book;
 
@@ -28,15 +37,15 @@ public class BookTemplate {
 	public static final HashMap<ResourceLocation, Class<? extends TemplateComponent>> componentTypes = new HashMap<>();
 
 	static {
-		registerComponent(ResourceLocation.fromNamespaceAndPath(GuidebookAPI.MODID, "text"), ComponentText.class);
-		registerComponent(ResourceLocation.fromNamespaceAndPath(GuidebookAPI.MODID, "item"), ComponentItemStack.class);
-		registerComponent(ResourceLocation.fromNamespaceAndPath(GuidebookAPI.MODID, "image"), ComponentImage.class);
-		registerComponent(ResourceLocation.fromNamespaceAndPath(GuidebookAPI.MODID, "header"), ComponentHeader.class);
-		registerComponent(ResourceLocation.fromNamespaceAndPath(GuidebookAPI.MODID, "separator"), ComponentSeparator.class);
-		registerComponent(ResourceLocation.fromNamespaceAndPath(GuidebookAPI.MODID, "frame"), ComponentFrame.class);
-		registerComponent(ResourceLocation.fromNamespaceAndPath(GuidebookAPI.MODID, "entity"), ComponentEntity.class);
-		registerComponent(ResourceLocation.fromNamespaceAndPath(GuidebookAPI.MODID, "tooltip"), ComponentTooltip.class);
-		registerComponent(ResourceLocation.fromNamespaceAndPath(GuidebookAPI.MODID, "custom"), ComponentCustom.class);
+		registerComponent(GuidebookAPI.prefix("text"), ComponentText.class);
+		registerComponent(GuidebookAPI.prefix("item"), ComponentItemStack.class);
+		registerComponent(GuidebookAPI.prefix("image"), ComponentImage.class);
+		registerComponent(GuidebookAPI.prefix("header"), ComponentHeader.class);
+		registerComponent(GuidebookAPI.prefix("separator"), ComponentSeparator.class);
+		registerComponent(GuidebookAPI.prefix("frame"), ComponentFrame.class);
+		registerComponent(GuidebookAPI.prefix("entity"), ComponentEntity.class);
+		registerComponent(GuidebookAPI.prefix("tooltip"), ComponentTooltip.class);
+		registerComponent(GuidebookAPI.prefix("custom"), ComponentCustom.class);
 	}
 
 	@SerializedName("include") List<TemplateInclusion> inclusions = new ArrayList<>();
@@ -92,7 +101,8 @@ public class BookTemplate {
 
 			try {
 				processor.setup(level, processorVars);
-			} catch (Exception e) {
+			}
+            catch (Exception e) {
 				throw new RuntimeException("Error setting up template processor", e);
 			}
 		}

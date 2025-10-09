@@ -13,14 +13,14 @@ import guidebook.client.base.ClientTicker;
 @Mixin(GameRenderer.class)
 public class MixinGameRenderer {
 
-	@Inject(at = @At("HEAD"), method = "render(Lnet/minecraft/client/DeltaTracker;Z)V")
-	public void guidebook$renderStart(DeltaTracker deltaTracker, boolean tick, CallbackInfo info) {
-		ClientTicker.renderTickStart(deltaTracker.getGameTimeDeltaPartialTick(false));
-	}
+    @Inject(at = @At("HEAD"), method = "render(Lnet/minecraft/client/DeltaTracker;Z)V")
+    public void guidebook$renderStart(DeltaTracker deltaTracker, boolean tick, CallbackInfo info) {
+        ClientTicker.renderTickStart(deltaTracker.getGameTimeDeltaPartialTick(false));
+    }
 
-	@Inject(at = @At("RETURN"), method = "render(Lnet/minecraft/client/DeltaTracker;Z)V")
-	public void guidebook$renderEnd(DeltaTracker deltaTracker, boolean tick, CallbackInfo info) {
-		ClientTicker.renderTickEnd();
-	}
+    @Inject(at = @At("RETURN"), method = "render(Lnet/minecraft/client/DeltaTracker;Z)V")
+    public void guidebook$renderEnd(DeltaTracker deltaTracker, boolean tick, CallbackInfo info) {
+        ClientTicker.renderTickEnd();
+    }
 
 }

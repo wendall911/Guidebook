@@ -12,9 +12,9 @@ import guidebook.client.base.ClientAdvancements;
 @Mixin(net.minecraft.client.multiplayer.ClientAdvancements.class)
 public abstract class MixinClientAdvancements {
 
-	@Inject(at = @At("RETURN"), method = "update")
-	public void guidebook$onSync(ClientboundUpdateAdvancementsPacket packet, CallbackInfo info) {
-		ClientAdvancements.onClientPacket();
-	}
+    @Inject(at = @At("RETURN"), method = "update")
+    public void guidebook$onSync(ClientboundUpdateAdvancementsPacket packet, CallbackInfo info) {
+        ClientAdvancements.onClientPacket();
+    }
 
 }

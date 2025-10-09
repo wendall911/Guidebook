@@ -14,9 +14,9 @@ import guidebook.client.handler.TooltipHandler;
 @Mixin(GuiGraphics.class)
 public class MixinGuiGraphics {
 
-	@Inject(at = @At("HEAD"), method = "renderTooltip(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V")
-	public void guidebook$onRenderTooltip(Font font, ItemStack stack, int x, int y, CallbackInfo info) {
-		TooltipHandler.onTooltip((GuiGraphics) (Object) this, stack, x, y);
-	}
+    @Inject(at = @At("HEAD"), method = "renderTooltip(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V")
+    public void guidebook$onRenderTooltip(Font font, ItemStack stack, int x, int y, CallbackInfo info) {
+        TooltipHandler.onTooltip((GuiGraphics) (Object) this, stack, x, y);
+    }
 
 }

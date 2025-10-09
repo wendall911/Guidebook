@@ -9,13 +9,13 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(SmithingTransformRecipe.class)
 public interface AccessorSmithingTransformRecipe {
 
-	@Accessor
-	Ingredient getTemplate();
+    @Accessor
+    Ingredient getTemplate();
 
-	@Accessor
-	Ingredient getBase();
+    @Accessor
+    Ingredient getBase();
 
-	@Accessor
-	Ingredient getAddition();
+    @Accessor
+    Ingredient getAddition();
 
 }

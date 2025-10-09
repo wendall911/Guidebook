@@ -15,33 +15,33 @@ import guidebook.api.IVariable;
 
 public final class SerializationUtil {
 
-	public static final IVariable.Serializer VARIABLE_SERIALIZER = new IVariable.Serializer();
-	public static final Gson RAW_GSON = new GsonBuilder()
-			.registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
-			.registerTypeAdapter(IVariable.class, VARIABLE_SERIALIZER)
-			.create();
-	public static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
+    public static final IVariable.Serializer VARIABLE_SERIALIZER = new IVariable.Serializer();
+    public static final Gson RAW_GSON = new GsonBuilder()
+        .registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
+        .registerTypeAdapter(IVariable.class, VARIABLE_SERIALIZER)
+        .create();
+    public static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
 
-	private SerializationUtil() {}
+    private SerializationUtil() {}
 
-	public static ResourceLocation getAsResourceLocation(JsonObject object, String key, @Nullable ResourceLocation fallback) {
-		if (object.has(key)) {
-			return ResourceLocation.tryParse(GsonHelper.convertToString(object.get(key), key));
-		}
+    public static ResourceLocation getAsResourceLocation(JsonObject object, String key, @Nullable ResourceLocation fallback) {
+        if (object.has(key)) {
+            return ResourceLocation.tryParse(GsonHelper.convertToString(object.get(key), key));
+        }
         else {
-			return fallback;
-		}
-	}
+            return fallback;
+        }
+    }
 
-	@Nullable
-	public static <T extends Enum<T>> T getAsEnum(JsonObject object, String key, Class<T> clz, @Nullable T fallback) {
-		if (object.has(key)) {
-			var str = GsonHelper.convertToString(object.get(key), key).toUpperCase(Locale.ROOT);
-			return Enum.valueOf(clz, str);
-		}
+    @Nullable
+    public static <T extends Enum<T>> T getAsEnum(JsonObject object, String key, Class<T> clz, @Nullable T fallback) {
+        if (object.has(key)) {
+            var str = GsonHelper.convertToString(object.get(key), key).toUpperCase(Locale.ROOT);
+            return Enum.valueOf(clz, str);
+        }
         else {
-			return fallback;
-		}
-	}
+            return fallback;
+        }
+    }
 
 }

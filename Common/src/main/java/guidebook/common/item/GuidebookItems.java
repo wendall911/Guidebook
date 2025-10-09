@@ -9,10 +9,11 @@ import guidebook.api.GuidebookAPI;
 
 public class GuidebookItems {
 
-	public static final ResourceLocation BOOK_ID = ResourceLocation.fromNamespaceAndPath(GuidebookAPI.MODID, "guide_book");
-	public static final Item BOOK = new ItemModBook();
+    public static final ResourceLocation BOOK_ID = GuidebookAPI.prefix("guide_book");
+    public static final Item BOOK = new ItemModBook();
 
-	public static void submitItemRegistrations(BiConsumer<ResourceLocation, Item> consumer) {
-		consumer.accept(BOOK_ID, BOOK);
-	}
+    public static void submitItemRegistrations(BiConsumer<ResourceLocation, Item> consumer) {
+        consumer.accept(BOOK_ID, BOOK);
+    }
+
 }

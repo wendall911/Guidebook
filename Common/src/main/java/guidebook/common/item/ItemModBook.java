@@ -25,120 +25,122 @@ import guidebook.common.book.BookRegistry;
 
 public class ItemModBook extends Item {
 
-	public ItemModBook() {
-		super(new Item.Properties().stacksTo(1));
-	}
+    public ItemModBook() {
+        super(new Item.Properties().stacksTo(1));
+    }
 
-	public static float getCompletion(ItemStack stack) {
-		Book book = getBook(stack);
-		float progression = 0F; // default incomplete
+    public static float getCompletion(ItemStack stack) {
+        Book book = getBook(stack);
+        float progression = 0F; // default incomplete
 
-		if (book != null) {
-			int totalEntries = 0;
-			int unlockedEntries = 0;
+        if (book != null) {
+            int totalEntries = 0;
+            int unlockedEntries = 0;
 
-			for (BookEntry entry : book.getContents().entries.values()) {
-				if (!entry.isSecret()) {
-					totalEntries++;
-					if (!entry.isLocked()) {
-						unlockedEntries++;
-					}
-				}
-			}
+            for (BookEntry entry : book.getContents().entries.values()) {
+                if (!entry.isSecret()) {
+                    totalEntries++;
+                    if (!entry.isLocked()) {
+                        unlockedEntries++;
+                    }
+                }
+            }
 
-			progression = ((float) unlockedEntries) / Math.max(1f, (float) totalEntries);
-		}
+            progression = ((float) unlockedEntries) / Math.max(1f, (float) totalEntries);
+        }
 
-		return progression;
-	}
+        return progression;
+    }
 
-	public static ItemStack forBook(Book book) {
-		return forBook(book.id);
-	}
+    public static ItemStack forBook(Book book) {
+        return forBook(book.id);
+    }
 
-	public static ItemStack forBook(ResourceLocation book) {
-		ItemStack stack = new ItemStack(GuidebookItems.BOOK);
+    public static ItemStack forBook(ResourceLocation book) {
+        ItemStack stack = new ItemStack(GuidebookItems.BOOK);
 
-		stack.set(GuidebookDataComponents.BOOK, book);
+        stack.set(GuidebookDataComponents.BOOK, book);
 
-		return stack;
-	}
+        return stack;
+    }
 
-	// SoftImplement IForgeItem
-	public String getCreatorModId(ItemStack stack) {
-		var book = getBook(stack);
-		if (book != null) {
-			return book.owner.getId();
-		}
-		return BuiltInRegistries.ITEM.getKey(this).getNamespace();
-	}
+    // SoftImplement IForgeItem
+    public String getCreatorModId(ItemStack stack) {
+        var book = getBook(stack);
+        if (book != null) {
+            return book.owner.getId();
+        }
+        return BuiltInRegistries.ITEM.getKey(this).getNamespace();
+    }
 
-	public static Book getBook(ItemStack stack) {
-		ResourceLocation res = getBookId(stack);
-		if (res == null) {
-			return null;
-		}
-		return BookRegistry.INSTANCE.books.get(res);
-	}
+    public static Book getBook(ItemStack stack) {
+        ResourceLocation res = getBookId(stack);
+        if (res == null) {
+            return null;
+        }
+        return BookRegistry.INSTANCE.books.get(res);
+    }
 
-	private static ResourceLocation getBookId(ItemStack stack) {
-		if (!stack.has(GuidebookDataComponents.BOOK)) {
-			return null;
-		}
+    private static ResourceLocation getBookId(ItemStack stack) {
+        if (!stack.has(GuidebookDataComponents.BOOK)) {
+            return null;
+        }
 
-		return stack.get(GuidebookDataComponents.BOOK);
-	}
+        return stack.get(GuidebookDataComponents.BOOK);
+    }
 
-	@Override
-	public Component getName(ItemStack stack) {
-		Book book = getBook(stack);
-		if (book != null) {
-			return Component.translatable(book.name);
-		}
+    @Override
+    public Component getName(ItemStack stack) {
+        Book book = getBook(stack);
+        if (book != null) {
+            return Component.translatable(book.name);
+        }
 
-		return super.getName(stack);
-	}
+        return super.getName(stack);
+    }
 
-	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-		super.appendHoverText(stack, context, tooltip, flagIn);
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip, flagIn);
 
-		ResourceLocation rl = getBookId(stack);
-		if (flagIn.isAdvanced()) {
-			tooltip.add(Component.literal("Book ID: " + rl).withStyle(ChatFormatting.GRAY));
-		}
+        ResourceLocation rl = getBookId(stack);
+        if (flagIn.isAdvanced()) {
+            tooltip.add(Component.literal("Book ID: " + rl).withStyle(ChatFormatting.GRAY));
+        }
 
-		Book book = getBook(stack);
-		if (book != null && !book.getContents().isErrored()) {
-			tooltip.add(book.getSubtitle().withStyle(ChatFormatting.GRAY));
-		} else if (book == null) {
-			if (rl == null) {
-				tooltip.add(Component.translatable("item.guidebook.guide_book.undefined")
-						.withStyle(ChatFormatting.DARK_GRAY));
-			} else {
-				tooltip.add(Component.translatable("item.guidebook.guide_book.invalid", rl)
-						.withStyle(ChatFormatting.DARK_GRAY));
-			}
-		}
-	}
+        Book book = getBook(stack);
+        if (book != null && !book.getContents().isErrored()) {
+            tooltip.add(book.getSubtitle().withStyle(ChatFormatting.GRAY));
+        }
+        else if (book == null) {
+            if (rl == null) {
+                tooltip.add(Component.translatable("item.guidebook.guide_book.undefined")
+                        .withStyle(ChatFormatting.DARK_GRAY));
+            }
+            else {
+                tooltip.add(Component.translatable("item.guidebook.guide_book.invalid", rl)
+                        .withStyle(ChatFormatting.DARK_GRAY));
+            }
+        }
+    }
 
-	@Override
-	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
-		ItemStack stack = playerIn.getItemInHand(handIn);
-		Book book = getBook(stack);
-		if (book == null) {
-			return new InteractionResultHolder<>(InteractionResult.FAIL, stack);
-		}
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+        ItemStack stack = playerIn.getItemInHand(handIn);
+        Book book = getBook(stack);
+        if (book == null) {
+            return new InteractionResultHolder<>(InteractionResult.FAIL, stack);
+        }
 
-		if (playerIn instanceof ServerPlayer) {
-			GuidebookAPI.get().openBookGUI((ServerPlayer) playerIn, book.id);
+        if (playerIn instanceof ServerPlayer) {
+            GuidebookAPI.get().openBookGUI((ServerPlayer) playerIn, book.id);
 
-			// This plays the sound to others nearby, playing to the actual opening player handled from the packet
-			SoundEvent sfx = GuidebookSounds.getSound(book.openSound, GuidebookSounds.BOOK_OPEN);
-			playerIn.playSound(sfx, 1F, (float) (0.7 + Math.random() * 0.4));
-		}
+            // This plays the sound to others nearby, playing to the actual opening player handled from the packet
+            SoundEvent sfx = GuidebookSounds.getSound(book.openSound, GuidebookSounds.BOOK_OPEN);
+            playerIn.playSound(sfx, 1F, (float) (0.7 + Math.random() * 0.4));
+        }
 
-		return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
-	}
+        return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+    }
 
 }

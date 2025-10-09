@@ -8,9 +8,9 @@ import java.util.List;
  */
 public interface CommonModContainer {
 
-	String getId();
-	String getName();
-	Path getPath(String s);
-	List<Path> getRootPaths();
+    String getId();
+    String getName();
+    Path getPath(String s);
+    List<Path> getRootPaths();
 
 }

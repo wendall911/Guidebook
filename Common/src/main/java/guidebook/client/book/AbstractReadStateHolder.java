@@ -5,27 +5,27 @@ import java.util.stream.Stream;
 
 public abstract class AbstractReadStateHolder {
 
-	EntryDisplayState readState;
-	boolean readStateDirty = true;
+    EntryDisplayState readState;
+    boolean readStateDirty = true;
 
-	public EntryDisplayState getReadState() {
-		if (readStateDirty) {
-			readState = computeReadState();
-			readStateDirty = false;
-		}
+    public EntryDisplayState getReadState() {
+        if (readStateDirty) {
+            readState = computeReadState();
+            readStateDirty = false;
+        }
 
-		return readState;
-	}
+        return readState;
+    }
 
-	public void markReadStateDirty() {
-		readStateDirty = true;
-	}
+    public void markReadStateDirty() {
+        readStateDirty = true;
+    }
 
-	protected abstract EntryDisplayState computeReadState();
+    protected abstract EntryDisplayState computeReadState();
 
-	public static EntryDisplayState mostImportantState(Stream<EntryDisplayState> stream) {
-		return stream.min(Comparator.comparingInt(EntryDisplayState::ordinal))
-				.orElse(EntryDisplayState.DEFAULT_TYPE);
-	}
+    public static EntryDisplayState mostImportantState(Stream<EntryDisplayState> stream) {
+        return stream.min(Comparator.comparingInt(EntryDisplayState::ordinal))
+                .orElse(EntryDisplayState.DEFAULT_TYPE);
+    }
 
 }

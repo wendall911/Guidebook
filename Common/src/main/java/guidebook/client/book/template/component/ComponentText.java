@@ -19,46 +19,46 @@ import guidebook.client.book.template.TemplateComponent;
 
 public class ComponentText extends TemplateComponent {
 
-	public IVariable text;
+    public IVariable text;
 
-	@SerializedName("color") public IVariable colorStr;
+    @SerializedName("color") public IVariable colorStr;
 
-	@SerializedName("max_width") int maxWidth = GuiBook.PAGE_WIDTH;
-	@SerializedName("line_height") int lineHeight = GuiBook.TEXT_LINE_HEIGHT;
+    @SerializedName("max_width") int maxWidth = GuiBook.PAGE_WIDTH;
+    @SerializedName("line_height") int lineHeight = GuiBook.TEXT_LINE_HEIGHT;
 
-	transient Component actualText;
-	transient BookTextRenderer textRenderer;
-	transient int color;
+    transient Component actualText;
+    transient BookTextRenderer textRenderer;
+    transient int color;
 
-	@Override
-	public void build(BookContentsBuilder builder, BookPage page, BookEntry entry, int pageNum) {
-		try {
-			color = Integer.parseInt(colorStr.asString(""), 16);
-		} catch (NumberFormatException e) {
-			color = page.book.textColor;
-		}
-	}
+    @Override
+    public void build(BookContentsBuilder builder, BookPage page, BookEntry entry, int pageNum) {
+        try {
+            color = Integer.parseInt(colorStr.asString(""), 16);
+        } catch (NumberFormatException e) {
+            color = page.book.textColor;
+        }
+    }
 
-	@Override
-	public void onVariablesAvailable(UnaryOperator<IVariable> lookup, HolderLookup.Provider registries) {
-		super.onVariablesAvailable(lookup, registries);
-		actualText = lookup.apply(text).as(Component.class);
-		colorStr = lookup.apply(colorStr);
-	}
+    @Override
+    public void onVariablesAvailable(UnaryOperator<IVariable> lookup, HolderLookup.Provider registries) {
+        super.onVariablesAvailable(lookup, registries);
+        actualText = lookup.apply(text).as(Component.class);
+        colorStr = lookup.apply(colorStr);
+    }
 
-	@Override
-	public void onDisplayed(BookPage page, GuiBookEntry parent, int left, int top) {
-		textRenderer = new BookTextRenderer(parent, actualText, x, y, maxWidth, lineHeight, color);
-	}
+    @Override
+    public void onDisplayed(BookPage page, GuiBookEntry parent, int left, int top) {
+        textRenderer = new BookTextRenderer(parent, actualText, x, y, maxWidth, lineHeight, color);
+    }
 
-	@Override
-	public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
-		textRenderer.render(graphics, mouseX, mouseY, pticks);
-	}
+    @Override
+    public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
+        textRenderer.render(graphics, mouseX, mouseY, pticks);
+    }
 
-	@Override
-	public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
-		return textRenderer.click(mouseX, mouseY, mouseButton);
-	}
+    @Override
+    public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
+        return textRenderer.click(mouseX, mouseY, mouseButton);
+    }
 
 }

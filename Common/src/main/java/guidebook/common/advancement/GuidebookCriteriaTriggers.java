@@ -7,10 +7,10 @@ import net.minecraft.resources.ResourceLocation;
 
 public class GuidebookCriteriaTriggers {
 
-	public static final BookOpenTrigger BOOK_OPEN = new BookOpenTrigger();
+    public static final BookOpenTrigger BOOK_OPEN = new BookOpenTrigger();
 
-	public static void submitTriggerRegistrations(BiConsumer<ResourceLocation, CriterionTrigger<?>> consumer) {
-		consumer.accept(BookOpenTrigger.ID, BOOK_OPEN);
-	}
+    public static void submitTriggerRegistrations(BiConsumer<ResourceLocation, CriterionTrigger<?>> consumer) {
+        consumer.accept(BookOpenTrigger.ID, BOOK_OPEN);
+    }
 
 }

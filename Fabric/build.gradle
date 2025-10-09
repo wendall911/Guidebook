@@ -1,115 +1,87 @@
 plugins {
-	id 'fabric-loom'
+    id 'multiloader-loader'
+    id 'fabric-loom'
 }
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings(loom.layered {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${minecraft_version}:${mappings_version}@zip")
+    })
 
-version = "${mc_version}-${build_number}-FABRIC"
-if (System.getenv().RELEASE_MODE != "1") {
-    version += '-SNAPSHOT'
-}
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
 
-repositories {
-	maven {
-		name = "JEI"
-		url "https://maven.blamejared.com/"
-		content {
-			includeGroup "mezz.jei"
-		}
-	}
-	maven {
-		name = "Modmuss"
-		url = "https://maven.modmuss50.me/"
-		content {
-			includeGroup "me.zeroeightsix"
-		}
-	}
-	maven {
-		name = "Shedaniel"
-		url = "https://maven.shedaniel.me/"
-		content {
-			includeGroup "me.shedaniel"
-			includeGroup "me.shedaniel.cloth"
-		}
-	}
+    modImplementation group: 'technology.roughness.whitenoise', name: "whitenoise-${minecraft_version}-fabric", version: "${whitenoise_version}"
+
+    modApi "dev.architectury:architectury-fabric:${architectury_version}"
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+    modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${rei_version}"
+    modCompileOnly "me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:${rei_version}"
+    modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}"
+
+    modCompileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+    modCompileOnly "mezz.jei:jei-${minecraft_version}-fabric:${jei_version}"
+
+    modLocalRuntime group: 'com.terraformersmc', name: 'modmenu', version: "${mod_menu_version}"
 }
 
 loom {
-	mixin.defaultRefmapName = "patchouli.refmap.json"
-	runs {
-		configureEach {
-			ideConfigGenerated(true)
-			runDir("../run")
-		}
-		client {
-			client()
-			setConfigName("Fabric Client")
-		}
-		server {
-			server()
-			setConfigName("Fabric Server")
-		}
-		gameTest {
-			server()
-			vmArg "-Dfabric-api.gametest=1"
-		}
-	}
+    def aw = project(":Common").file("src/main/resources/${mod_id}.accesswidener")
+    if (aw.exists()) {
+        accessWidenerPath.set(aw)
+    }
+    mixin {
+        defaultRefmapName.set("${mod_id}.refmap.json")
+    }
+    runs {
+        client {
+            client()
+            /*
+             * TODO: Add proper test mod
+            source sourceSets.test
+             */
+            setConfigName("Fabric Client")
+            ideConfigGenerated(true)
+            runDir("run")
+        }
+        server {
+            server()
+            setConfigName("Fabric Server")
+            ideConfigGenerated(true)
+            runDir("run")
+        }
+        commonDatagen {
+            client()
+            vmArg "-D${mod_id}.common_datagen=1"
+            vmArg "-Dfabric-api.datagen"
+            vmArg "-Dfabric-api.datagen.modid=${mod_id}"
+            vmArg "-Dfabric-api.datagen.output-dir=${file("../Common/src/generated/resources")}"
+        }
+    }
 }
 
-dependencies {
-	modImplementation "me.zeroeightsix:fiber:0.23.0-2"
-	include "me.zeroeightsix:fiber:0.23.0-2"
-
-	minecraft "com.mojang:minecraft:${mc_version}"
-	mappings loom.officialMojangMappings()
-	modImplementation "net.fabricmc:fabric-loader:0.16.14"
-
-	modImplementation "net.fabricmc.fabric-api:fabric-api:0.116.4+1.21.1"
-    compileOnly project(":Xplat")
-
-	modCompileOnly "mezz.jei:jei-1.21-common-api:19.1.1.19"
-
-	modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:16.0.729") { transitive = false }
-	modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:15.0.127") { transitive = false }
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
 }
 
-compileJava {
-	source(project(":Xplat").sourceSets.main.allSource)
-}
-
-sourcesJar {
-	from project(":Xplat").sourceSets.main.allJava
-}
-
-processResources {
-    from project(":Xplat").sourceSets.main.resources
-	inputs.property "version", project.version
-
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
-	}
-}
-
-/*
-task apiJar(type: Jar, dependsOn: classes) {
-	from(sourceSets.main.output)
-	include 'vazkii/patchouli/api/**'
-
-	archiveClassifier = "api"
-}
-*/
-
-// configure the maven publication
 publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			groupId project.group
-			artifactId project.archivesBaseName
-			version project.version
-			from components.java
-		}
-	}
-	repositories {
-		maven {
-			url "file://" + System.getenv("local_maven")
-		}
-	}
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            from components.java
+        }
+    }
+    repositories {
+        if (System.getenv('local_maven') != null) {
+            maven {
+                url 'file://' + System.getenv('local_maven')
+            }
+        }
+    }
 }

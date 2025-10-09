@@ -18,40 +18,40 @@ import guidebook.common.util.SerializationUtil;
 
 public class ComponentCustom extends TemplateComponent {
 
-	@SerializedName("class") String clazz;
+    @SerializedName("class") String clazz;
 
-	private transient ICustomComponent callbacks;
+    private transient ICustomComponent callbacks;
 
-	@Override
-	public void onVariablesAvailable(UnaryOperator<IVariable> lookup, HolderLookup.Provider registries) {
-		super.onVariablesAvailable(lookup, registries);
-		try {
-			Class<?> classObj = Class.forName(clazz);
-			callbacks = (ICustomComponent) SerializationUtil.RAW_GSON.fromJson(sourceObject, classObj);
-			callbacks.onVariablesAvailable(lookup, registries);
-		} catch (Exception e) {
-			throw new RuntimeException("Failed to create custom component " + clazz, e);
-		}
-	}
+    @Override
+    public void onVariablesAvailable(UnaryOperator<IVariable> lookup, HolderLookup.Provider registries) {
+        super.onVariablesAvailable(lookup, registries);
+        try {
+            Class<?> classObj = Class.forName(clazz);
+            callbacks = (ICustomComponent) SerializationUtil.RAW_GSON.fromJson(sourceObject, classObj);
+            callbacks.onVariablesAvailable(lookup, registries);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create custom component " + clazz, e);
+        }
+    }
 
-	@Override
-	public void build(BookContentsBuilder builder, BookPage page, BookEntry entry, int pageNum) {
-		callbacks.build(x, y, pageNum);
-	}
+    @Override
+    public void build(BookContentsBuilder builder, BookPage page, BookEntry entry, int pageNum) {
+        callbacks.build(x, y, pageNum);
+    }
 
-	@Override
-	public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
-		callbacks.render(graphics, page.parent, pticks, mouseX, mouseY);
-	}
+    @Override
+    public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
+        callbacks.render(graphics, page.parent, pticks, mouseX, mouseY);
+    }
 
-	@Override
-	public void onDisplayed(BookPage page, GuiBookEntry parent, int left, int top) {
-		callbacks.onDisplayed(parent);
-	}
+    @Override
+    public void onDisplayed(BookPage page, GuiBookEntry parent, int left, int top) {
+        callbacks.onDisplayed(parent);
+    }
 
-	@Override
-	public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
-		return callbacks.mouseClicked(page.parent, mouseX, mouseY, mouseButton);
-	}
+    @Override
+    public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
+        return callbacks.mouseClicked(page.parent, mouseX, mouseY, mouseButton);
+    }
 
 }

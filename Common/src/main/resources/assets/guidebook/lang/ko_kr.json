@@ -44,7 +44,6 @@
 	"guidebook.gui.lexicon.reloaded": "%d 밀리초에 책이 다시 로드되었습니다.",
 	"guidebook.gui.lexicon.add_bookmark": "북마크 추가",
 	"guidebook.gui.lexicon.remove_bookmark": "(Shift-Click로 삭제하기)",
-	"guidebook.gui.lexicon.multiblock_bookmark": "시각화된 구조",
 	"guidebook.gui.lexicon.relations": "관련된 장",
 	"guidebook.gui.lexicon.not_anchored": "블록을 마우스 오른쪽 버튼으로 클릭하여 구조물을 고정합니다.",
 	"guidebook.gui.lexicon.structure_complete": "완료!",

@@ -6,8 +6,7 @@
     {
       "type": "guidebook:relations",
       "entries": [
-        "guidebook:page_types/link",
-        "guidebook:multiblocks/dense"
+        "guidebook:page_types/link"
       ],
       "title": "Check These Out",
       "text": "Very cool."

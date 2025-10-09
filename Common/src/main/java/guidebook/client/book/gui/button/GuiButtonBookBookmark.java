@@ -4,7 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
 import guidebook.client.base.PersistentData.Bookmark;
@@ -17,17 +16,11 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 	private final Book book;
 
 	public final Bookmark bookmark;
-	public final boolean multiblock;
 
 	public GuiButtonBookBookmark(GuiBook parent, int x, int y, Bookmark bookmark) {
-		this(parent, x, y, bookmark, false);
-	}
-
-	public GuiButtonBookBookmark(GuiBook parent, int x, int y, Bookmark bookmark, boolean multiblock) {
-		super(parent, x, y, 272, bookmark == null ? 170 : 160, 13, 10, parent::handleButtonBookmark, getTooltip(parent.book, bookmark, multiblock));
+		super(parent, x, y, 272, bookmark == null ? 170 : 160, 13, 10, parent::handleButtonBookmark, getTooltip(parent.book, bookmark));
 		this.book = parent.book;
 		this.bookmark = bookmark;
-		this.multiblock = multiblock;
 	}
 
 	@Override
@@ -44,16 +37,14 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 
 			RenderSystem.disableDepthTest();
 			String s = Integer.toString(bookmark.spread + 1);
-			if (multiblock) {
-				s = I18n.get("guidebook.gui.lexicon.visualize_letter");
-			}
+
 			graphics.drawString(parent.getMinecraft().font, s, px + 12, py + 10, 0xFFFFFF, true);
 			RenderSystem.enableDepthTest();
 			graphics.pose().popPose();
 		}
 	}
 
-	private static Component[] getTooltip(Book book, Bookmark bookmark, boolean multiblock) {
+	private static Component[] getTooltip(Book book, Bookmark bookmark) {
 		BookEntry entry = bookmark == null ? null : bookmark.getEntry(book);
 
 		if (bookmark == null || entry == null) {
@@ -61,10 +52,8 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 		}
 
 		return new Component[] {
-				entry.getName(),
-				Component.translatable(multiblock
-						? "guidebook.gui.lexicon.multiblock_bookmark"
-						: "guidebook.gui.lexicon.remove_bookmark").withStyle(ChatFormatting.GRAY)
+            entry.getName(),
+            Component.translatable("guidebook.gui.lexicon.remove_bookmark").withStyle(ChatFormatting.GRAY)
 		};
 	}
 

@@ -7,8 +7,8 @@ import guidebook.client.book.page.abstr.PageSimpleProcessingRecipe;
 
 public class PageSmelting extends PageSimpleProcessingRecipe<SmeltingRecipe> {
 
-	public PageSmelting() {
-		super(RecipeType.SMELTING);
-	}
+    public PageSmelting() {
+        super(RecipeType.SMELTING);
+    }
 
 }

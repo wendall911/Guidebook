@@ -16,13 +16,13 @@ import net.minecraft.resources.ResourceLocation;
  */
 public interface BookDrawScreenCallback {
 
-	Event<BookDrawScreenCallback> EVENT = EventFactory.createArrayBacked(BookDrawScreenCallback.class,
-			(listeners) -> (b, g, mx, my, pt, gr) -> {
-				for (BookDrawScreenCallback l : listeners) {
-					l.trigger(b, g, mx, my, pt, gr);
-				}
-			});
+    Event<BookDrawScreenCallback> EVENT = EventFactory.createArrayBacked(BookDrawScreenCallback.class,
+        (listeners) -> (b, g, mx, my, pt, gr) -> {
+            for (BookDrawScreenCallback l : listeners) {
+                l.trigger(b, g, mx, my, pt, gr);
+            }
+        });
 
-	void trigger(ResourceLocation book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics);
+    void trigger(ResourceLocation book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics);
 
 }

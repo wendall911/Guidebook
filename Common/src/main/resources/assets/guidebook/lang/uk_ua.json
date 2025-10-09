@@ -39,7 +39,6 @@
 	"guidebook.gui.lexicon.reloaded": "Книги перезавантажено за %d мс.",
 	"guidebook.gui.lexicon.add_bookmark": "Додати закладку",
 	"guidebook.gui.lexicon.remove_bookmark": "(Shift-клац, щоб прибрати)",
-	"guidebook.gui.lexicon.multiblock_bookmark": "Візуалізована структура",
 	"guidebook.gui.lexicon.relations": "Пов'язані розділи",
 	"guidebook.gui.lexicon.not_anchored": "Пкм по блоку для закріплення структури",
 	"guidebook.gui.lexicon.structure_complete": "Завершено!",

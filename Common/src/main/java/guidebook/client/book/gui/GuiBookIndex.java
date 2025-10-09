@@ -10,18 +10,18 @@ import guidebook.common.book.Book;
 
 public class GuiBookIndex extends GuiBookEntryList {
 
-	public GuiBookIndex(Book book) {
-		super(book, Component.translatable("guidebook.gui.lexicon.index"));
-	}
+    public GuiBookIndex(Book book) {
+        super(book, Component.translatable("guidebook.gui.lexicon.index"));
+    }
 
-	@Override
-	protected String getDescriptionText() {
-		return I18n.get("guidebook.gui.lexicon.index.info");
-	}
+    @Override
+    protected String getDescriptionText() {
+        return I18n.get("guidebook.gui.lexicon.index.info");
+    }
 
-	@Override
-	protected Collection<BookEntry> getEntries() {
-		return book.getContents().entries.values();
-	}
+    @Override
+    protected Collection<BookEntry> getEntries() {
+        return book.getContents().entries.values();
+    }
 
 }

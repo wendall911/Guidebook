@@ -1,44 +1,53 @@
 plugins {
-    id 'java'
+    id 'multiloader-common'
     id 'net.neoforged.moddev'
 }
 
-base {
-    archivesName = "${mod_name}-xplat"
-}
-version = "${mc_version}-${build_number}"
-if (System.getenv().RELEASE_MODE == null) {
-    version += '-SNAPSHOT'
-}
-
 neoForge {
-    // To find the timestamp, see https://projects.neoforged.net/neoforged/neoform
-    neoFormVersion = "1.21.1-20240808.144430"
-    addModdingDependenciesTo sourceSets.test
-}
-
-repositories {
-    maven {
-        name = "JEI"
-        url "https://maven.blamejared.com/"
-        content {
-            includeGroup "mezz.jei"
-        }
+    neoFormVersion = neo_form_version
+    validateAccessTransformers = true
+    // Automatically enable AccessTransformers if the file exists
+    def at = file('src/main/resources/META-INF/accesstransformer.cfg')
+    if (at.exists()) {
+        accessTransformers.from(at.absolutePath)
+    }
+    parchment {
+        minecraftVersion = minecraft_version
+        mappingsVersion = mappings_version
     }
 }
 
 dependencies {
-    compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
-    compileOnly "mezz.jei:jei-1.21-common-api:19.1.1.19"
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.1'
+    compileOnly group: 'org.spongepowered', name: 'mixin', version: "${mixin_version}"
+    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
+    // fabric and neoforge both bundle mixinextras, so it is safe to use it in common
+    compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: "${mixin_extras_version}"
+    annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: "${mixin_extras_version}"
+    implementation group: 'technology.roughness.whitenoise', name: "whitenoise-${minecraft_version}-common", version: "${whitenoise_version}"
+
+    compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+
+    compileOnly "me.shedaniel:RoughlyEnoughItems-api:${rei_version}"
 }
 
-test {
-    useJUnitPlatform()
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
 }
 
-processResources {
+configurations {
+    commonJava {
+        canBeResolved = false
+        canBeConsumed = true
+    }
+    commonResources {
+        canBeResolved = false
+        canBeConsumed = true
+    }
+}
+
+artifacts {
+    commonJava sourceSets.main.java.sourceDirectories.singleFile
+    commonResources sourceSets.main.resources.sourceDirectories.files
 }
 
 publishing {
@@ -51,8 +60,10 @@ publishing {
         }
     }
     repositories {
-        maven {
-            url "file://" + System.getenv("local_maven")
+        if (System.getenv('local_maven') != null) {
+            maven {
+                url 'file://' + System.getenv('local_maven')
+            }
         }
     }
 }

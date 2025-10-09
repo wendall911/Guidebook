@@ -7,8 +7,8 @@ import guidebook.client.book.page.abstr.PageSimpleProcessingRecipe;
 
 public class PageCampfireCooking extends PageSimpleProcessingRecipe<CampfireCookingRecipe> {
 
-	public PageCampfireCooking() {
-		super(RecipeType.CAMPFIRE_COOKING);
-	}
+    public PageCampfireCooking() {
+        super(RecipeType.CAMPFIRE_COOKING);
+    }
 
 }

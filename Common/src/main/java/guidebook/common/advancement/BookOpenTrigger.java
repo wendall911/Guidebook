@@ -19,35 +19,35 @@ import guidebook.api.GuidebookAPI;
  */
 public class BookOpenTrigger extends SimpleCriterionTrigger<BookOpenTrigger.TriggerInstance> {
 
-	public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(GuidebookAPI.MODID, "open_book");
-	public static final BookOpenTrigger INSTANCE = new BookOpenTrigger();
+    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(GuidebookAPI.MODID, "open_book");
+    public static final BookOpenTrigger INSTANCE = new BookOpenTrigger();
 
-	@NotNull
-	@Override
-	public Codec<TriggerInstance> codec() {
-		return BookOpenTrigger.TriggerInstance.CODEC;
-	}
+    @NotNull
+    @Override
+    public Codec<TriggerInstance> codec() {
+        return BookOpenTrigger.TriggerInstance.CODEC;
+    }
 
-	public void trigger(@NotNull ServerPlayer player, @NotNull ResourceLocation book) {
-		trigger(player, instance -> instance.matches(book, null, 0));
-	}
+    public void trigger(@NotNull ServerPlayer player, @NotNull ResourceLocation book) {
+        trigger(player, instance -> instance.matches(book, null, 0));
+    }
 
-	public void trigger(@NotNull ServerPlayer player, @NotNull ResourceLocation book, @Nullable ResourceLocation entry, int page) {
-		trigger(player, instance -> instance.matches(book, entry, page));
-	}
+    public void trigger(@NotNull ServerPlayer player, @NotNull ResourceLocation book, @Nullable ResourceLocation entry, int page) {
+        trigger(player, instance -> instance.matches(book, entry, page));
+    }
 
-	public record TriggerInstance(Optional<ContextAwarePredicate> player, ResourceLocation book, Optional<ResourceLocation> entry, MinMaxBounds.Ints page) implements SimpleInstance {
+    public record TriggerInstance(Optional<ContextAwarePredicate> player, ResourceLocation book,
+          Optional<ResourceLocation> entry, MinMaxBounds.Ints page) implements SimpleInstance {
+        public static Codec<BookOpenTrigger.TriggerInstance> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+            ResourceLocation.CODEC.fieldOf("book").forGetter(TriggerInstance::book),
+            ResourceLocation.CODEC.optionalFieldOf("entry").forGetter(TriggerInstance::entry),
+            MinMaxBounds.Ints.CODEC.optionalFieldOf("page", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::page)
+        ).apply(instance, TriggerInstance::new));
 
-		public static Codec<BookOpenTrigger.TriggerInstance> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-				EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
-				ResourceLocation.CODEC.fieldOf("book").forGetter(TriggerInstance::book),
-				ResourceLocation.CODEC.optionalFieldOf("entry").forGetter(TriggerInstance::entry),
-				MinMaxBounds.Ints.CODEC.optionalFieldOf("page", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::page)
-		).apply(instance, TriggerInstance::new));
-
-		public boolean matches(@NotNull ResourceLocation book, @Nullable ResourceLocation entry, int page) {
-			return this.book.equals(book) && (this.entry.isEmpty() || this.entry.get().equals(entry)) && this.page.matches(page);
-		}
-	}
+        public boolean matches(@NotNull ResourceLocation book, @Nullable ResourceLocation entry, int page) {
+            return this.book.equals(book) && (this.entry.isEmpty() || this.entry.get().equals(entry)) && this.page.matches(page);
+        }
+    }
 
 }

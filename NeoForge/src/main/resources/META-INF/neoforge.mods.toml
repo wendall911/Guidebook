@@ -1,27 +1,35 @@
 modLoader="javafml"
-license="CC BY-NC-SA 3.0"
-loaderVersion="[4,)"
-issueTrackerURL="https://github.com/VazkiiMods/Patchouli"
-logoFile="logo.png"
-
+loaderVersion="${neoforge_loader_version_range}"
+license="${license}"
+issueTrackerURL="https://github.com/${mod_author}/${mod_name}/issues"
 [[mods]]
-modId="patchouli"
-displayName="Patchouli"
-version="${file.jarVersion}"
-authors="Vazkii"
-description='''
-Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and Pack Makers
-'''
-
-[[dependencies.patchouli]]
-modId="neoforge"
-type="REQUIRED"
-versionRange="[21.0.31-beta,)"
-
-[[dependencies.patchouli]]
-modId="minecraft"
-type="REQUIRED"
-versionRange="[1.21.1,1.21.2)"
-
+    modId="${mod_id}"
+    version="${version}"
+    displayName="${mod_name}"
+    displayURL="https://github.com/${mod_author}/${mod_name}"
+    logoFile="${mod_id}_icon.png"
+    authors="${mod_author}"
+    credits="${mod_credits}"
+    description='''
+    ${mod_description}
+    '''
 [[mixins]]
-config="patchouli_xplat.mixins.json"
+    config = "${mod_id}.mixins.json"
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="${neoforge_loader_version_range}"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${neoforge_mc_version_range}"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.${mod_id}]]
+    modId="whitenoise"
+    type="required"
+    versionRange="${whitenoise_range}"
+    ordering="NONE"
+    side="BOTH"

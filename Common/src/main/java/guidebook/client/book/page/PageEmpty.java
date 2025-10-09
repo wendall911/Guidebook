@@ -9,13 +9,13 @@ import guidebook.client.book.gui.GuiBook;
 
 public class PageEmpty extends BookPage {
 
-	@SerializedName("draw_filler") boolean filler = true;
+    @SerializedName("draw_filler") boolean filler = true;
 
-	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
-		if (filler) {
-			GuiBook.drawPageFiller(graphics, book, 0, 0);
-		}
-	}
+    @Override
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
+        if (filler) {
+            GuiBook.drawPageFiller(graphics, book, 0, 0);
+        }
+    }
 
 }

@@ -33,173 +33,175 @@ import guidebook.common.book.BookRegistry;
 import guidebook.common.item.ItemModBook;
 
 public final class ItemStackUtil {
-	private ItemStackUtil() {}
 
-	public static Triple<Holder<Item>, DataComponentPatch, Integer> deserializeStack(String string, HolderLookup.Provider registries) {
-		StringReader reader = new StringReader(string.trim());
-		ItemParser itemParser = new ItemParser(registries);
-		try {
-			ItemParser.ItemResult result = itemParser.parse(reader);
-			int count = 1;
-			if (reader.canRead()) {
-				reader.expect('#');
-				count = reader.readInt();
-			}
-			return Triple.of(result.item(), result.components(), count);
-		} catch (CommandSyntaxException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    private ItemStackUtil() {}
 
-	public static ItemStack loadFromParsed(Triple<Holder<Item>, DataComponentPatch, Integer> parsed) {
-		var holder = parsed.getLeft();
-		var components = parsed.getMiddle();
-		var count = parsed.getRight();
-		if (!holder.isBound() && holder.unwrapKey().isPresent()) {
-			throw new RuntimeException("Unknown item ID: " + holder.unwrapKey().get().location());
-		}
-		Item item = holder.value();
-		ItemStack stack = new ItemStack(item, count);
+    public static Triple<Holder<Item>, DataComponentPatch, Integer> deserializeStack(String string, HolderLookup.Provider registries) {
+        StringReader reader = new StringReader(string.trim());
+        ItemParser itemParser = new ItemParser(registries);
+        try {
+            ItemParser.ItemResult result = itemParser.parse(reader);
+            int count = 1;
+            if (reader.canRead()) {
+                reader.expect('#');
+                count = reader.readInt();
+            }
+            return Triple.of(result.item(), result.components(), count);
+        } catch (CommandSyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-		if (!components.isEmpty()) {
-			stack.applyComponents(components);
-		}
-		return stack;
-	}
+    public static ItemStack loadFromParsed(Triple<Holder<Item>, DataComponentPatch, Integer> parsed) {
+        var holder = parsed.getLeft();
+        var components = parsed.getMiddle();
+        var count = parsed.getRight();
+        if (!holder.isBound() && holder.unwrapKey().isPresent()) {
+            throw new RuntimeException("Unknown item ID: " + holder.unwrapKey().get().location());
+        }
+        Item item = holder.value();
+        ItemStack stack = new ItemStack(item, count);
 
-	public static ItemStack loadStackFromString(String res, HolderLookup.Provider registries) {
-		return loadFromParsed(deserializeStack(res, registries));
-	}
+        if (!components.isEmpty()) {
+            stack.applyComponents(components);
+        }
+        return stack;
+    }
 
-	public static Ingredient loadIngredientFromString(String ingredientString, HolderLookup.Provider registries) {
-		return Ingredient.of(loadStackListFromString(ingredientString, registries).toArray(new ItemStack[0]));
-	}
+    public static ItemStack loadStackFromString(String res, HolderLookup.Provider registries) {
+        return loadFromParsed(deserializeStack(res, registries));
+    }
 
-	public static List<ItemStack> loadStackListFromString(String ingredientString, HolderLookup.Provider registries) {
-		String[] stacksSerialized = splitStacksFromSerializedIngredient(ingredientString);
-		List<ItemStack> stacks = new ArrayList<>();
-		for (String s : stacksSerialized) {
-			if (s.isEmpty())
-				continue;
-			if (s.startsWith("tag:")) {
-				var key = TagKey.create(Registries.ITEM, ResourceLocation.tryParse(s.substring(4)));
-				registries.lookupOrThrow(Registries.ITEM).get(key).stream().flatMap(HolderSet::stream).forEach(item -> stacks.add(new ItemStack(item)));
-			} else {
-				stacks.add(loadStackFromString(s, registries));
-			}
-		}
-		return stacks;
-	}
+    public static Ingredient loadIngredientFromString(String ingredientString, HolderLookup.Provider registries) {
+        return Ingredient.of(loadStackListFromString(ingredientString, registries).toArray(new ItemStack[0]));
+    }
 
-	public static StackWrapper wrapStack(ItemStack stack) {
-		return stack.isEmpty() ? StackWrapper.EMPTY_WRAPPER : new StackWrapper(stack);
-	}
+    public static List<ItemStack> loadStackListFromString(String ingredientString, HolderLookup.Provider registries) {
+        String[] stacksSerialized = splitStacksFromSerializedIngredient(ingredientString);
+        List<ItemStack> stacks = new ArrayList<>();
+        for (String s : stacksSerialized) {
+            if (s.isEmpty())
+                continue;
+            if (s.startsWith("tag:")) {
+                var key = TagKey.create(Registries.ITEM, ResourceLocation.tryParse(s.substring(4)));
+                registries.lookupOrThrow(Registries.ITEM).get(key).stream().flatMap(HolderSet::stream).forEach(item -> stacks.add(new ItemStack(item)));
+            } else {
+                stacks.add(loadStackFromString(s, registries));
+            }
+        }
+        return stacks;
+    }
 
-	@Nullable
-	public static Book getBookFromStack(ItemStack stack) {
-		if (stack.getItem() instanceof ItemModBook) {
-			return ItemModBook.getBook(stack);
-		}
+    public static StackWrapper wrapStack(ItemStack stack) {
+        return stack.isEmpty() ? StackWrapper.EMPTY_WRAPPER : new StackWrapper(stack);
+    }
 
-		Collection<Book> books = BookRegistry.INSTANCE.books.values();
-		for (Book b : books) {
-			if (ItemStack.isSameItem(b.getBookItem(), stack)) {
-				return b;
-			}
-		}
+    @Nullable
+    public static Book getBookFromStack(ItemStack stack) {
+        if (stack.getItem() instanceof ItemModBook) {
+            return ItemModBook.getBook(stack);
+        }
 
-		return null;
-	}
+        Collection<Book> books = BookRegistry.INSTANCE.books.values();
+        for (Book b : books) {
+            if (ItemStack.isSameItem(b.getBookItem(), stack)) {
+                return b;
+            }
+        }
 
-	public static class StackWrapper {
+        return null;
+    }
 
-		public static final StackWrapper EMPTY_WRAPPER = new StackWrapper(ItemStack.EMPTY);
+    public static class StackWrapper {
 
-		public final ItemStack stack;
+        public static final StackWrapper EMPTY_WRAPPER = new StackWrapper(ItemStack.EMPTY);
 
-		public StackWrapper(ItemStack stack) {
-			this.stack = stack;
-		}
+        public final ItemStack stack;
 
-		@Override
-		public boolean equals(Object obj) {
-			return obj == this || (obj instanceof StackWrapper && ItemStack.isSameItem(stack, ((StackWrapper) obj).stack));
-		}
+        public StackWrapper(ItemStack stack) {
+            this.stack = stack;
+        }
 
-		@Override
-		public int hashCode() {
-			return stack.getItem().hashCode();
-		}
+        @Override
+        public boolean equals(Object obj) {
+            return obj == this || (obj instanceof StackWrapper && ItemStack.isSameItem(stack, ((StackWrapper) obj).stack));
+        }
 
-		@Override
-		public String toString() {
-			return "Wrapper[" + stack.toString() + "]";
-		}
+        @Override
+        public int hashCode() {
+            return stack.getItem().hashCode();
+        }
 
-	}
+        @Override
+        public String toString() {
+            return "Wrapper[" + stack.toString() + "]";
+        }
 
-	private static String[] splitStacksFromSerializedIngredient(String ingredientSerialized) {
-		final List<String> result = new ArrayList<>();
+    }
 
-		int lastIndex = 0;
-		int braces = 0;
-		int brackets = 0;
-		Character insideString = null;
-		for (int i = 0; i < ingredientSerialized.length(); i++) {
-			switch (ingredientSerialized.charAt(i)) {
-			case '{':
-				if (insideString == null) {
-					braces++;
-				}
-				break;
-			case '}':
-				if (insideString == null) {
-					braces--;
-				}
-				break;
-			case '[':
-				if (insideString == null) {
-					brackets++;
-				}
-				break;
-			case ']':
-				if (insideString == null) {
-					brackets--;
-				}
-				break;
-			case '\'':
-				insideString = insideString == null ? '\'' : null;
-				break;
-			case '"':
-				insideString = insideString == null ? '"' : null;
-				break;
-			case ',':
-				if (braces <= 0 && brackets <= 0) {
-					result.add(ingredientSerialized.substring(lastIndex, i));
-					lastIndex = i + 1;
-					break;
-				}
-			}
-		}
+    private static String[] splitStacksFromSerializedIngredient(String ingredientSerialized) {
+        final List<String> result = new ArrayList<>();
 
-		result.add(ingredientSerialized.substring(lastIndex));
+        int lastIndex = 0;
+        int braces = 0;
+        int brackets = 0;
+        Character insideString = null;
+        for (int i = 0; i < ingredientSerialized.length(); i++) {
+            switch (ingredientSerialized.charAt(i)) {
+            case '{':
+                if (insideString == null) {
+                    braces++;
+                }
+                break;
+            case '}':
+                if (insideString == null) {
+                    braces--;
+                }
+                break;
+            case '[':
+                if (insideString == null) {
+                    brackets++;
+                }
+                break;
+            case ']':
+                if (insideString == null) {
+                    brackets--;
+                }
+                break;
+            case '\'':
+                insideString = insideString == null ? '\'' : null;
+                break;
+            case '"':
+                insideString = insideString == null ? '"' : null;
+                break;
+            case ',':
+                if (braces <= 0 && brackets <= 0) {
+                    result.add(ingredientSerialized.substring(lastIndex, i));
+                    lastIndex = i + 1;
+                    break;
+                }
+            }
+        }
 
-		return result.toArray(new String[0]);
-	}
+        result.add(ingredientSerialized.substring(lastIndex));
 
-	public static ItemStack loadStackFromJson(JsonObject json, HolderLookup.Provider registries) {
-		String itemName = json.get("item").getAsString();
+        return result.toArray(new String[0]);
+    }
 
-		Item item = BuiltInRegistries.ITEM.getOptional(ResourceLocation.tryParse(itemName)).orElseThrow(() -> new IllegalArgumentException("Unknown item '" + itemName + "'")
-		);
+    public static ItemStack loadStackFromJson(JsonObject json, HolderLookup.Provider registries) {
+        String itemName = json.get("item").getAsString();
 
-		ItemStack stack = new ItemStack(item, GsonHelper.getAsInt(json, "count", 1));
+        Item item = BuiltInRegistries.ITEM.getOptional(ResourceLocation.tryParse(itemName)).orElseThrow(() -> new IllegalArgumentException("Unknown item '" + itemName + "'")
+        );
 
-		if (json.has("components")) {
-			DataComponentMap.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE), json.get("components")).result()
-					.ifPresent(stack::applyComponents);
-		}
+        ItemStack stack = new ItemStack(item, GsonHelper.getAsInt(json, "count", 1));
 
-		return stack;
-	}
+        if (json.has("components")) {
+            DataComponentMap.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE), json.get("components")).result()
+                    .ifPresent(stack::applyComponents);
+        }
+
+        return stack;
+    }
+
 }

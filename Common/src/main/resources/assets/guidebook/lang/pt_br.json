@@ -42,7 +42,6 @@
 	"guidebook.gui.lexicon.reloaded": "Livros recarregados em %d ms.",
 	"guidebook.gui.lexicon.add_bookmark": "Adicionar Favorito",
 	"guidebook.gui.lexicon.remove_bookmark": "(Shift + botão esquedo para remover)",
-	"guidebook.gui.lexicon.multiblock_bookmark": "Estrutura Visualizada",
 	"guidebook.gui.lexicon.relations": "Capítulos Relacionados",
 	"guidebook.gui.lexicon.not_anchored": "Clique-botão direito em um bloco para ancorar a estrutura",
 	"guidebook.gui.lexicon.structure_complete": "Completo!",

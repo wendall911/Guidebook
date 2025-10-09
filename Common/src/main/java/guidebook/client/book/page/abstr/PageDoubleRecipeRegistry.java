@@ -15,39 +15,39 @@ import guidebook.client.book.BookEntry;
 
 public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends PageDoubleRecipe<T> {
 
-	private final RecipeType<? extends T> recipeType;
+    private final RecipeType<? extends T> recipeType;
 
-	public PageDoubleRecipeRegistry(RecipeType<? extends T> recipeType) {
-		this.recipeType = recipeType;
-	}
+    public PageDoubleRecipeRegistry(RecipeType<? extends T> recipeType) {
+        this.recipeType = recipeType;
+    }
 
-	@Nullable
-	private T getRecipe(Level level, ResourceLocation id) {
-		RecipeManager manager = level.getRecipeManager();
-		var recipeHolder = manager.byKey(id).filter(recipe -> recipe.value().getType() == recipeType).orElse(null);
-		return recipeHolder != null ? (T) recipeHolder.value() : null;
-	}
+    @Nullable
+    private T getRecipe(Level level, ResourceLocation id) {
+        RecipeManager manager = level.getRecipeManager();
+        var recipeHolder = manager.byKey(id).filter(recipe -> recipe.value().getType() == recipeType).orElse(null);
+        return recipeHolder != null ? (T) recipeHolder.value() : null;
+    }
 
-	@Override
-	protected T loadRecipe(Level level, BookContentsBuilder builder, BookEntry entry, ResourceLocation res, boolean linkRecipe) {
-		if (res == null || level == null) {
-			return null;
-		}
+    @Override
+    protected T loadRecipe(Level level, BookContentsBuilder builder, BookEntry entry, ResourceLocation res, boolean linkRecipe) {
+        if (res == null || level == null) {
+            return null;
+        }
 
-		T tempRecipe = getRecipe(level, res);
-		if (tempRecipe == null) { // this is hacky but it works around Forge requiring custom recipes to have the prefix of the adding mod
-			tempRecipe = getRecipe(level, ResourceLocation.fromNamespaceAndPath("crafttweaker", res.getPath()));
-		}
+        T tempRecipe = getRecipe(level, res);
+        if (tempRecipe == null) { // this is hacky but it works around Forge requiring custom recipes to have the prefix of the adding mod
+            tempRecipe = getRecipe(level, ResourceLocation.fromNamespaceAndPath("crafttweaker", res.getPath()));
+        }
 
-		if (tempRecipe != null) {
-			if (linkRecipe) {
-				entry.addRelevantStack(builder, tempRecipe.getResultItem(level.registryAccess()), pageNum);
-			}
-			return tempRecipe;
-		}
+        if (tempRecipe != null) {
+            if (linkRecipe) {
+                entry.addRelevantStack(builder, tempRecipe.getResultItem(level.registryAccess()), pageNum);
+            }
+            return tempRecipe;
+        }
 
-		GuidebookAPI.LOGGER.warn("Recipe {} (of type {}) not found", res, BuiltInRegistries.RECIPE_TYPE.getKey(recipeType));
-		return null;
-	}
+        GuidebookAPI.LOGGER.warn("Recipe {} (of type {}) not found", res, BuiltInRegistries.RECIPE_TYPE.getKey(recipeType));
+        return null;
+    }
 
 }

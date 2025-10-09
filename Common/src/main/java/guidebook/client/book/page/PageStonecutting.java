@@ -7,8 +7,8 @@ import guidebook.client.book.page.abstr.PageSimpleProcessingRecipe;
 
 public class PageStonecutting extends PageSimpleProcessingRecipe<StonecutterRecipe> {
 
-	public PageStonecutting() {
-		super(RecipeType.STONECUTTING);
-	}
+    public PageStonecutting() {
+        super(RecipeType.STONECUTTING);
+    }
 
 }

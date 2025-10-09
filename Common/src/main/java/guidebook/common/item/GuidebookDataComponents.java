@@ -9,14 +9,14 @@ import guidebook.api.GuidebookAPI;
 
 public class GuidebookDataComponents {
 
-	public static final ResourceLocation COMPONENT_ID = ResourceLocation.fromNamespaceAndPath(GuidebookAPI.MODID, "book");
-	public static final DataComponentType<ResourceLocation> BOOK = DataComponentType.<ResourceLocation>builder()
-			.persistent(ResourceLocation.CODEC)
-			.networkSynchronized(ResourceLocation.STREAM_CODEC)
-			.build();
+    public static final ResourceLocation COMPONENT_ID = ResourceLocation.fromNamespaceAndPath(GuidebookAPI.MODID, "book");
+    public static final DataComponentType<ResourceLocation> BOOK = DataComponentType.<ResourceLocation>builder()
+        .persistent(ResourceLocation.CODEC)
+        .networkSynchronized(ResourceLocation.STREAM_CODEC)
+        .build();
 
-	public static void submitDataComponentRegistrations(BiConsumer<ResourceLocation, DataComponentType<?>> consumer) {
-		consumer.accept(COMPONENT_ID, BOOK);
-	}
+    public static void submitDataComponentRegistrations(BiConsumer<ResourceLocation, DataComponentType<?>> consumer) {
+        consumer.accept(COMPONENT_ID, BOOK);
+    }
 
 }

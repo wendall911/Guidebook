@@ -12,10 +12,10 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(Screen.class)
 public interface AccessorScreen {
 
-	@Accessor("renderables")
-	List<Renderable> getRenderables();
+    @Accessor("renderables")
+    List<Renderable> getRenderables();
 
-	@Accessor("narratables")
-	List<NarratableEntry> getNarratables();
+    @Accessor("narratables")
+    List<NarratableEntry> getNarratables();
 
 }

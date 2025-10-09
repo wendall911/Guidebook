@@ -1,4 +1,4 @@
-package guidebook.fabric.xplat;
+package guidebook.platform;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,9 +15,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
-import guidebook.api.BookContentsReloadCallback;
-import guidebook.api.BookDrawScreenCallback;
 import guidebook.common.CommonModContainer;
+import guidebook.common.FabricModContainer;
+import guidebook.event.BookDrawScreenCallback;
 import guidebook.integration.rei.ReiCompat;
 import guidebook.network.FabricMessageOpenBookGui;
 import guidebook.network.FabricMessageReloadBookContents;
@@ -26,64 +25,50 @@ import guidebook.platform.services.IBookHelper;
 
 public class FabricBookHelper implements IBookHelper {
 
-	@Override
-	public void fireDrawBookScreen(ResourceLocation book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics) {
-		BookDrawScreenCallback.EVENT.invoker().trigger(book, gui, mouseX, mouseY, partialTicks, graphics);
-	}
+    @Override
+    public void fireDrawBookScreen(ResourceLocation book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics) {
+        BookDrawScreenCallback.EVENT.invoker().trigger(book, gui, mouseX, mouseY, partialTicks, graphics);
+    }
 
-	@Override
-	public void fireBookReload(ResourceLocation book) {
-		BookContentsReloadCallback.EVENT.invoker().trigger(book);
-	}
+    @Override
+    public void sendReloadContentsMessage(MinecraftServer server) {
+        FabricMessageReloadBookContents.sendToAll(server);
+    }
 
-	@Override
-	public void sendReloadContentsMessage(MinecraftServer server) {
-		FabricMessageReloadBookContents.sendToAll(server);
-	}
+    @Override
+    public void sendOpenBookGui(ServerPlayer player, ResourceLocation book, @Nullable ResourceLocation entry, int page) {
+        FabricMessageOpenBookGui.send(player, book, entry, page);
+    }
 
-	@Override
-	public void sendOpenBookGui(ServerPlayer player, ResourceLocation book, @Nullable ResourceLocation entry, int page) {
-		FabricMessageOpenBookGui.send(player, book, entry, page);
-	}
+    @Override
+    public Collection<CommonModContainer> getAllMods() {
+        List<CommonModContainer> ret = new ArrayList<>();
+        for (var mod : FabricLoader.getInstance().getAllMods()) {
+            ret.add(new FabricModContainer(mod));
+        }
+        return ret;
+    }
 
-	@Override
-	public Collection<CommonModContainer> getAllMods() {
-		List<CommonModContainer> ret = new ArrayList<>();
-		for (var mod : FabricLoader.getInstance().getAllMods()) {
-			ret.add(new FabricCommonModContainer(mod));
-		}
-		return ret;
-	}
+    @Override
+    public CommonModContainer getModContainer(String modId) {
+        return new FabricModContainer(FabricLoader.getInstance().getModContainer(modId).get());
+    }
 
-	@Override
-	public CommonModContainer getModContainer(String modId) {
-		return new FabricCommonModContainer(FabricLoader.getInstance().getModContainer(modId).get());
-	}
+    @Override
+    public boolean isDevEnvironment() {
+        return FabricLoader.getInstance().isDevelopmentEnvironment();
+    }
 
-	@Override
-	public boolean isModLoaded(String modId) {
-		return FabricLoader.getInstance().isModLoaded(modId);
-	}
+    @Override
+    public boolean handleRecipeKeybind(int keyCode, int scanCode, @Nullable ItemStack stack) {
+        if (stack == null || stack.isEmpty()) {
+            return false;
+        }
+        else if (FabricLoader.getInstance().isModLoaded("roughlyenoughitems")) {
+            return ReiCompat.handleRecipeKeybind(keyCode, scanCode, stack);
+        }
 
-	@Override
-	public boolean isDevEnvironment() {
-		return FabricLoader.getInstance().isDevelopmentEnvironment();
-	}
-
-	@Override
-	public boolean isPhysicalClient() {
-		return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
-	}
-
-	@Override
-	public boolean handleRecipeKeybind(int keyCode, int scanCode, @Nullable ItemStack stack) {
-		if (stack == null || stack.isEmpty()) {
-			return false;
-		}
-		if (FabricLoader.getInstance().isModLoaded("roughlyenoughitems")) {
-			return ReiCompat.handleRecipeKeybind(keyCode, scanCode, stack);
-		}
-		return false;
-	}
+        return false;
+    }
 
 }

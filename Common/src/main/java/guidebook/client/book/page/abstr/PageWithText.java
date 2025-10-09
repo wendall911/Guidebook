@@ -10,37 +10,37 @@ import guidebook.client.book.gui.GuiBookEntry;
 
 public abstract class PageWithText extends BookPage {
 
-	protected IVariable text;
+    protected IVariable text;
 
-	transient BookTextRenderer textRender;
+    transient BookTextRenderer textRender;
 
-	@Override
-	public void onDisplayed(GuiBookEntry parent, int left, int top) {
-		super.onDisplayed(parent, left, top);
+    @Override
+    public void onDisplayed(GuiBookEntry parent, int left, int top) {
+        super.onDisplayed(parent, left, top);
 
-		if (text == null) {
-			text = IVariable.wrap("");
-		}
+        if (text == null) {
+            text = IVariable.wrap("");
+        }
 
-		textRender = new BookTextRenderer(parent, text.as(Component.class), 0, getTextHeight());
-	}
+        textRender = new BookTextRenderer(parent, text.as(Component.class), 0, getTextHeight());
+    }
 
-	public abstract int getTextHeight();
+    public abstract int getTextHeight();
 
-	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
-		if (shouldRenderText()) {
-			textRender.render(graphics, mouseX, mouseY, pticks);
-		}
-	}
+    @Override
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
+        if (shouldRenderText()) {
+            textRender.render(graphics, mouseX, mouseY, pticks);
+        }
+    }
 
-	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		return shouldRenderText() && textRender.click(mouseX, mouseY, mouseButton);
-	}
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        return shouldRenderText() && textRender.click(mouseX, mouseY, mouseButton);
+    }
 
-	public boolean shouldRenderText() {
-		return true;
-	}
+    public boolean shouldRenderText() {
+        return true;
+    }
 
 }

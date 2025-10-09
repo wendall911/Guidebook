@@ -1,42 +1,49 @@
 {
   "schemaVersion": 1,
-  "id": "patchouli",
+  "id": "${mod_id}",
   "version": "${version}",
-
-  "name": "Patchouli",
-  "description": "Patchouli: Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and Pack Makers",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
   "authors": [
-    "Vazkii",
-    "williewillus"
+    "${mod_author}"
+  ],
+  "contributors": [
+    "${mod_credits}"
   ],
   "contact": {
-    "issues": "https://github.com/VazkiiMods/Patchouli/issues",
-    "sources": "https://github.com/Vazkii/ModsPatchouli"
+    "homepage": "https://github.com/${mod_author}/${mod_name}",
+    "issues": "https://github.com/${mod_author}/${mod_name}/issues",
+    "sources": "https://github.com/${mod_author}/${mod_name}"
   },
-
-  "license": "CC BY-NC-SA 3.0",
-  "icon": "assets/patchouli/icon.png",
-
+  "license": "${license}",
+  "icon": "${mod_id}_icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "vazkii.patchouli.fabric.common.FabricModInitializer"
+      "${mod_id}.${mod_name}Fabric"
     ],
     "client": [
-      "vazkii.patchouli.fabric.client.FabricClientInitializer"
+      "${mod_id}.${mod_name}ClientFabric"
     ],
-    "fabric-gametest": [
-      "vazkii.patchouli.fabric.common.PatchouliSmokeTest"
+    "fabric-datagen": [
+      "${mod_id}.data.FabricDatagenInitializer"
+    ],
+    "jei_mod_plugin": [
+      "${mod_id}.client.integration.jei.JEIPlugin"
+    ],
+    "whitenoise-config": [
+      "${mod_id}.FabricConfigInitializer"
     ]
   },
   "mixins": [
-    "patchouli_xplat.mixins.json",
-    "patchouli_fabric.mixins.json"
+    "${mod_id}.mixins.json",
+    "${mod_id}.fabric.mixins.json"
   ],
-
   "depends": {
-    "fabricloader": ">=0.15.11",
-    "fabric": ">=0.100.3",
-    "minecraft": ">=1.21.1 <1.21.2"
+    "fabricloader": "${fabric_loader_min_version}",
+    "fabric": "*",
+    "minecraft": ${fabric_mc_version_range},
+    "whitenoise": ${fabric_whitenoise_range},
+    "java": ">=${java_version}"
   }
 }

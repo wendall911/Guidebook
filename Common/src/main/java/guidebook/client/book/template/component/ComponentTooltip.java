@@ -17,39 +17,34 @@ import guidebook.client.book.template.TemplateComponent;
 
 public class ComponentTooltip extends TemplateComponent {
 
-	@SerializedName("tooltip") public IVariable[] tooltipRaw;
+    @SerializedName("tooltip") public IVariable[] tooltipRaw;
 
-	int width, height;
+    int width, height;
 
-	transient List<Component> tooltip;
+    transient List<Component> tooltip;
 
-	@Override
-	public void onVariablesAvailable(UnaryOperator<IVariable> lookup, HolderLookup.Provider registries) {
-		super.onVariablesAvailable(lookup, registries);
-		for (int i = 0; i < tooltipRaw.length; i++) {
-			tooltipRaw[i] = lookup.apply(tooltipRaw[i]);
-		}
-	}
+    @Override
+    public void onVariablesAvailable(UnaryOperator<IVariable> lookup, HolderLookup.Provider registries) {
+        super.onVariablesAvailable(lookup, registries);
+        for (int i = 0; i < tooltipRaw.length; i++) {
+            tooltipRaw[i] = lookup.apply(tooltipRaw[i]);
+        }
+    }
 
-	@Override
-	public void onDisplayed(BookPage page, GuiBookEntry parent, int left, int top) {
-		tooltip = new ArrayList<>();
+    @Override
+    public void onDisplayed(BookPage page, GuiBookEntry parent, int left, int top) {
+        tooltip = new ArrayList<>();
 
-		// todo 1.16 expand this into actual text components
-		for (IVariable s : tooltipRaw) {
-			//s = I18n.translate(s).replaceAll("&", "\u00A7");
-			//if (!s.isEmpty()) {
-			//	tooltip.add(new LiteralText(s));
-			//}
-			tooltip.add(s.as(Component.class));
-		}
-	}
+        for (IVariable s : tooltipRaw) {
+            tooltip.add(s.as(Component.class));
+        }
+    }
 
-	@Override
-	public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
-		if (page.parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)) {
-			page.parent.setTooltip(tooltip);
-		}
-	}
+    @Override
+    public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
+        if (page.parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)) {
+            page.parent.setTooltip(tooltip);
+        }
+    }
 
 }

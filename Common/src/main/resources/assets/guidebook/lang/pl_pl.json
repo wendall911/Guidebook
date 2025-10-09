@@ -38,7 +38,6 @@
 	"guidebook.gui.lexicon.reloaded": "Książki przeładowane. Zajęło to %d ms.",
 	"guidebook.gui.lexicon.add_bookmark": "Dodaj zakładkę",
 	"guidebook.gui.lexicon.remove_bookmark": "(Shift-Klik aby usunąć)",
-	"guidebook.gui.lexicon.multiblock_bookmark": "Struktura zwizualizowana",
 	"guidebook.gui.lexicon.relations": "Powiązane rozdziały",
 	"guidebook.gui.lexicon.not_anchored": "Prawy-Klik na blok by zakotwiczyć strukturę",
 	"guidebook.gui.lexicon.structure_complete": "Zakończono!",

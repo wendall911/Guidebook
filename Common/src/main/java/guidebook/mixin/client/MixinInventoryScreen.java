@@ -19,46 +19,46 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import guidebook.client.gui.GuiButtonInventoryBook;
-import guidebook.common.base.GuidebookConfig;
 import guidebook.common.book.Book;
 import guidebook.common.book.BookRegistry;
+import guidebook.config.GuidebookConfig;
 
 @Mixin(InventoryScreen.class)
 public abstract class MixinInventoryScreen extends EffectRenderingInventoryScreen<InventoryMenu> {
 
-	public MixinInventoryScreen(InventoryMenu container, Inventory playerInventory, Component text) {
-		super(container, playerInventory, text);
-	}
+    public MixinInventoryScreen(InventoryMenu container, Inventory playerInventory, Component text) {
+        super(container, playerInventory, text);
+    }
 
-	@Inject(at = @At("RETURN"), method = "init()V")
-	public void onGuiInitPost(CallbackInfo info) {
-		var bookID = ResourceLocation.tryParse(GuidebookConfig.get().inventoryButtonBook());
-		Book book = BookRegistry.INSTANCE.books.get(bookID);
-		if (book == null) {
-			return;
-		}
+    @Inject(at = @At("RETURN"), method = "init()V")
+    public void onGuiInitPost(CallbackInfo info) {
+        var bookID = ResourceLocation.tryParse(GuidebookConfig.Client.inventoryButtonBook());
+        Book book = BookRegistry.INSTANCE.books.get(bookID);
+        if (book == null) {
+            return;
+        }
 
-		Renderable replaced = null;
-		Button replacement = null;
-		for (int i = 0; i < ((AccessorScreen) this).getRenderables().size(); i++) {
-			Renderable button = ((AccessorScreen) this).getRenderables().get(i);
-			if (button instanceof ImageButton tex) {
-				replaced = button;
-				replacement = new GuiButtonInventoryBook(book, tex.getX(), tex.getY() - 1);
-				((AccessorScreen) this).getRenderables().set(i, replacement);
-				break;
-			}
-		}
+        Renderable replaced = null;
+        Button replacement = null;
+        for (int i = 0; i < ((AccessorScreen) this).getRenderables().size(); i++) {
+            Renderable button = ((AccessorScreen) this).getRenderables().get(i);
+            if (button instanceof ImageButton tex) {
+                replaced = button;
+                replacement = new GuiButtonInventoryBook(book, tex.getX(), tex.getY() - 1);
+                ((AccessorScreen) this).getRenderables().set(i, replacement);
+                break;
+            }
+        }
 
-		int i = children().indexOf(replaced);
-		if (i >= 0) {
-			((List<GuiEventListener>) children()).set(i, replacement);
-		}
+        int i = children().indexOf(replaced);
+        if (i >= 0) {
+            ((List<GuiEventListener>) children()).set(i, replacement);
+        }
 
-		i = ((AccessorScreen) this).getNarratables().indexOf(replaced);
-		if (i >= 0) {
-			((AccessorScreen) this).getNarratables().set(i, replacement);
-		}
-	}
+        i = ((AccessorScreen) this).getNarratables().indexOf(replaced);
+        if (i >= 0) {
+            ((AccessorScreen) this).getNarratables().set(i, replacement);
+        }
+    }
 
 }

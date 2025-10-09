@@ -13,33 +13,33 @@ import guidebook.common.book.Book;
 
 public class GuiBookHistory extends GuiBookEntryList {
 
-	public GuiBookHistory(Book book) {
-		super(book, Component.translatable("guidebook.gui.lexicon.history"));
-	}
+    public GuiBookHistory(Book book) {
+        super(book, Component.translatable("guidebook.gui.lexicon.history"));
+    }
 
-	@Override
-	protected String getDescriptionText() {
-		return I18n.get("guidebook.gui.lexicon.history.info");
-	}
+    @Override
+    protected String getDescriptionText() {
+        return I18n.get("guidebook.gui.lexicon.history.info");
+    }
 
-	@Override
-	protected boolean shouldDrawProgressBar() {
-		return false;
-	}
+    @Override
+    protected boolean shouldDrawProgressBar() {
+        return false;
+    }
 
-	@Override
-	protected boolean shouldSortEntryList() {
-		return false;
-	}
+    @Override
+    protected boolean shouldSortEntryList() {
+        return false;
+    }
 
-	@Override
-	protected Collection<BookEntry> getEntries() {
-		BookData data = PersistentData.data.getBookData(book);
+    @Override
+    protected Collection<BookEntry> getEntries() {
+        BookData data = PersistentData.data.getBookData(book);
 
-		return data.history.stream()
-				.map((res) -> book.getContents().entries.get(res))
-				.filter((e) -> e != null && !e.isLocked())
-				.collect(Collectors.toList());
-	}
+        return data.history.stream()
+                .map((res) -> book.getContents().entries.get(res))
+                .filter((e) -> e != null && !e.isLocked())
+                .collect(Collectors.toList());
+    }
 
 }
