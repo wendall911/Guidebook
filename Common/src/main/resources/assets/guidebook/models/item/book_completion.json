@@ -8,19 +8,24 @@
     {
       "predicate": { "completion": 0 },
       "model": "guidebook:item/book_brown"
-    }, {
+    },
+    {
       "predicate": { "completion": 0.2 },
       "model": "guidebook:item/book_red"
-    }, {
+    },
+    {
       "predicate": { "completion": 0.4 },
       "model": "guidebook:item/book_green"
-    }, {
+    },
+    {
       "predicate": { "completion": 0.6 },
       "model": "guidebook:item/book_cyan"
-    }, {
+    },
+    {
       "predicate": { "completion": 0.8 },
       "model": "guidebook:item/book_blue"
-    }, {
+    },
+    {
       "predicate": { "completion": 1 },
       "model": "guidebook:item/book_purple"
     }
