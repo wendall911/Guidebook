@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}test",
+  "version": "1.0.0",
+  "name": "${mod_name}Test",
+  "description": "A test mod for ${mod_name}.",
+  "authors": [
+    "${mod_author}"
+  ],
+  "license": "${license}",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "${mod_id}.${mod_name}TestFabric"
+    ],
+    "whitenoise-config": [
+      "${mod_id}.TestFabricConfigInitializer"
+    ]
+  },
+  "mixins": [],
+  "depends": {
+    "fabricloader": "${fabric_loader_min_version}",
+    "fabric": "*",
+    "minecraft": ${fabric_mc_version_range},
+    "java": ">=${java_version}"
+  }
+}

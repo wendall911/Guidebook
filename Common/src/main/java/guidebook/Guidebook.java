@@ -11,7 +11,7 @@ public class Guidebook {
 
     public static void initConfig() {
         if (Services.PLATFORM.isPhysicalClient()) {
-            WhiteNoiseConfigLoader.add(WhiteNoiseConfig.Type.COMMON, GuidebookConfig.CLIENT_SPEC, GuidebookAPI.MODID);
+            WhiteNoiseConfigLoader.add(WhiteNoiseConfig.Type.CLIENT, GuidebookConfig.CLIENT_SPEC, GuidebookAPI.MODID);
         }
     }
 

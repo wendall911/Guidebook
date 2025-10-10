@@ -40,10 +40,7 @@ loom {
     runs {
         client {
             client()
-            /*
-             * TODO: Add proper test mod
             source sourceSets.test
-             */
             setConfigName("Fabric Client")
             ideConfigGenerated(true)
             runDir("run")
@@ -56,10 +53,27 @@ loom {
         }
         commonDatagen {
             client()
+            setConfigName("${mod_name} Common Datagen")
             vmArg "-D${mod_id}.common_datagen=1"
             vmArg "-Dfabric-api.datagen"
             vmArg "-Dfabric-api.datagen.modid=${mod_id}"
             vmArg "-Dfabric-api.datagen.output-dir=${file("../Common/src/generated/resources")}"
+        }
+        fabricTestDatagen {
+            client()
+            setConfigName("${mod_name} Fabric Test Datagen")
+            vmArg "-D${mod_id}.fabric_test_datagen=1"
+            vmArg "-Dfabric-api.datagen"
+            vmArg "-Dfabric-api.datagen.modid=${mod_id}"
+            vmArg "-Dfabric-api.datagen.output-dir=${file("src/test/resources")}"
+        }
+        neoforgeTestDatagen {
+            client()
+            setConfigName("${mod_name} NeoForge Test Datagen")
+            vmArg "-D${mod_id}.forge_test_datagen=1"
+            vmArg "-Dfabric-api.datagen"
+            vmArg "-Dfabric-api.datagen.modid=${mod_id}"
+            vmArg "-Dfabric-api.datagen.output-dir=${file("../NeoForge/src/test/resources")}"
         }
     }
 }
