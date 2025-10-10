@@ -61,18 +61,20 @@ loom {
         }
         fabricTestDatagen {
             client()
+            source sourceSets.test
             setConfigName("${mod_name} Fabric Test Datagen")
             vmArg "-D${mod_id}.fabric_test_datagen=1"
             vmArg "-Dfabric-api.datagen"
-            vmArg "-Dfabric-api.datagen.modid=${mod_id}"
+            vmArg "-Dfabric-api.datagen.modid=${mod_id}test"
             vmArg "-Dfabric-api.datagen.output-dir=${file("src/test/resources")}"
         }
         neoForgeTestDatagen {
             client()
+            source sourceSets.test
             setConfigName("${mod_name} NeoForge Test Datagen")
-            vmArg "-D${mod_id}.forge_test_datagen=1"
+            vmArg "-D${mod_id}.neoforge_test_datagen=1"
             vmArg "-Dfabric-api.datagen"
-            vmArg "-Dfabric-api.datagen.modid=${mod_id}"
+            vmArg "-Dfabric-api.datagen.modid=${mod_id}test"
             vmArg "-Dfabric-api.datagen.output-dir=${file("../NeoForge/src/test/resources")}"
         }
     }

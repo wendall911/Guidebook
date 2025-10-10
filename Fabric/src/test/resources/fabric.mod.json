@@ -13,9 +13,6 @@
     "main": [
       "${mod_id}.${mod_name}TestFabric"
     ],
-    "fabric-datagen": [
-      "${mod_id}.data.FabricDatagenInitializer"
-    ],
     "whitenoise-config": [
       "${mod_id}.TestFabricConfigInitializer"
     ]

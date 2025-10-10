@@ -27,12 +27,9 @@ neoForge {
         "${mod_id}" {
             sourceSet sourceSets.main
         }
-        /*
-         * TODO: Add proper test mod
         "${mod_id}test" {
             sourceSet sourceSets.test
         }
-         */
     }
 }
 

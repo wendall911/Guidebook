@@ -5,27 +5,40 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 
 import guidebook.api.GuidebookAPI;
+import guidebook.data.test.GuidebookTestLanguageProvider;
 
 public class FabricDatagenInitializer implements DataGeneratorEntrypoint {
-
-    private static FabricTagProvider.BlockTagProvider fabricBlockTagProvider;
 
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
-        fabricBlockTagProvider = pack.addProvider(FabricBlockTagProvider::new);
 
         if (System.getProperty(GuidebookAPI.MODID + ".common_datagen") != null) {
             configureCommonDatagen(pack);
         }
+        else if (System.getProperty(GuidebookAPI.MODID + ".fabric_test_datagen") != null) {
+            configureFabicTestDatagen(pack);
+        }
+        else if (System.getProperty(GuidebookAPI.MODID + ".neoforge_test_datagen") != null) {
+            configureNeoForgeTestDatagen(pack);
+        }
     }
 
     public static void configureCommonDatagen(FabricDataGenerator.Pack pack) {
+        FabricTagProvider.BlockTagProvider fabricBlockTagProvider = pack.addProvider(FabricBlockTagProvider::new);
         //pack.addProvider((dataOutput, registryFuture) -> new GuidebookItemTagProvider(dataOutput, registryFuture, fabricBlockTagProvider.contentsGetter()));
-        //fabricDataGenerator.addProvider(GuidebookItemModelProvider::new);
-        //fabricDataGenerator.addProvider(GuidebookRecipeProvider::new);
-        //fabricDataGenerator.addProvider(GuidebookAdvancementProvider::new);
-        //fabricDataGenerator.addProvider(GuidebookLanguageProvider::new);
+        //pack.addProvider(GuidebookItemModelProvider::new);
+        //pack.addProvider(GuidebookRecipeProvider::new);
+        //pack.addProvider(GuidebookAdvancementProvider::new);
+        //pack.addProvider(GuidebookLanguageProvider::new);
+    }
+
+    public static void configureFabicTestDatagen(FabricDataGenerator.Pack pack) {
+        pack.addProvider(GuidebookTestLanguageProvider::new);
+    }
+
+    public static void configureNeoForgeTestDatagen(FabricDataGenerator.Pack pack) {
+        pack.addProvider(GuidebookTestLanguageProvider::new);
     }
 
 }
