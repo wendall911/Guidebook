@@ -80,11 +80,13 @@ repositories {
 
 sourcesJar {
     from(rootProject.file('LICENSE'))
+    from(rootProject.file('LICENSE.CC-BY-NC-SA'))
     from(rootProject.file('README.md'))
 }
 
 jar {
     from(rootProject.file('LICENSE'))
+    from(rootProject.file('LICENSE.CC-BY-NC-SA'))
     from(rootProject.file('README.md'))
     manifest {
         attributes([
