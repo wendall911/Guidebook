@@ -27,8 +27,6 @@ public class GuidebookItemModelProvider extends FabricModelProvider {
         addBookModel(itemModelGenerator, GuidebookItems.BOOK_GREEN_ID, GuidebookItems.BOOK_GREEN_ID);
         addBookModel(itemModelGenerator, GuidebookItems.BOOK_PURPLE_ID, GuidebookItems.BOOK_PURPLE_ID);
         addBookModel(itemModelGenerator, GuidebookItems.BOOK_RED_ID, GuidebookItems.BOOK_RED_ID);
-        //ModelTemplates.FLAT_ITEM.create(GuidebookItems.BOOK_ID, TextureMapping.layer0(GuidebookItems.BOOK_BROWN_ID), itemModelGenerator.output);
-        //itemModelGenerator.generateFlatItem(GuidebookItems.BOOK, FLAT_HANDHELD_ITEM);
     }
 
     @Override
