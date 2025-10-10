@@ -1,0 +1,95 @@
+package guidebook.api.data;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
+
+import org.jetbrains.annotations.NotNull;
+
+import com.google.gson.JsonObject;
+
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.CachedOutput;
+import net.minecraft.data.DataProvider;
+import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
+
+public abstract class GuidebookBookProvider implements DataProvider {
+
+    protected final PackOutput.PathProvider datapackProvider;
+    protected final PackOutput.PathProvider assetsProvider;
+
+    private final String locale;
+    private final String modid;
+    private final CompletableFuture<HolderLookup.Provider> registries;
+
+    public GuidebookBookProvider(PackOutput packOutput, String modid, String locale, CompletableFuture<HolderLookup.Provider> registries) {
+        this.datapackProvider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, "guidebook_books");
+        this.assetsProvider = packOutput.createPathProvider(PackOutput.Target.RESOURCE_PACK, "guidebook_books");
+        this.modid = modid;
+        this.locale = locale;
+        this.registries = registries;
+    }
+
+    /**
+     * Performs this provider's action.
+     *
+     * @param cache the cache
+     * @return the completable future
+     */
+    @Override
+    public @NotNull CompletableFuture<?> run(@NotNull CachedOutput cache) {
+        return this.registries.thenCompose(provider -> {
+            List<CompletableFuture<?>> list = new ArrayList<>();
+
+            this.addBooks(book -> {
+                list.add(saveBook(cache, book.toJson(), book.getId()));
+
+                for (CategoryBuilder category : book.getCategories()) {
+                    list.add(saveCategory(cache, category.toJson(), book.getId(), category.getId()));
+
+                    for (EntryBuilder entry : category.getEntries()) {
+                        list.add(saveEntry(cache, entry.toJson(), book.getId(), entry.getId()));
+                    }
+                }
+            }, provider);
+
+            return CompletableFuture.allOf(list.toArray(CompletableFuture[]::new));
+        });
+    }
+
+    protected abstract void addBooks(Consumer<BookBuilder> consumer, HolderLookup.Provider provider);
+
+    private CompletableFuture<?> saveEntry(CachedOutput cache, JsonObject json, ResourceLocation bookId, ResourceLocation id) {
+        String pathSuffix = bookId.getPath() + "/" + locale + "/entries/" + id.getPath();
+
+        return DataProvider.saveStable(cache, json, assetsProvider.json(ResourceLocation.fromNamespaceAndPath(bookId.getNamespace(), pathSuffix)));
+    }
+
+    private CompletableFuture<?> saveCategory(CachedOutput cache, JsonObject json, ResourceLocation bookId, ResourceLocation id) {
+        String pathSuffix = bookId.getPath() + "/" + locale + "/categories/" + id.getPath();
+
+        return DataProvider.saveStable(cache, json, assetsProvider.json(ResourceLocation.fromNamespaceAndPath(bookId.getNamespace(), pathSuffix)));
+    }
+
+    private CompletableFuture<?> saveBook(CachedOutput cache, JsonObject json, ResourceLocation bookId) {
+        String pathSuffix = bookId.getPath() + "/book";
+
+        return DataProvider.saveStable(cache, json, datapackProvider.json(ResourceLocation.fromNamespaceAndPath(bookId.getNamespace(), pathSuffix)));
+    }
+
+    public BookBuilder createBookBuilder(String id, String name, String landingText, HolderLookup.Provider provider) {
+        return new BookBuilder(modid, id, name, landingText, provider);
+    }
+
+    /**
+     * Gets a name for this provider, to use in logging.
+     */
+    @NotNull
+    @Override
+    public String getName() {
+        return "Guidebook Book Provider";
+    }
+
+}
