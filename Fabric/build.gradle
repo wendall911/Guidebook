@@ -67,7 +67,7 @@ loom {
             vmArg "-Dfabric-api.datagen.modid=${mod_id}"
             vmArg "-Dfabric-api.datagen.output-dir=${file("src/test/resources")}"
         }
-        neoforgeTestDatagen {
+        neoForgeTestDatagen {
             client()
             setConfigName("${mod_name} NeoForge Test Datagen")
             vmArg "-D${mod_id}.forge_test_datagen=1"

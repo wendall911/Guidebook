@@ -16,7 +16,7 @@ public class GuidebookTestFabric implements ModInitializer {
 
     public static void initConfig() {
         if (Services.PLATFORM.isPhysicalClient()) {
-            WhiteNoiseConfigLoader.add(WhiteNoiseConfig.Type.COMMON, GuidebookTestConfig.COMMON_SPEC, GuidebookAPI.MODID);
+            WhiteNoiseConfigLoader.add(WhiteNoiseConfig.Type.COMMON, GuidebookTestConfig.COMMON_SPEC, "guidebooktest");
         }
     }
 
