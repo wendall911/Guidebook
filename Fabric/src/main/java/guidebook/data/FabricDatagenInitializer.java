@@ -30,7 +30,7 @@ public class FabricDatagenInitializer implements DataGeneratorEntrypoint {
         //pack.addProvider(GuidebookItemModelProvider::new);
         //pack.addProvider(GuidebookRecipeProvider::new);
         //pack.addProvider(GuidebookAdvancementProvider::new);
-        //pack.addProvider(GuidebookLanguageProvider::new);
+        pack.addProvider(GuidebookLanguageProvider::new);
     }
 
     public static void configureFabicTestDatagen(FabricDataGenerator.Pack pack) {
