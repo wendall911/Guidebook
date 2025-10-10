@@ -27,7 +27,7 @@ public class FabricDatagenInitializer implements DataGeneratorEntrypoint {
     public static void configureCommonDatagen(FabricDataGenerator.Pack pack) {
         FabricTagProvider.BlockTagProvider fabricBlockTagProvider = pack.addProvider(FabricBlockTagProvider::new);
         pack.addProvider((dataOutput, registryFuture) -> new GuidebookItemTagsProvider(dataOutput, registryFuture, fabricBlockTagProvider.contentsGetter()));
-        //pack.addProvider(GuidebookItemModelProvider::new);
+        pack.addProvider(GuidebookItemModelProvider::new);
         //pack.addProvider(GuidebookRecipeProvider::new);
         //pack.addProvider(GuidebookAdvancementProvider::new);
         pack.addProvider(GuidebookLanguageProvider::new);
