@@ -30,6 +30,7 @@ public abstract class MixinInventoryScreen extends EffectRenderingInventoryScree
         super(container, playerInventory, text);
     }
 
+    @SuppressWarnings("unchecked")
     @Inject(at = @At("RETURN"), method = "init()V")
     public void onGuiInitPost(CallbackInfo info) {
         var bookID = ResourceLocation.tryParse(GuidebookConfig.Client.inventoryButtonBook());
