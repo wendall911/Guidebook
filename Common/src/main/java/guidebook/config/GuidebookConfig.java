@@ -6,16 +6,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import net.minecraft.resources.ResourceLocation;
+import java.util.function.Predicate;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import technology.roughness.whitenoise.config.WhiteNoiseConfigSpec;
+
 import guidebook.api.GuidebookAPI;
 import guidebook.common.CommonModContainer;
+import guidebook.common.Translations;
 import guidebook.platform.Services;
-
-import technology.roughness.whitenoise.config.WhiteNoiseConfigSpec;
 
 public class GuidebookConfig {
 
@@ -30,55 +30,44 @@ public class GuidebookConfig {
     }
 
     public static final class Client {
-        private final WhiteNoiseConfigSpec.ConfigValue<Boolean> disableAdvancementLocking;
+        private final WhiteNoiseConfigSpec.BooleanValue disableAdvancementLocking;
         private final WhiteNoiseConfigSpec.ConfigValue<List<? extends String>> noAdvancementBooks;
-        private final WhiteNoiseConfigSpec.ConfigValue<Boolean> testingMode;
+        private final WhiteNoiseConfigSpec.BooleanValue testingMode;
         private final WhiteNoiseConfigSpec.ConfigValue<String> inventoryButtonBook;
-        private final WhiteNoiseConfigSpec.ConfigValue<Boolean> useShiftForQuickLookup;
+        private final WhiteNoiseConfigSpec.BooleanValue useShiftForQuickLookup;
         private final WhiteNoiseConfigSpec.EnumValue<TextOverflowMode> overflowMode;
-        private final WhiteNoiseConfigSpec.ConfigValue<Integer> quickLookupTime;
+        private final WhiteNoiseConfigSpec.IntValue quickLookupTime;
+        private static final Predicate<Object> resourceLocationValidator = s -> s instanceof String
+            && ((String) s).matches("[a-z]+[:]{1}[a-z_]+");
 
         Client(WhiteNoiseConfigSpec.Builder builder) {
             disableAdvancementLocking = builder
-                .comment(
-                    "Set this to true to disable advancement locking for ALL books, ",
-                    "making all entries visible at all times. Config Flag: advancements_disabled"
-                )
+                .comment(getTranslation("disableadvancementlocking"))
                 .define("disableAdvancementLocking", false);
 
             noAdvancementBooks = builder
-                .comment(
-                    "Granular list of Book ID's to disable advancement locking for, ",
-                    "e.g. [ \"botania:lexicon\" ]. Config Flags: advancements_disabled_<bookid>"
-                )
-                .defineListAllowEmpty(List.of("noAdvancementBooks"), Collections::emptyList,
-                    o -> o instanceof String s && ResourceLocation.tryParse(s) != null);
+                .comment(getTranslation("noadvancementbooks"))
+                .defineListAllowEmpty(List.of("noAdvancementBooks"), Collections::emptyList, resourceLocationValidator);
 
             testingMode = builder
-                .comment(
-                    "Enable testing mode. By default this doesn't do anything, but you can use the config ",
-                    "flag in your books if you want. Config Flag: testing_mode"
-                )
+                .comment(getTranslation("testingmode"))
                 .define("testingMode", false);
 
             inventoryButtonBook = builder
-                .comment("Set this to the ID of a book to have it show up in players' inventories, replacing the recipe book.")
-                .define("inventoryButtonBook", "");
+                .comment(getTranslation("inventorybuttonbook"))
+                .define("inventoryButtonBook", "", resourceLocationValidator);
 
             useShiftForQuickLookup = builder
-                .comment("Set this to true to use Shift instead of Ctrl for the inventory quick lookup feature.")
+                .comment(getTranslation("useshiftforquicklookup"))
                 .define("useShiftForQuickLookup", false);
 
             overflowMode = builder
-                .comment(
-                    "Set how text overflow should be coped with: overflow the text off the page, ",
-                    "truncate overflowed text, or resize everything to fit. Relogin after changing."
-                )
+                .comment(getTranslation("textoverflowmode"))
                 .defineEnum("textOverflowMode", TextOverflowMode.RESIZE);
 
             quickLookupTime = builder
-                .comment("How long in ticks the quick lookup key needs to be pressed before the book opens")
-                .define("quickLookupTime", 10);
+                .comment(getTranslation("quicklookuptime"))
+                .defineInRange("quickLookupTime", 10, 1, 20);
         }
 
         public static boolean disableAdvancementLocking() {
@@ -181,6 +170,10 @@ public class GuidebookConfig {
 
     public static void setFlag(String flag, boolean value) {
         CONFIG_FLAGS.put(flag.trim().toLowerCase(Locale.ROOT), value);
+    }
+
+    private static String getTranslation(String key) {
+        return Translations.get(key);
     }
 
 }

@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.core.HolderLookup;
 
 import guidebook.api.GuidebookAPI;
+import guidebook.common.Translations;
 
 public class GuidebookLanguageProvider extends FabricLanguageProvider {
 
@@ -104,6 +105,14 @@ public class GuidebookLanguageProvider extends FabricLanguageProvider {
         addLexicon(builder, "button.mark_category_read", "Mark this category as read");
         addNetworking(builder, "open_book.failed", "Failed to open book %s");
         addNetworking(builder, "reload_contents.failed", "Failed to reload contents %S");
+        addTranslationTitle(builder, "Guidebook Configuration");
+        addTranslation(builder, "disableadvancementlocking");
+        addTranslation(builder, "noadvancementbooks");
+        addTranslation(builder, "testingmode");
+        addTranslation(builder, "inventorybuttonbook");
+        addTranslation(builder, "useshiftforquicklookup");
+        addTranslation(builder, "textoverflowmode");
+        addTranslation(builder, "quicklookuptime");
     }
 
     private void addGuidebookItem(TranslationBuilder builder, String id, String text) {
@@ -124,6 +133,27 @@ public class GuidebookLanguageProvider extends FabricLanguageProvider {
 
     private void add(TranslationBuilder builder, String id, String text) {
         builder.add(id, text);
+    }
+
+    private void addTranslationTitle(TranslationBuilder builder, String title) {
+        builder.add(GuidebookAPI.MODID + ".configuration.title", title);
+    }
+
+    private void addTranslationName(TranslationBuilder builder, String id, String name) {
+        builder.add(GuidebookAPI.MODID + ".configuration." + id + ".name", name);
+    }
+
+    private void addTranslationDescription(TranslationBuilder builder, String id) {
+        builder.add(GuidebookAPI.MODID + ".configuration." + id + ".description", Translations.get(id));
+    }
+
+    private void addTranslation(TranslationBuilder buildder, String id) {
+        addTranslationName(buildder, id, Translations.get(id + ".title"));
+        addTranslationDescription(buildder, id);
+    }
+
+    private void addTranslationDescription(TranslationBuilder builder, String id, String key) {
+        builder.add(GuidebookAPI.MODID + ".configuration." + id + ".description", Translations.get(key));
     }
 
 }
