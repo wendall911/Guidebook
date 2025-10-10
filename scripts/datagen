@@ -1,10 +1,3 @@
 #!/bin/bash
 
 DATA_GEN=all ./gradlew :Fabric:runCommonDatagen :Fabric:runFabricTestDatagen :Fabric:runNeoForgeTestDatagen || exit 1
-
-# Restore files that we are running datagen over.
-# I'm not entirely sure the best way to do this.
-# Ugly but effective
-git checkout Fabric/src/test/resources/fabric.mod.json
-git checkout NeoForge/src/test/resources/META-INF/neoforge.mods.toml
-git checkout NeoForge/src/test/resources/pack.mcmeta
