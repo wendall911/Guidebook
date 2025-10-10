@@ -22,9 +22,10 @@ public class BookCrashHandler implements Supplier<String> {
     public static void appendToCrashReport(SystemReport report) {
         Minecraft mc = Minecraft.getInstance();
 
-        if (!(mc.screen instanceof GuiBook)) {
+        if (mc != null && !(mc.screen instanceof GuiBook)) {
             return;
         }
+
         try {
             report.setDetail(LABEL, new BookCrashHandler());
         }
