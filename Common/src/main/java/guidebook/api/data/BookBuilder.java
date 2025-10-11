@@ -9,11 +9,13 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 import com.google.gson.JsonObject;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import guidebook.api.data.util.ItemStackHelper;
+import guidebook.config.GuidebookConfig.TextOverflowMode;
 
 public class BookBuilder {
 
@@ -45,6 +47,8 @@ public class BookBuilder {
     private Boolean showToasts;
     private Boolean useBlockyFont;
     private Boolean i18n;
+    private Boolean pauseGame;
+    private Enum<TextOverflowMode> textOverflowMode;
     private Map<String, String> macros;
     private HolderLookup.Provider provider;
 
@@ -135,6 +139,12 @@ public class BookBuilder {
         }
         if (i18n != null) {
             json.addProperty("i18n", i18n);
+        }
+        if (pauseGame != null) {
+            json.addProperty("pause_game", pauseGame);
+        }
+        if (textOverflowMode != null) {
+            json.addProperty("text_overflow_mode", textOverflowMode.toString());
         }
         if (macros != null) {
             JsonObject macroObject = new JsonObject();
@@ -317,11 +327,25 @@ public class BookBuilder {
 
     public BookBuilder setUseBlockyFont(boolean useBlockyFont) {
         this.useBlockyFont = useBlockyFont;
+
         return this;
     }
 
     public BookBuilder setI18n(boolean i18n) {
         this.i18n = i18n;
+
+        return this;
+    }
+
+    public BookBuilder setPauseGame(boolean pauseGame) {
+        this.pauseGame = pauseGame;
+
+        return this;
+    }
+
+    public BookBuilder setTextOverflowMode(Enum<TextOverflowMode> textOverflowMode) {
+        this.textOverflowMode = textOverflowMode;
+
         return this;
     }
 
