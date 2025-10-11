@@ -1,0 +1,32 @@
+{
+  "category": "guidebooktest:page_types",
+  "icon": "minecraft:creeper_spawn_egg",
+  "name": "Entity Page",
+  "pages": [
+    {
+      "type": "guidebook:entity",
+      "entity": "minecraft:creeper",
+      "text": "This is a creeper. It explodes."
+    },
+    {
+      "type": "guidebook:entity",
+      "entity": "minecraft:creeper{powered:1}",
+      "text": "This is a creeper. It is exploding."
+    },
+    {
+      "type": "guidebook:entity",
+      "entity": "minecraft:snow_golem",
+      "text": "This is a snow golem. It throws snowballs."
+    },
+    {
+      "type": "guidebook:entity",
+      "entity": "minecraft:armor_stand",
+      "text": "This is an armor stand. It holds and displays armor and other items."
+    },
+    {
+      "type": "guidebook:entity",
+      "entity": "minecraft:slime{Size:2}",
+      "text": "This is a slime. It bounces around and splits into smaller slimes when killed."
+    }
+  ]
+}

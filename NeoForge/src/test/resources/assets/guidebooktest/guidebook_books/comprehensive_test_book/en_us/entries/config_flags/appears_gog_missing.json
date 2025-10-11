@@ -1,0 +1,12 @@
+{
+  "category": "guidebooktest:config_flags",
+  "flag": "!mod:gardenofglass",
+  "icon": "minecraft:oak_sapling",
+  "name": "Appears if GOG is missing",
+  "pages": [
+    {
+      "type": "guidebook:text",
+      "text": "This entry appears if the Garden of Glass mod is not installed."
+    }
+  ]
+}

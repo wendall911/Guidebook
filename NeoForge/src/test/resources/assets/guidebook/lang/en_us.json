@@ -1,0 +1,16 @@
+{
+  "book.guidebooktest.comprehensive_test_book.landing": "Test book with all the features.",
+  "book.guidebooktest.comprehensive_test_book.language_test.contents": "This page should be replaced with something else when you switch to zh_cn",
+  "book.guidebooktest.comprehensive_test_book.name": "Comprehensive Test Book",
+  "book.guidebooktest.guide_book": "Guide Book",
+  "book.guidebooktest.guide_book.invalid": "Invalid book: %s",
+  "book.guidebooktest.guide_book.undefined": "Invalid book: no ID defined",
+  "book.guidebooktest.pamphlet.landing": "A test pamphlet, which is a book with only one category.",
+  "book.guidebooktest.pamphlet.name": "Test Pamphlet",
+  "book.guidebooktest.test_book_1.landing": "Not as fun landing text but still here.",
+  "book.guidebooktest.test_book_1.name": "Test Book 1",
+  "book.guidebooktest.test_book_2.landing": "Landing text! It even supports $(2)colors$() and $(4)the $(bold)like$()!",
+  "book.guidebooktest.test_book_2.name": "Test Book 2",
+  "book.guidebooktest.test_completion.landing": "This book changes colors when you unlock entries!",
+  "book.guidebooktest.test_completion.name": "Test Advancement-Driven Book"
+}

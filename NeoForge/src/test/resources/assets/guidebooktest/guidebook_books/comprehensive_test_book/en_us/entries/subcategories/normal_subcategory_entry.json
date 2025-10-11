@@ -1,0 +1,11 @@
+{
+  "category": "guidebooktest:subcategories",
+  "icon": "minecraft:carrot_on_a_stick",
+  "name": "Normal Subcategory Entry",
+  "pages": [
+    {
+      "type": "guidebook:text",
+      "text": "This entry is in the main category, not in a subcategory."
+    }
+  ]
+}
