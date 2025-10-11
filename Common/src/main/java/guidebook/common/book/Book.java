@@ -188,7 +188,8 @@ public class Book {
     public void reloadContents(Level level, boolean singleBook) {
         try {
             contents = BookContentsBuilder.loadAndBuildFor(level, this, singleBook);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             GuidebookAPI.LOGGER.error("Error loading and compiling book {}, using empty contents", id, e);
             contents = BookContents.empty(this, e);
         }
@@ -204,6 +205,7 @@ public class Book {
         getContents().categories.values().forEach(c -> c.updateLockStatus(true));
 
         boolean updated = popUpdated();
+
         if (updated && !suppressToasts && advancementsEnabled() && showToasts) {
             ClientAdvancements.sendBookToast(this);
         }

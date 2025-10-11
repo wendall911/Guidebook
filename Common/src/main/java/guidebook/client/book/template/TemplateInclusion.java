@@ -59,10 +59,11 @@ public class TemplateInclusion {
         y += parent.y;
 
         for (Map.Entry<String, JsonElement> entry : localBindings.entrySet()) {
-            String key = entry.getKey();
-            JsonElement val = entry.getValue();
-            if (val.isJsonPrimitive() && val.getAsString().startsWith("#")) {
-                String realVal = val.getAsString().substring(1);
+            JsonElement value = entry.getValue();
+
+            if (value.isJsonPrimitive() && value.getAsString().startsWith("#")) {
+                String realVal = value.getAsString().substring(1);
+
                 if (parent.localBindings.has(realVal)) {
                     entry.setValue(parent.localBindings.get(realVal));
                 }
@@ -76,13 +77,14 @@ public class TemplateInclusion {
         }
 
         for (Map.Entry<String, JsonElement> entry : localBindings.entrySet()) {
-            String key = entry.getKey();
-            JsonElement val = entry.getValue();
-            if (val.isJsonPrimitive() && val.getAsString().startsWith("#")) {
-                String realVal = val.getAsString().substring(1);
-                IVariable res = processor.process(level, realVal);
-                if (res != null) {
-                    entry.setValue(res.unwrap());
+            JsonElement value = entry.getValue();
+
+            if (value.isJsonPrimitive() && value.getAsString().startsWith("#")) {
+                String realVal = value.getAsString().substring(1);
+                IVariable result = processor.process(level, realVal);
+
+                if (result != null) {
+                    entry.setValue(result.unwrap());
                 }
             }
         }
@@ -94,6 +96,7 @@ public class TemplateInclusion {
 
         // if it's an upreference, return the upreference
         String result = IVariable.wrap(localBindings.get(query), RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY)).asString();
+
         if (result.startsWith("#")) {
             return result.substring(1);
         }
@@ -108,7 +111,9 @@ public class TemplateInclusion {
         if (key.startsWith("#")) {
             key = key.substring(1);
         }
+
         IVariable result = IVariable.wrap(localBindings.get(key), registries);
+
         return result.asString().isEmpty() || isUpreference(result) ? null : result;
     }
 

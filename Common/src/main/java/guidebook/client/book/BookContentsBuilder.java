@@ -186,8 +186,8 @@ public class BookContentsBuilder {
     private static BookContentLoader.LoadResult loadLocalizedJson(Book book, BookContentLoader loader, ResourceLocation file) {
         ResourceLocation localizedFile = ResourceLocation.fromNamespaceAndPath(file.getNamespace(),
                 file.getPath().replaceAll(DEFAULT_LANG, ClientBookRegistry.INSTANCE.currentLang));
-
         BookContentLoader.LoadResult input = loader.loadJson(book, localizedFile);
+
         if (input == null) {
             input = loader.loadJson(book, file);
             if (input == null) {

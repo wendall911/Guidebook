@@ -34,7 +34,8 @@ public class ComponentText extends TemplateComponent {
     public void build(BookContentsBuilder builder, BookPage page, BookEntry entry, int pageNum) {
         try {
             color = Integer.parseInt(colorStr.asString(""), 16);
-        } catch (NumberFormatException e) {
+        }
+        catch (NumberFormatException e) {
             color = page.book.textColor;
         }
     }
