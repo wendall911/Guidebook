@@ -31,6 +31,7 @@ import guidebook.api.data.page.SpotlightPageBuilder;
 import guidebook.api.data.page.StonecuttingPageBuilder;
 import guidebook.api.data.page.TextPageBuilder;
 import guidebook.api.data.util.ItemStackHelper;
+import guidebook.api.data.util.TagKeyHelper;
 
 public class EntryBuilder {
 
@@ -48,6 +49,7 @@ public class EntryBuilder {
     private Integer sortnum;
     private String turnin;
     private Map<ItemStack, Integer> extraRecipeMappings;
+    private Map<TagKey<Item>, Integer> extraRecipeMappingTags;
     private HolderLookup.Provider provider;
 
     protected EntryBuilder(String id, String name, String icon, CategoryBuilder parent,
@@ -99,11 +101,20 @@ public class EntryBuilder {
         if (turnin != null) {
             json.addProperty("turnin", turnin);
         }
-        if (extraRecipeMappings != null) {
+        if (extraRecipeMappings != null || extraRecipeMappingTags != null) {
             JsonObject mappings = new JsonObject();
-            for (Map.Entry<ItemStack, Integer> entry : extraRecipeMappings.entrySet()) {
-                mappings.addProperty(ItemStackHelper.serializeStack(entry.getKey(), provider), entry.getValue());
+
+            if (extraRecipeMappingTags != null) {
+                for (Map.Entry<TagKey<Item>, Integer> entry : extraRecipeMappingTags.entrySet()) {
+                    mappings.addProperty(TagKeyHelper.serializeTagKey(entry.getKey()), entry.getValue());
+                }
             }
+            if (extraRecipeMappings != null) {
+                for (Map.Entry<ItemStack, Integer> entry : extraRecipeMappings.entrySet()) {
+                    mappings.addProperty(ItemStackHelper.serializeStack(entry.getKey(), provider), entry.getValue());
+                }
+            }
+
             json.add("extra_recipe_mappings", mappings);
         }
 
@@ -264,6 +275,15 @@ public class EntryBuilder {
             this.extraRecipeMappings = new HashMap<>();
         }
         this.extraRecipeMappings.put(stack, index);
+
+        return this;
+    }
+
+    public EntryBuilder addExtraRecipeMapping(TagKey<Item> tag, int index) {
+        if (this.extraRecipeMappingTags == null) {
+            this.extraRecipeMappingTags = new HashMap<>();
+        }
+        this.extraRecipeMappingTags.put(tag, index);
 
         return this;
     }
