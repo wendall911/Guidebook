@@ -1,0 +1,17 @@
+{
+    "name": "Entry 2",
+    "category": "guidebook:root",
+    "sortnum": 2,
+    "icon": "minecraft:diamond_pickaxe",
+    "pages": [
+        {
+            "type": "guidebook:text",
+            "text": "Entry Number Two!"
+        },
+        {
+            "type": "guidebook:crafting",
+            "recipe": "minecraft:diamond_pickaxe",
+            "text": "All the normal page types work still!"
+        }
+    ]
+}

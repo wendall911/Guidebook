@@ -1,0 +1,44 @@
+{
+  "name": "Normal Recipe Mapping",
+  "category": "guidebook:recipe_mapping",
+  "icon": "minecraft:cooked_salmon",
+  "pages": [
+    {
+      "type": "guidebook:crafting",
+      "recipe": "minecraft:diamond_sword",
+      "recipe2": "minecraft:flint_and_steel"
+    },
+    {
+      "type": "guidebook:crafting",
+      "recipe": "minecraft:fletching_table",
+      "recipe2": "minecraft:snow",
+      "link_recipe": false
+    },
+    {
+      "type": "guidebook:smelting",
+      "recipe": "minecraft:cooked_cod"
+    },
+    {
+      "type": "guidebook:blasting",
+      "recipe": "minecraft:iron_ingot_from_blasting_iron_ore"
+    },
+    {
+      "type": "guidebook:smoking",
+      "recipe": "minecraft:cooked_cod_from_smoking"
+    },
+    {
+      "type": "guidebook:campfire",
+      "recipe": "minecraft:cooked_cod_from_campfire_cooking"
+    },
+    {
+      "type": "guidebook:stonecutting",
+      "recipe": "minecraft:andesite_slab_from_andesite_stonecutting"
+    },
+    {
+      "type": "guidebook:smithing",
+      "recipe": "minecraft:netherite_axe_smithing",
+      "recipe2": "minecraft:netherite_pickaxe_smithing",
+      "text": "Smithing table recipes"
+    }
+  ]
+}

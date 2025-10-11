@@ -1,0 +1,10 @@
+{
+  "components": [
+    {
+      "type": "guidebook:item",
+      "item": "#input->stacks",
+      "x": 10,
+      "y": 40
+    }
+  ]
+}

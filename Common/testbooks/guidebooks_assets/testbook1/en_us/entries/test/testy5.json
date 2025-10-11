@@ -1,0 +1,14 @@
+{
+	"name": "Test Entry FIX",
+	"icon": "minecraft:textures/item/clock_06.png",
+	"category": "guidebook:test",
+	"priority": true,
+	"read_by_default": false,
+	"advancement": "guidebook:test_invis",
+	"pages": [
+		{
+			"type": "guidebook:text",
+			"text": "THIS IS A TEST ENTRY"
+		}
+	]
+}

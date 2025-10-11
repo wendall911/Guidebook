@@ -1,0 +1,22 @@
+{
+  "name": "Extra Recipe Mapping",
+  "category": "guidebook:recipe_mapping",
+  "icon": "minecraft:stone",
+  "pages": [
+    {
+      "type": "guidebook:text",
+      "text": {"translate":"guidebook.gui.lexicon.reloaded","with":[69]}
+    },
+    {
+      "type": "guidebook:empty"
+    },
+    {
+      "type": "guidebook:text",
+      "text": "Logs should be mapped here"
+    }
+  ],
+  "extra_recipe_mappings": {
+    "minecraft:grass_block": 0,
+    "tag:minecraft:logs": 2
+  }
+}
