@@ -17,6 +17,7 @@ import guidebook.api.data.page.CampfirePageBuilder;
 import guidebook.api.data.page.CraftingPageBuilder;
 import guidebook.api.data.page.EmptyPageBuilder;
 import guidebook.api.data.page.EntityPageBuilder;
+import guidebook.api.data.page.FormattedTextPageBuilder;
 import guidebook.api.data.page.ImagePageBuilder;
 import guidebook.api.data.page.LinkPageBuilder;
 import guidebook.api.data.page.QuestPageBuilder;
@@ -129,6 +130,10 @@ public class EntryBuilder {
 
     public TextPageBuilder addTextPage(String text, String title) {
         return addPage(new TextPageBuilder(text, title, this));
+    }
+
+    public FormattedTextPageBuilder addFormattedTextPage(String translate, Object... with) {
+        return addPage(new FormattedTextPageBuilder(translate, with, this));
     }
 
     public ImagePageBuilder addImagePage(ResourceLocation image) {
