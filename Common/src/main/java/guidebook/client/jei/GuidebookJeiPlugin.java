@@ -34,6 +34,9 @@ public class GuidebookJeiPlugin implements IModPlugin {
 
     private static IJeiRuntime jeiRuntime;
 
+    static {
+    }
+
     @NotNull
     @Override
     public ResourceLocation getPluginUid() {
@@ -69,6 +72,10 @@ public class GuidebookJeiPlugin implements IModPlugin {
 
         GuidebookJeiPlugin.showRecipe = allKeyMappings.get("key.jei.showRecipe");
         GuidebookJeiPlugin.showUses = allKeyMappings.get("key.jei.showUses");
+
+        if (showRecipe == null || showUses == null) {
+            GuidebookAPI.LOGGER.warn("Could not locate JEI keybindings, lookups in books may not work");
+        }
     }
 
     public static boolean handleRecipeKeybind(int keyCode, int scanCode, ItemStack stack) {
