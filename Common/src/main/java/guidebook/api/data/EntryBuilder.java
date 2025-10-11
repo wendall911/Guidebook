@@ -206,6 +206,7 @@ public class EntryBuilder {
 
     public <T extends AbstractPageBuilder<T>> T addPage(T builder) {
         pages.add(builder);
+
         return builder;
     }
 
