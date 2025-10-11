@@ -39,8 +39,7 @@ public class FormattedTextPageBuilder extends AbstractPageBuilder<FormattedTextP
                         withArray.add(arr);
                     }
                     case JsonElement jsonElement -> withArray.add(jsonElement);
-                    default ->
-                        throw new IllegalArgumentException("Unsupported type in 'with' array: " + obj.getClass());
+                    default -> withArray.add(obj.toString());
                 }
             }
 
