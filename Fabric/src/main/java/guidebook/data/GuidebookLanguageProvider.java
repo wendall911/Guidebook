@@ -9,6 +9,9 @@ import net.minecraft.core.HolderLookup;
 
 import guidebook.api.GuidebookAPI;
 import guidebook.common.Translations;
+import guidebook.common.item.GuidebookItems;
+
+import static guidebook.data.GuidebookInternalBookProvider.INTRO_BOOK_TRANSLATION_KEY;
 
 public class GuidebookLanguageProvider extends FabricLanguageProvider {
 
@@ -18,10 +21,21 @@ public class GuidebookLanguageProvider extends FabricLanguageProvider {
 
     @Override
     public void generateTranslations(HolderLookup.Provider registryLookup, TranslationBuilder builder) {
-        addGuidebookItem(builder, "intro_book.name", "Guidebook");
-        addGuidebookItem(builder, "intro_book.subtitle", "Documentation for everyone");
-        addGuidebookItem(builder, "intro_book.landing", "With $(item)Guidebook$(), " +
+        addItem(builder, GuidebookItems.BOOK_ID.getPath(), "Guidebook Guide");
+        addBook(builder, INTRO_BOOK_TRANSLATION_KEY, "Guidebook");
+        addBookTranslation(builder, "subtitle", "Documentation for everyone");
+        addBookTranslation(builder, "landing", "With $(item)Guidebook$(), " +
             "you can make easy to read, advancement unlockable $(thing)books$() for mods and modpacks!");
+        addBookTranslation(builder, "introduction.name", "Introduction");
+        addBookTranslation(builder, "introduction.description", "A Guide for Guidebook!");
+        addBookTranslation(builder, "introduction.welcome.name", "Welcome to Guidebook");
+        addBookTranslation(builder, "introduction.welcome.intro", "This is a sample book made with Guidebook.$(br)" +
+            "$(p)Guidebook is a documentation mod for Minecraft that allows mod and modpack " +
+            "authors to easily create in-game documentation for their mods.$(br)" +
+            "$(p)This book is just a demonstration of what Guidebook can do. " +
+            "Feel free to explore and see the various features it has to offer.$(br)" +
+            "$(p)If you're an author looking to create your own books, " +
+            "please refer to the wiki for documentation and tutorials.");
         addSubtitle(builder, "book_open", "Book Opens");
         addSubtitle(builder, "book_flip", "Page Turns");
         addLexicon(builder, "landing_info", "(Placeholder landing text, define your own in your book json file!)");
@@ -115,8 +129,12 @@ public class GuidebookLanguageProvider extends FabricLanguageProvider {
         addTranslation(builder, "quicklookuptime");
     }
 
-    private void addGuidebookItem(TranslationBuilder builder, String id, String text) {
-        add(builder, "item." + GuidebookAPI.MODID + ":" + id, text);
+    private void addBook(TranslationBuilder builder, String id, String text) {
+        add(builder, id, text);
+    }
+
+    private void addBookTranslation(TranslationBuilder builder, String id, String text) {
+        add(builder, INTRO_BOOK_TRANSLATION_KEY + "." + id, text);
     }
 
     private void addSubtitle(TranslationBuilder builder, String id, String text) {
@@ -154,6 +172,10 @@ public class GuidebookLanguageProvider extends FabricLanguageProvider {
 
     private void addTranslationDescription(TranslationBuilder builder, String id, String key) {
         builder.add(GuidebookAPI.MODID + ".configuration." + id + ".description", Translations.get(key));
+    }
+
+    private void addItem(TranslationBuilder translationBuilder, String name, String text) {
+        translationBuilder.add("item." + GuidebookAPI.MODID + "." + name, text);
     }
 
 }
