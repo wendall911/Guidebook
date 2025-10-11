@@ -30,19 +30,9 @@ public class GuidebookJeiPlugin implements IModPlugin {
 
     private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(GuidebookAPI.MODID, GuidebookAPI.MODID);
 
-    private static final KeyMapping showRecipe, showUses;
+    private static KeyMapping showRecipe, showUses;
 
     private static IJeiRuntime jeiRuntime;
-
-    static {
-        Map<String, KeyMapping> allKeyMappings = AccessorKeyMapping.getAllKeyMappings();
-
-        showRecipe = allKeyMappings.get("key.jei.showRecipe");
-        showUses = allKeyMappings.get("key.jei.showUses");
-        if (showRecipe == null || showUses == null) {
-            GuidebookAPI.LOGGER.warn("Could not locate JEI keybindings, lookups in books may not work");
-        }
-    }
 
     @NotNull
     @Override
@@ -74,6 +64,11 @@ public class GuidebookJeiPlugin implements IModPlugin {
     @Override
     public void onRuntimeAvailable(@NotNull IJeiRuntime jeiRuntime) {
         GuidebookJeiPlugin.jeiRuntime = jeiRuntime;
+
+        Map<String, KeyMapping> allKeyMappings = AccessorKeyMapping.getAllKeyMappings();
+
+        GuidebookJeiPlugin.showRecipe = allKeyMappings.get("key.jei.showRecipe");
+        GuidebookJeiPlugin.showUses = allKeyMappings.get("key.jei.showUses");
     }
 
     public static boolean handleRecipeKeybind(int keyCode, int scanCode, ItemStack stack) {
