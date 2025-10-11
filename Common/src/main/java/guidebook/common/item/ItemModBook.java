@@ -1,9 +1,9 @@
 package guidebook.common.item;
 
+import java.util.Collection;
 import java.util.List;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,6 +16,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import technology.roughness.whitenoise.util.ResourceLocationHelper;
 
 import guidebook.api.GuidebookAPI;
 import guidebook.client.book.BookEntry;
@@ -64,17 +65,6 @@ public class ItemModBook extends Item {
         return stack;
     }
 
-    // SoftImplement IForgeItem
-    public String getCreatorModId(ItemStack stack) {
-        Book book = getBook(stack);
-
-        if (book != null) {
-            return book.owner.getId();
-        }
-
-        return BuiltInRegistries.ITEM.getKey(this).getNamespace();
-    }
-
     public static Book getBook(ItemStack stack) {
         ResourceLocation res = getBookId(stack);
 
@@ -85,12 +75,22 @@ public class ItemModBook extends Item {
         return BookRegistry.INSTANCE.books.get(res);
     }
 
+    /*
+     * Gets the book ID from the stack, either from Component or by looking up the item
+     */
     private static ResourceLocation getBookId(ItemStack stack) {
-        if (!stack.has(GuidebookDataComponents.BOOK)) {
-            return null;
+        if (stack.has(GuidebookDataComponents.BOOK)) {
+            return stack.get(GuidebookDataComponents.BOOK);
+        }
+        else {
+            Book book = BookRegistry.INSTANCE.books.getOrDefault(ResourceLocationHelper.getItemStackId(stack), null);
+
+            if (book != null) {
+                return book.id;
+            }
         }
 
-        return stack.get(GuidebookDataComponents.BOOK);
+        return null;
     }
 
     @Override

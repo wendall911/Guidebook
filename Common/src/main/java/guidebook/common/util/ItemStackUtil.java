@@ -3,6 +3,7 @@ package guidebook.common.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -27,6 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import org.apache.commons.lang3.tuple.Triple;
+import technology.roughness.whitenoise.util.ResourceLocationHelper;
 
 import guidebook.common.book.Book;
 import guidebook.common.book.BookRegistry;
@@ -109,17 +111,29 @@ public final class ItemStackUtil {
         return stack.isEmpty() ? StackWrapper.EMPTY_WRAPPER : new StackWrapper(stack);
     }
 
+    /**
+     * Attempts to get a book instance from an item stack. This checks if the stack is a book item, and if not,
+     * checks if the stack matches any registered book item.
+     * Originally, this required having the data component on the stack, but this caused problems with
+     * item comparisons in some cases (e.g. JEI ingredient matching), so now it checks against all registered books.
+     *
+     * @param stack the stack
+     * @return the book, or null if none found
+     */
     @Nullable
     public static Book getBookFromStack(ItemStack stack) {
         if (stack.getItem() instanceof ItemModBook) {
             return ItemModBook.getBook(stack);
         }
 
-        Collection<Book> books = BookRegistry.INSTANCE.books.values();
+        ResourceLocation stackId = ResourceLocationHelper.getItemStackId(stack);
 
-        for (Book b : books) {
-            if (ItemStack.isSameItem(b.getBookItem(), stack)) {
-                return b;
+        for (Map.Entry<ResourceLocation, Book> entry : BookRegistry.INSTANCE.books.entrySet()) {
+            if (ItemStack.isSameItem(entry.getValue().getBookItem(), stack)) {
+                return entry.getValue();
+            }
+            else if (entry.getKey().equals(stackId)) {
+                return entry.getValue();
             }
         }
 

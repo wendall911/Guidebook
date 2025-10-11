@@ -14,6 +14,9 @@ import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import technology.roughness.whitenoise.util.ResourceLocationHelper;
 
 public abstract class GuidebookBookProvider implements DataProvider {
 
@@ -81,6 +84,19 @@ public abstract class GuidebookBookProvider implements DataProvider {
 
     public BookBuilder createBookBuilder(String id, String name, String landingText, HolderLookup.Provider provider) {
         return new BookBuilder(modid, id, name, landingText, provider);
+    }
+
+    /**
+     * Creates a BookBuilder for a book with the given item.
+     * The item is used both as the book item and to derive the book ID and model.
+     */
+    public BookBuilder createBookBuilder(Item item, String name, String landingText, HolderLookup.Provider provider) {
+        ItemStack bookItem = new ItemStack(item);
+        ResourceLocation itemId = ResourceLocationHelper.getItemStackId(bookItem);
+
+        return new BookBuilder(itemId, name, landingText, provider)
+            .setModel(itemId)
+            .setCustomBookItem(bookItem);
     }
 
     /**
