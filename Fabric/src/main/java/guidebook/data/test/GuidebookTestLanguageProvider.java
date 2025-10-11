@@ -17,23 +17,24 @@ public class GuidebookTestLanguageProvider extends FabricLanguageProvider {
 
     @Override
     public void generateTranslations(HolderLookup.Provider provider, TranslationBuilder builder) {
-        addGuidebookItem(builder, "guide_book", "Guide Book");
-        addGuidebookItem(builder, "guide_book.undefined", "Invalid book: no ID defined");
-        addGuidebookItem(builder, "guide_book.invalid", "Invalid book: %s");
-        addGuidebookItem(builder, "comprehensive_test_book.name", "Comprehensive Test Book");
-        addGuidebookItem(builder, "comprehensive_test_book.landing", "Test book with all the features.");
-        addGuidebookItem(builder, "test_book_1.name", "Test Book 1");
-        addGuidebookItem(builder, "test_book_1.landing", "Not as fun landing text but still here.");
-        addGuidebookItem(builder, "test_book_2.name", "Test Book 2");
-        addGuidebookItem(builder, "test_book_2.landing", "Landing text! It even supports $(2)colors$() and $(4)the $(bold)like$()!");
-        addGuidebookItem(builder, "test_completion.name", "Test Advancement-Driven Book");
-        addGuidebookItem(builder, "test_completion.landing", "This book changes colors when you unlock entries!");
-        addGuidebookItem(builder, "pamphlet.name", "Test Pamphlet");
-        addGuidebookItem(builder, "pamphlet.landing", "A test pamphlet, which is a book with only one category.");
+        addBookTranslation(builder, "guide_book", "Guide Book");
+        addBookTranslation(builder, "guide_book.undefined", "Invalid book: no ID defined");
+        addBookTranslation(builder, "guide_book.invalid", "Invalid book: %s");
+        addBookTranslation(builder, "comprehensive_test_book.name", "Comprehensive Test Book");
+        addBookTranslation(builder, "comprehensive_test_book.landing", "Test book with all the features.");
+        addBookTranslation(builder, "comprehensive_test_book.language_test.contents", "This page should be replaced with something else when you switch to zh_cn");
+        addBookTranslation(builder, "test_book_1.name", "Test Book 1");
+        addBookTranslation(builder, "test_book_1.landing", "Not as fun landing text but still here.");
+        addBookTranslation(builder, "test_book_2.name", "Test Book 2");
+        addBookTranslation(builder, "test_book_2.landing", "Landing text! It even supports $(2)colors$() and $(4)the $(bold)like$()!");
+        addBookTranslation(builder, "test_completion.name", "Test Advancement-Driven Book");
+        addBookTranslation(builder, "test_completion.landing", "This book changes colors when you unlock entries!");
+        addBookTranslation(builder, "pamphlet.name", "Test Pamphlet");
+        addBookTranslation(builder, "pamphlet.landing", "A test pamphlet, which is a book with only one category.");
     }
 
-    private void addGuidebookItem(TranslationBuilder builder, String id, String text) {
-        add(builder, "item." + GuidebookAPI.MODID + ":" + id, text);
+    private void addBookTranslation(TranslationBuilder builder, String id, String text) {
+        add(builder, "book." + GuidebookAPI.MODID + "test." + id, text);
     }
 
     private void add(TranslationBuilder builder, String id, String text) {

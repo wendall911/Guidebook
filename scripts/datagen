@@ -1,3 +1,10 @@
 #!/bin/bash
 
 DATA_GEN=all ./gradlew :Fabric:runCommonDatagen :Fabric:runFabricTestDatagen :Fabric:runNeoForgeTestDatagen || exit 1
+
+# Restore files that get overwritten in test.
+git checkout Fabric/src/test/resources/fabric.mod.json
+git checkout NeoForge/src/test/resources/META-INF/neoforge.mods.toml
+git checkout NeoForge/src/test/resources/pack.mcmeta
+git checkout NeoForge/src/test/resources/assets/guidebook/lang/zh_cn.json
+git checkout Fabric/src/test/resources/assets/guidebook/lang/zh_cn.json

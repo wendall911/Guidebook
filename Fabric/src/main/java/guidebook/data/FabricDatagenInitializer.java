@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 
 import guidebook.api.GuidebookAPI;
 import guidebook.data.test.GuidebookTestLanguageProvider;
+import guidebook.data.test.GuidebookTestingBooksProvider;
 
 public class FabricDatagenInitializer implements DataGeneratorEntrypoint {
 
@@ -35,12 +36,14 @@ public class FabricDatagenInitializer implements DataGeneratorEntrypoint {
 
     public static void configureFabicTestDatagen(FabricDataGenerator.Pack pack) {
         pack.addProvider(GuidebookTestLanguageProvider::new);
+        pack.addProvider(GuidebookTestingBooksProvider::new);
         //pack.addProvider(GuidebookRecipeProvider::new);
         //pack.addProvider(GuidebookAdvancementProvider::new);
     }
 
     public static void configureNeoForgeTestDatagen(FabricDataGenerator.Pack pack) {
         pack.addProvider(GuidebookTestLanguageProvider::new);
+        pack.addProvider(GuidebookTestingBooksProvider::new);
         //pack.addProvider(GuidebookRecipeProvider::new);
         //pack.addProvider(GuidebookAdvancementProvider::new);
     }
