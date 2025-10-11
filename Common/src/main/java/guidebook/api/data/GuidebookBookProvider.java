@@ -16,6 +16,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+
 import technology.roughness.whitenoise.util.ResourceLocationHelper;
 
 public abstract class GuidebookBookProvider implements DataProvider {

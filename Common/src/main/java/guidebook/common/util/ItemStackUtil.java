@@ -1,13 +1,13 @@
 package guidebook.common.util;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import org.jetbrains.annotations.Nullable;
 
 import com.google.gson.JsonObject;
+
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.JsonOps;
@@ -28,6 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import org.apache.commons.lang3.tuple.Triple;
+
 import technology.roughness.whitenoise.util.ResourceLocationHelper;
 
 import guidebook.common.book.Book;
