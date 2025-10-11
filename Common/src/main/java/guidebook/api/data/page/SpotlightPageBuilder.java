@@ -3,22 +3,60 @@ package guidebook.api.data.page;
 import com.google.gson.JsonObject;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import guidebook.api.data.AbstractPageBuilder;
 import guidebook.api.data.EntryBuilder;
 import guidebook.api.data.util.ItemStackHelper;
+import guidebook.api.data.util.TagKeyHelper;
 
 public class SpotlightPageBuilder extends AbstractPageBuilder<SpotlightPageBuilder> {
-    private final String item;
+
+    private String item;
     private String title;
     private Boolean linkRecipe;
     private String text;
+    private HolderLookup.Provider provider;
 
-    public SpotlightPageBuilder(ItemStack stack, EntryBuilder parent, HolderLookup.Provider provider) {
+    public SpotlightPageBuilder(EntryBuilder parent, HolderLookup.Provider provider, ItemStack... stacks) {
         super("guidebook:spotlight", parent);
-        this.item = ItemStackHelper.serializeStack(stack, provider);
+        this.item = serializeStacks(stacks, provider);
+        this.provider = provider;
     }
+
+    @SafeVarargs
+    public SpotlightPageBuilder(EntryBuilder parent, HolderLookup.Provider provider, TagKey<Item>... tag) {
+        super("guidebook:spotlight", parent);
+        this.item = serializeTagKeys(tag);
+        this.provider = provider;
+    }
+
+    private String serializeStacks(ItemStack[] stacks, HolderLookup.Provider provider) {
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < stacks.length; i++) {
+            sb.append(ItemStackHelper.serializeStack(stacks[i], provider));
+            if (i < stacks.length - 1) {
+                sb.append(",");
+            }
+        }
+        return sb.toString();
+    }
+
+    private String serializeTagKeys(TagKey<Item>[] tags) {
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < tags.length; i++) {
+            sb.append(TagKeyHelper.serializeTagKey(tags[i]));
+            if (i < tags.length - 1) {
+                sb.append(",");
+            }
+        }
+        return sb.toString();
+    }
+
 
     @Override
     protected void serialize(JsonObject json) {
@@ -49,6 +87,19 @@ public class SpotlightPageBuilder extends AbstractPageBuilder<SpotlightPageBuild
 
     public SpotlightPageBuilder setText(String text) {
         this.text = text;
+
+        return this;
+    }
+
+    @SafeVarargs
+    public final SpotlightPageBuilder addTag(TagKey<Item>... tags) {
+        this.item = this.item + "," + serializeTagKeys(tags);
+
+        return this;
+    }
+
+    public final SpotlightPageBuilder addItem(ItemStack... stacks) {
+        this.item = this.item + "," + serializeStacks(stacks, provider);
 
         return this;
     }

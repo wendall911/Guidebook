@@ -9,6 +9,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
 
@@ -188,8 +190,13 @@ public class EntryBuilder {
         return addEntityPage(entity.toString());
     }
 
-    public SpotlightPageBuilder addSpotlightPage(ItemStack stack) {
-        return addPage(new SpotlightPageBuilder(stack, this, provider));
+    public SpotlightPageBuilder addSpotlightPage(ItemStack... stacks) {
+        return addPage(new SpotlightPageBuilder(this, provider, stacks));
+    }
+
+    @SafeVarargs
+    public final SpotlightPageBuilder addSpotlightPage(TagKey<Item>... tags) {
+        return addPage(new SpotlightPageBuilder(this, provider, tags));
     }
 
     public LinkPageBuilder addLinkPage(String url, String linkText) {
