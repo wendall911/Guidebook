@@ -93,7 +93,7 @@ public class CategoryBuilder {
     }
 
     public CategoryBuilder setParent(String parent) {
-        this.parent = parent;
+        this.parent = bookBuilder.getId().getNamespace() + ":" + parent;
 
         return this;
     }
