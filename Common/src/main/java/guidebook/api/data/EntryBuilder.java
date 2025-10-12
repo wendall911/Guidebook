@@ -17,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import guidebook.api.data.page.BlastingPageBuilder;
 import guidebook.api.data.page.CampfirePageBuilder;
 import guidebook.api.data.page.CraftingPageBuilder;
+import guidebook.api.data.page.CustomPageBuilder;
 import guidebook.api.data.page.EmptyPageBuilder;
 import guidebook.api.data.page.EntityPageBuilder;
 import guidebook.api.data.page.FormattedTextPageBuilder;
@@ -145,8 +146,12 @@ public class EntryBuilder {
         return addPage(new TextPageBuilder(text, title, this));
     }
 
-    public FormattedTextPageBuilder addFormattedTextPage(String translate, Object... with) {
-        return addPage(new FormattedTextPageBuilder(translate, with, this));
+    public FormattedTextPageBuilder addFormattedTextPage(String translate) {
+        return addPage(new FormattedTextPageBuilder(translate, this));
+    }
+
+    public CustomPageBuilder addCustomPage(String template, Map<String, String> includes) {
+        return addPage(new CustomPageBuilder(template, includes, this));
     }
 
     public ImagePageBuilder addImagePage(ResourceLocation image) {

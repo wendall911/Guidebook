@@ -79,16 +79,10 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
     }
 
     private static BookBuilder addDeserializationTest(BookBuilder bookBuilder) {
-        JsonElement keybindUse = new JsonObject();
         JsonElement shears = new JsonObject();
-        JsonElement sheep = new JsonObject();
-        JsonElement wool = new JsonObject();
 
-        keybindUse.getAsJsonObject().addProperty("keybind", "key.use");
         shears.getAsJsonObject().addProperty("translate", "item.minecraft.shears");
         shears.getAsJsonObject().addProperty("italic", true);
-        sheep.getAsJsonObject().addProperty("translate", "entity.minecraft.sheep");
-        wool.getAsJsonObject().addProperty("translate", "item.minecraft.white_wool");
 
         CategoryBuilder category = bookBuilder
             .addCategory(
@@ -108,13 +102,13 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
             .addTextPage("The following page should read \"<playername> pressed <usebinding> " +
                 "with their <shears name> on a <sheep name> and got some <wool name>\"").build()
             .addFormattedTextPage(
-                "$(l)%s$() pressed %s with their $(6)%s on a %s$(0) and got some $(8)%s$(0)",
-                "$(playername)",
-                keybindUse,
-                shears,
-                sheep,
-                wool
-            );
+                "$(l)%s$() pressed %s with their $(6)%s on a %s$(0) and got some $(8)%s$(0)"
+            )
+            .with("$(playername)")
+            .with("keybind", "key.use")
+            .with(shears)
+            .with("translate", "entity.minecraft.sheep")
+            .with("translate", "item.minecraft.white_wool");
 
         EntryBuilder overflowRender = category.addEntry(
             "deserialization/overflow_render",
@@ -160,10 +154,10 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
                 "text on the following page should be localized!"
             ).build()
             .addFormattedTextPage(
-                "guidebook.gui.lexicon.edition_str",
-                "Using the edition translation string with $(4)cool text that should " +
-                    "propagate its formatting to the rest of the string!"
-            ).build()
+                "guidebook.gui.lexicon.edition_str"
+            )
+            .with("Using the edition translation string with $(4)cool text that should " +
+                "propagate its formatting to the rest of the string!").build()
             .addTextPage(
                 "This link should lead to the recipe_mapping category: " +
                 " $(l:guidebook:recipe_mapping)click me$(/l)"
@@ -298,7 +292,7 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
         .addExtraRecipeMapping(new ItemStack(Items.GRASS_BLOCK), 0)
         .addExtraRecipeMapping(ItemTags.LOGS, 2);
 
-        extra.addFormattedTextPage("guidebook.gui.lexicon.reloaded", 69D);
+        extra.addFormattedTextPage("guidebook.gui.lexicon.reloaded").with(69);
         extra.addEmptyPage();
         extra.addTextPage("Logs should be mapped here");
 
