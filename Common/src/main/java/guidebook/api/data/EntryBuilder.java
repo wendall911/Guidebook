@@ -119,12 +119,8 @@ public class EntryBuilder {
             json.add("extra_recipe_mappings", mappings);
         }
 
-        this.serialize(json);
-
         return json;
     }
-
-    protected void serialize(JsonObject json) {}
 
     public CategoryBuilder build() {
         return parent;

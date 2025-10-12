@@ -57,6 +57,9 @@ public abstract class GuidebookBookProvider implements DataProvider {
                         list.add(saveEntry(cache, entry.toJson(), book.getId(), entry.getId()));
                     }
                 }
+                for (TemplateBuilder template : book.getTemplates()) {
+                    list.add(saveTemplate(cache, template.toJson(), book.getId(), template.getId()));
+                }
             }, provider);
 
             return CompletableFuture.allOf(list.toArray(CompletableFuture[]::new));
@@ -73,6 +76,12 @@ public abstract class GuidebookBookProvider implements DataProvider {
 
     private CompletableFuture<?> saveCategory(CachedOutput cache, JsonObject json, ResourceLocation bookId, ResourceLocation id) {
         String pathSuffix = bookId.getPath() + "/" + locale + "/categories/" + id.getPath();
+
+        return DataProvider.saveStable(cache, json, assetsProvider.json(ResourceLocation.fromNamespaceAndPath(bookId.getNamespace(), pathSuffix)));
+    }
+
+    private CompletableFuture<?> saveTemplate(CachedOutput cache, JsonObject json, ResourceLocation bookId, ResourceLocation id) {
+        String pathSuffix = bookId.getPath() + "/" + locale + "/templates/" + id.getPath();
 
         return DataProvider.saveStable(cache, json, assetsProvider.json(ResourceLocation.fromNamespaceAndPath(bookId.getNamespace(), pathSuffix)));
     }

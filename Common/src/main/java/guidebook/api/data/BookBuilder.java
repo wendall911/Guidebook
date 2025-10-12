@@ -23,6 +23,7 @@ public class BookBuilder {
     private final String displayName;
     private final String landingText;
     private final List<CategoryBuilder> categories = new ArrayList<>();
+    private final List<TemplateBuilder> templates = new ArrayList<>();
     private String bookTexture;
     private String fillerTexture;
     private String craftingTexture;
@@ -165,6 +166,10 @@ public class BookBuilder {
         return Collections.unmodifiableList(categories);
     }
 
+    protected List<TemplateBuilder> getTemplates() {
+        return Collections.unmodifiableList(templates);
+    }
+
     public void build(Consumer<BookBuilder> consumer) {
         consumer.accept(this);
     }
@@ -179,6 +184,16 @@ public class BookBuilder {
 
     protected <T extends CategoryBuilder> T addCategory(T builder) {
         this.categories.add(builder);
+
+        return builder;
+    }
+
+    public TemplateBuilder addTemplate(String id) {
+        return this.addTemplate(new TemplateBuilder(id, this));
+    }
+
+    protected <T extends TemplateBuilder> T addTemplate(T builder) {
+        this.templates.add(builder);
 
         return builder;
     }

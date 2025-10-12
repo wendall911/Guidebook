@@ -3,6 +3,7 @@ package guidebook.data.test;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.core.HolderLookup.Provider;
@@ -17,6 +18,7 @@ import guidebook.api.data.BookBuilder;
 import guidebook.api.data.CategoryBuilder;
 import guidebook.api.data.EntryBuilder;
 import guidebook.api.data.GuidebookBookProvider;
+import guidebook.api.data.TemplateBuilder;
 import guidebook.config.GuidebookConfig.TextOverflowMode;
 
 public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
@@ -47,6 +49,10 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
         .setI18n(true)
         .setPauseGame(true);
 
+        comprehensiveTestBook = addBuiltinComponentOne(comprehensiveTestBook);
+        comprehensiveTestBook = addBuiltinComponentTwo(comprehensiveTestBook);
+        comprehensiveTestBook = addDeriveIntegerToStack(comprehensiveTestBook);
+        comprehensiveTestBook = addNesting(comprehensiveTestBook);
         comprehensiveTestBook = addConfigFlags(comprehensiveTestBook);
         comprehensiveTestBook = addDeserializationTest(comprehensiveTestBook);
         comprehensiveTestBook = addLanguageTest(comprehensiveTestBook);
@@ -56,6 +62,110 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
         comprehensiveTestBook = addTemplates(comprehensiveTestBook);
 
         return comprehensiveTestBook;
+    }
+
+    private static BookBuilder addBuiltinComponentOne(BookBuilder bookBuilder) {
+        JsonElement header = new JsonObject();
+        JsonElement separator = new JsonObject();
+        JsonElement text = new JsonObject();
+        JsonElement item = new JsonObject();
+        JsonElement image = new JsonObject();
+
+        // builtin_components_1
+        header.getAsJsonObject().addProperty("type", "guidebook:header");
+        header.getAsJsonObject().addProperty("text", "#headertext");
+        header.getAsJsonObject().addProperty("x", -1);
+        header.getAsJsonObject().addProperty("y", -1);
+        separator.getAsJsonObject().addProperty("type", "guidebook:separator");
+        separator.getAsJsonObject().addProperty("x", -1);
+        separator.getAsJsonObject().addProperty("y", -1);
+        text.getAsJsonObject().addProperty("type", "guidebook:text");
+        text.getAsJsonObject().addProperty("text", "#texttext");
+        text.getAsJsonObject().addProperty("x", 20);
+        text.getAsJsonObject().addProperty("y", 30);
+        item.getAsJsonObject().addProperty("type", "guidebook:item");
+        item.getAsJsonObject().addProperty("item", "#item");
+        item.getAsJsonObject().addProperty("x", 20);
+        item.getAsJsonObject().addProperty("y", 80);
+        item.getAsJsonObject().addProperty("framed", true);
+        image.getAsJsonObject().addProperty("type", "guidebook:image");
+        image.getAsJsonObject().addProperty("image", "#image");
+        image.getAsJsonObject().addProperty("x", 20);
+        image.getAsJsonObject().addProperty("y", 50);
+        image.getAsJsonObject().addProperty("width", 16);
+        image.getAsJsonObject().addProperty("height", 16);
+        image.getAsJsonObject().addProperty("texture_width", "16");
+        image.getAsJsonObject().addProperty("texture_height", "16");
+
+        TemplateBuilder template = bookBuilder.addTemplate("builtin_components_1")
+            .addComponent(header)
+            .addComponent(separator)
+            .addComponent(text)
+            .addComponent(item)
+            .addComponent(image);
+
+        return template.build();
+    }
+
+    private static BookBuilder addBuiltinComponentTwo(BookBuilder bookBuilder) {
+        JsonElement entity = new JsonObject();
+        JsonElement frame = new JsonObject();
+        JsonElement tooltip = new JsonObject();
+        JsonArray tooltips = new JsonArray();
+
+        // builtin_components_2
+        entity.getAsJsonObject().addProperty("type", "guidebook:entity");
+        entity.getAsJsonObject().addProperty("entity", "#entity");
+        entity.getAsJsonObject().addProperty("x", 50);
+        entity.getAsJsonObject().addProperty("y", 50);
+        frame.getAsJsonObject().addProperty("type", "guidebook:frame");
+        frame.getAsJsonObject().addProperty("x", 50);
+        frame.getAsJsonObject().addProperty("y", 100);
+        tooltip.getAsJsonObject().addProperty("type", "guidebook:tooltip");
+        tooltips.add("#tip1");
+        tooltips.add("#tip2");
+        tooltip.getAsJsonObject().add("tooltip", tooltips);
+        tooltip.getAsJsonObject().addProperty("width", 100);
+        tooltip.getAsJsonObject().addProperty("height", 100);
+
+        TemplateBuilder template = bookBuilder.addTemplate("builtin_components_2")
+            .addComponent(entity)
+            .addComponent(frame)
+            .addComponent(tooltip);
+
+        return template.build();
+    }
+
+    private static BookBuilder addDeriveIntegerToStack(BookBuilder bookBuilder) {
+        JsonElement item = new JsonObject();
+
+        // derive_ingr_to_stack
+        item.getAsJsonObject().addProperty("type", "guidebook:item");
+        item.getAsJsonObject().addProperty("item", "#input->stacks");
+        item.getAsJsonObject().addProperty("x", 10);
+        item.getAsJsonObject().addProperty("y", 40);
+
+        TemplateBuilder template = bookBuilder.addTemplate("derive_ingr_to_stack")
+            .addComponent(item);
+
+        return template.build();
+    }
+
+    private static BookBuilder addNesting(BookBuilder bookBuilder) {
+        JsonElement templateInclude = new JsonObject();
+        JsonElement using = new JsonObject();
+
+        // nesting
+        using.getAsJsonObject().addProperty("headertext", "Header text from using block");
+        using.getAsJsonObject().addProperty("texttext", "#texttext");
+        templateInclude.getAsJsonObject().addProperty("template", "guidebook:builtin_components_1");
+        templateInclude.getAsJsonObject().addProperty("as", "child1");
+        templateInclude.getAsJsonObject().add("using", using);
+
+        TemplateBuilder template = bookBuilder.addTemplate("nesting")
+            .addInclude(templateInclude);
+
+        return template.build();
     }
 
     private static BookBuilder addConfigFlags(BookBuilder bookBuilder) {
@@ -421,8 +531,6 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
             "Basic Template Components",
             new ItemStack(Items.WRITTEN_BOOK)
         );
-
-        //builtinComponents. add something with guidebooktest:builtin_compnents_1 ?? // I think this is custom json
 
         return category.build();
     }

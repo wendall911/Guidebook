@@ -10,7 +10,7 @@ import guidebook.api.data.EntryBuilder;
 public class FormattedTextPageBuilder extends AbstractPageBuilder<FormattedTextPageBuilder> {
 
     private final String translate;
-    private JsonArray with = new JsonArray();
+    private final JsonArray with = new JsonArray();
 
     public FormattedTextPageBuilder(String translate, EntryBuilder parent) {
         super("guidebook:text", parent);
