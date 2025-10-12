@@ -146,8 +146,8 @@ public class EntryBuilder {
         return addPage(new FormattedTextPageBuilder(translate, this));
     }
 
-    public CustomPageBuilder addCustomPage(String template, Map<String, String> includes) {
-        return addPage(new CustomPageBuilder(template, includes, this));
+    public CustomPageBuilder addCustomPage(String template) {
+        return addPage(new CustomPageBuilder(template, this));
     }
 
     public ImagePageBuilder addImagePage(ResourceLocation image) {
