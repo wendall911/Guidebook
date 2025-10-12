@@ -24,6 +24,8 @@ import guidebook.common.base.GuidebookSounds;
 import guidebook.common.book.Book;
 import guidebook.common.book.BookRegistry;
 
+import static guidebook.data.GuidebookInternalBookProvider.INTRO_BOOK_TRANSLATION_KEY;
+
 public class ItemModBook extends Item {
 
     public ItemModBook() {
@@ -121,12 +123,12 @@ public class ItemModBook extends Item {
         }
         else if (book == null) {
             if (rl == null) {
-                tooltip.add(Component.translatable("item.guidebook.guide_book.undefined")
-                        .withStyle(ChatFormatting.DARK_GRAY));
+                tooltip.add(Component.translatable(INTRO_BOOK_TRANSLATION_KEY + ".undefined")
+                    .withStyle(ChatFormatting.DARK_GRAY));
             }
             else {
-                tooltip.add(Component.translatable("item.guidebook.guide_book.invalid", rl)
-                        .withStyle(ChatFormatting.DARK_GRAY));
+                tooltip.add(Component.translatable(INTRO_BOOK_TRANSLATION_KEY + ".invalid", rl)
+                    .withStyle(ChatFormatting.DARK_GRAY));
             }
         }
     }
