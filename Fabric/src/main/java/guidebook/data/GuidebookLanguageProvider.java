@@ -21,8 +21,10 @@ public class GuidebookLanguageProvider extends FabricLanguageProvider {
 
     @Override
     public void generateTranslations(HolderLookup.Provider registryLookup, TranslationBuilder builder) {
-        addItem(builder, GuidebookItems.BOOK_ID.getPath(), "Guidebook Guide");
+        addItem(builder, GuidebookItems.BOOK_ID.getPath(), "Guidebook Book");
         addBook(builder, INTRO_BOOK_TRANSLATION_KEY, "Guidebook");
+        addBookTranslation(builder, INTRO_BOOK_TRANSLATION_KEY + ".undefined", "Invalid book: no ID defined");
+        addBookTranslation(builder, INTRO_BOOK_TRANSLATION_KEY + ".invalid", "Invalid book: %s");
         addBookTranslation(builder, "subtitle", "Documentation for everyone");
         addBookTranslation(builder, "landing", "With $(item)Guidebook$(), " +
             "you can make easy to read, advancement unlockable $(thing)books$() for mods and modpacks!");
