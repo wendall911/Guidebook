@@ -21,12 +21,8 @@ public class TemplateBuilder {
     JsonObject toJson() {
         JsonObject json = new JsonObject();
 
-        if (components.isEmpty() && includes.isEmpty()) {
-            throw new IllegalStateException("Template must have at least one component or include");
-        }
-
         if (!includes.isEmpty()) {
-            json.add("includes", includes);
+            json.add("include", includes);
         }
 
         json.add("components", components);
