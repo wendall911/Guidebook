@@ -53,6 +53,7 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
         comprehensiveTestBook = addBuiltinComponentTwo(comprehensiveTestBook);
         comprehensiveTestBook = addDeriveIntegerToStack(comprehensiveTestBook);
         comprehensiveTestBook = addNesting(comprehensiveTestBook);
+        comprehensiveTestBook = addCustomComponent(comprehensiveTestBook);
         comprehensiveTestBook = addConfigFlags(comprehensiveTestBook);
         comprehensiveTestBook = addDeserializationTest(comprehensiveTestBook);
         comprehensiveTestBook = addLanguageTest(comprehensiveTestBook);
@@ -119,8 +120,8 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
         entity.getAsJsonObject().addProperty("x", 50);
         entity.getAsJsonObject().addProperty("y", 50);
         frame.getAsJsonObject().addProperty("type", "guidebook:frame");
-        frame.getAsJsonObject().addProperty("x", 50);
-        frame.getAsJsonObject().addProperty("y", 100);
+        frame.getAsJsonObject().addProperty("x", -1);
+        frame.getAsJsonObject().addProperty("y", -1);
         tooltip.getAsJsonObject().addProperty("type", "guidebook:tooltip");
         tooltips.add("#tip1");
         tooltips.add("#tip2");
@@ -158,7 +159,7 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
         // nesting
         using.getAsJsonObject().addProperty("headertext", "Header text from using block");
         using.getAsJsonObject().addProperty("texttext", "#texttext");
-        templateInclude.getAsJsonObject().addProperty("template", "guidebook:builtin_components_1");
+        templateInclude.getAsJsonObject().addProperty("template", "guidebooktest:builtin_components_1");
         templateInclude.getAsJsonObject().addProperty("as", "child1");
         templateInclude.getAsJsonObject().add("using", using);
 
@@ -167,6 +168,22 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
 
         return template.build();
     }
+
+    private static BookBuilder addCustomComponent(BookBuilder bookBuilder) {
+        JsonElement custom = new JsonObject();
+
+        // custom_component
+        custom.getAsJsonObject().addProperty("type", "guidebook:custom");
+        custom.getAsJsonObject().addProperty("class", "guidebook.client.book.template.test.ComponentCustomTest");
+        custom.getAsJsonObject().addProperty("x", 10);
+        custom.getAsJsonObject().addProperty("y", 40);
+
+        TemplateBuilder template = bookBuilder.addTemplate("custom_component")
+            .addComponent(custom);
+
+        return template.build();
+    }
+
 
     private static BookBuilder addConfigFlags(BookBuilder bookBuilder) {
         CategoryBuilder category = bookBuilder
@@ -452,7 +469,7 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
                 new ItemStack(Items.COOKED_CHICKEN)
             ).setParent("subcategories");
 
-        EntryBuilder normalSubcategoryEntry = category.addEntry(
+        EntryBuilder normalSubcategoryEntry = normalSubcategory.addEntry(
             "subcategories/normal_subcategory_entry",
             "Normal Subcategory Entry",
             new ItemStack(Items.CARROT_ON_A_STICK)
@@ -518,6 +535,10 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
     }
 
     private static BookBuilder addTemplates(BookBuilder bookBuilder) {
+        JsonElement input = new JsonObject();
+
+        input.getAsJsonObject().addProperty("tag", "minecraft:music_discs");
+
         CategoryBuilder category = bookBuilder
             .addCategory(
                 "templates",
@@ -531,6 +552,42 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
             "Basic Template Components",
             new ItemStack(Items.WRITTEN_BOOK)
         );
+        builtinComponents.addCustomPage("guidebooktest:builtin_components_1")
+            .set("headertext", "Header component")
+            .set("texttext", "Text component section")
+            .set("item", "minecraft:poisonous_potato")
+            .set("image", "minecraft:textures/item/end_crystal.png").build()
+        .addCustomPage("guidebooktest:builtin_components_2")
+            .set("entity", "minecraft:drowned")
+            .set("tip1", "The Drowned is a special zombie that spawns in oceans.")
+            .set("tip2", "It can also be created by manually drowning standard zombies.");
+
+        EntryBuilder customComponents = category.addEntry(
+            "templates/custom_components",
+            "Custom Template Components",
+            new ItemStack(Items.WRITTEN_BOOK)
+        );
+        customComponents.addCustomPage("guidebooktest:custom_component")
+            .set("spaget", "pasta")
+            .set("pop", "beer");
+
+        EntryBuilder deriveFunctions = category.addEntry(
+            "templates/derive_functions",
+            "Derive Functions in Templates",
+            new ItemStack(Items.WRITTEN_BOOK)
+        );
+        deriveFunctions.addCustomPage("guidebooktest:derive_ingr_to_stack")
+            .set("input", input);
+
+        EntryBuilder templateNesting = category.addEntry(
+            "templates/template_nesting",
+            "Template Nesting",
+            new ItemStack(Items.WRITTEN_BOOK)
+        );
+        templateNesting.addCustomPage("guidebooktest:nesting")
+            .set("texttext", "Text component text defined in entry json")
+            .set("child1.item", "minecraft:barrier")
+            .set("child1.image", "minecraft:textures/item/end_crystal.png");
 
         return category.build();
     }
