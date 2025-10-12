@@ -50,6 +50,7 @@ public class BookBuilder {
     private Boolean i18n;
     private Boolean pauseGame;
     private Enum<TextOverflowMode> textOverflowMode;
+    private Boolean pamphlet;
     private Map<String, String> macros;
     private HolderLookup.Provider provider;
 
@@ -146,6 +147,9 @@ public class BookBuilder {
         }
         if (textOverflowMode != null) {
             json.addProperty("text_overflow_mode", textOverflowMode.toString());
+        }
+        if (pamphlet != null) {
+            json.addProperty("pamphlet", pamphlet);
         }
         if (macros != null) {
             JsonObject macroObject = new JsonObject();
@@ -360,6 +364,12 @@ public class BookBuilder {
 
     public BookBuilder setTextOverflowMode(Enum<TextOverflowMode> textOverflowMode) {
         this.textOverflowMode = textOverflowMode;
+
+        return this;
+    }
+
+    public BookBuilder setPamphlet(boolean pamphlet) {
+        this.pamphlet = pamphlet;
 
         return this;
     }
