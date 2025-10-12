@@ -1,0 +1,38 @@
+{
+  "components": [
+    {
+      "type": "guidebook:header",
+      "text": "#headertext",
+      "x": -1,
+      "y": -1
+    },
+    {
+      "type": "guidebook:separator",
+      "x": -1,
+      "y": -1
+    },
+    {
+      "type": "guidebook:text",
+      "text": "#texttext",
+      "x": 20,
+      "y": 30
+    },
+    {
+      "type": "guidebook:item",
+      "framed": true,
+      "item": "#item",
+      "x": 20,
+      "y": 80
+    },
+    {
+      "type": "guidebook:image",
+      "height": 16,
+      "image": "#image",
+      "texture_height": "16",
+      "texture_width": "16",
+      "width": 16,
+      "x": 20,
+      "y": 50
+    }
+  ]
+}

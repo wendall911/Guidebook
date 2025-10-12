@@ -1,5 +1,5 @@
 {
-  "category": "guidebooktest:subcategories",
+  "category": "guidebooktest:subcategories/normal_subcategory",
   "icon": "minecraft:carrot_on_a_stick",
   "name": "Normal Subcategory Entry",
   "pages": [

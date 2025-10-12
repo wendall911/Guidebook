@@ -1,0 +1,5 @@
+{
+  "description": "What'll happen if I add an invalid smelting recipe?",
+  "icon": "minecraft:end_crystal",
+  "name": "Invalid smelting recipe test"
+}

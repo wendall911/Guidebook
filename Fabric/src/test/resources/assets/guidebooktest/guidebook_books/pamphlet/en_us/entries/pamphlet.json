@@ -1,0 +1,16 @@
+{
+  "category": "guidebooktest:root",
+  "icon": "minecraft:crafting_table",
+  "name": "What is a Pamphlet?",
+  "pages": [
+    {
+      "type": "guidebook:text",
+      "text": "A pamphlet is a book with only one category. This means that when you open the book, you go straight to the category view, skipping the landing page and the category selection page. This is useful for small books that don't need multiple categories."
+    },
+    {
+      "type": "guidebook:text",
+      "text": "You can still add subcategories, but they will be displayed as buttons at the bottom of the category view. This is useful for grouping related entries together without adding too much complexity."
+    }
+  ],
+  "priority": true
+}

@@ -1,0 +1,13 @@
+{
+  "components": [],
+  "include": [
+    {
+      "as": "child1",
+      "template": "guidebooktest:builtin_components_1",
+      "using": {
+        "headertext": "Header text from using block",
+        "texttext": "#texttext"
+      }
+    }
+  ]
+}

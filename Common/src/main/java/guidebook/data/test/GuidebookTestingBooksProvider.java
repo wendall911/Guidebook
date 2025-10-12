@@ -24,6 +24,7 @@ import guidebook.config.GuidebookConfig.TextOverflowMode;
 public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
 
     public static final String COMPREHENSIVE_BOOK_TRANSLATION_KEY = "book." + GuidebookAPI.MODID + "test.comprehensive_test_book";
+    public static final String PAMPHLET_TRANSLATION_KEY = "book." + GuidebookAPI.MODID + "test.pamphlet";
 
     public GuidebookTestingBooksProvider(PackOutput packOutput, CompletableFuture<Provider> registries) {
         super(packOutput, GuidebookAPI.MODID + "test", "en_us", registries);
@@ -31,7 +32,130 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
 
     @Override
     protected void addBooks(Consumer<BookBuilder> consumer, Provider provider) {
+        createPamphlet(this, provider).build(consumer);
+        createSmeltingErrorBook(this, provider).build(consumer);
+        createCraftingErrorBook(this, provider).build(consumer);
         createComprehensiveTestBook(this, provider).build(consumer);
+    }
+
+    private BookBuilder createPamphlet(GuidebookTestingBooksProvider builder, Provider provider) {
+        BookBuilder pamphlet = builder.createBookBuilder(
+                "pamphlet",
+                PAMPHLET_TRANSLATION_KEY + ".name",
+                PAMPHLET_TRANSLATION_KEY + ".landing",
+                provider
+            )
+            .setPamphlet(true)
+            .setCreativeTab("minecraft:tools_and_utilities")
+            .setAdvancementsTab("guidebooktest");
+
+        CategoryBuilder category = pamphlet
+            .addCategory(
+                "root",
+                "Root Category",
+                "None of this is displayed.",
+                new ItemStack(Items.BARRIER)
+            );
+
+        EntryBuilder pamphletEntry = category.addEntry(
+            "pamphlet",
+            "What is a Pamphlet?",
+            new ItemStack(Items.CRAFTING_TABLE)
+        ).setPriority(true);
+        pamphletEntry
+            .addTextPage(
+                "A pamphlet is a book with only one category. " +
+                "This means that when you open the book, you go straight to the category view, " +
+                "skipping the landing page and the category selection page. " +
+                "This is useful for small books that don't need multiple categories."
+            ).build()
+            .addTextPage(
+                "You can still add subcategories, but they will be displayed as buttons at the bottom of the category view. " +
+                "This is useful for grouping related entries together without adding too much complexity."
+            );
+
+        EntryBuilder anotherEntry = category.addEntry(
+            "another_entry",
+            "Another Entry",
+            new ItemStack(Items.STICK)
+        ).setSortnum(1);
+        anotherEntry.addTextPage("Just another entry to show that entries still work fine in a pamphlet.");
+
+        EntryBuilder finalEntry = category.addEntry(
+            "final_entry",
+            "Final Entry",
+            new ItemStack(Items.WOODEN_SWORD)
+        ).setSortnum(2);
+        finalEntry
+            .addCraftingPage(ResourceLocation.fromNamespaceAndPath("minecraft", "diamond_sword"))
+                .setText("All normal page types, including custom pages work in a pamphlet.").build()
+            .addTextPage("This is the final entry in the pamphlet. Thanks for reading!");
+
+        return pamphlet;
+    }
+
+    private BookBuilder createSmeltingErrorBook(GuidebookTestingBooksProvider builder, Provider provider) {
+        BookBuilder smeltingErrorBook = builder.createBookBuilder(
+                "i_am_smelting_error",
+                "guidebooktest.smelting.error",
+                "DO NOT OPEN",
+                provider
+            )
+            .setCreativeTab("minecraft:tools_and_utilities")
+            .setSubtitle("DO NOT OPEN")
+            .setModel("minecraft:barrier")
+            .setVersion("GRADLE:VERSION");
+
+        CategoryBuilder category = smeltingErrorBook
+            .addCategory(
+                "burning_dab",
+                "Invalid smelting recipe test",
+                "What'll happen if I add an invalid smelting recipe?",
+                new ItemStack(Items.END_CRYSTAL)
+            );
+
+        EntryBuilder entry = category.addEntry(
+            "kraft_dab/burning_dab_entry",
+            "Smelting page with an invalid recipe",
+            new ItemStack(Items.FURNACE)
+        );
+        entry.addSmeltingPage(ResourceLocation.fromNamespaceAndPath("minecraft", "charcoal"))
+            .setText("This is supposed to have a second recipe that does not exist.")
+            .setRecipe2(ResourceLocation.fromNamespaceAndPath("minecraft", "carrot"));
+
+        return smeltingErrorBook;
+    }
+
+    private BookBuilder createCraftingErrorBook(GuidebookTestingBooksProvider builder, Provider provider) {
+        BookBuilder craftingErrorBook = builder.createBookBuilder(
+            "i_am_crafting_error",
+            "guidebooktest.crafting.error",
+            "DO NOT OPEN",
+            provider
+        )
+        .setCreativeTab("minecraft:tools_and_utilities")
+        .setSubtitle("DO NOT OPEN")
+        .setModel("minecraft:barrier")
+        .setVersion("GRADLE:VERSION");
+
+        CategoryBuilder category = craftingErrorBook
+            .addCategory(
+                "kraft_dab",
+                "Invalid crafting recipe test",
+                "What'll happen if I add an invalid crafting recipe?",
+                new ItemStack(Items.END_CRYSTAL)
+            );
+
+        EntryBuilder entry = category.addEntry(
+            "kraft_dab/kraft_dab_entry",
+            "Crafting page with an invalid recipe",
+            new ItemStack(Items.CRAFTING_TABLE)
+        );
+        entry.addCraftingPage(ResourceLocation.fromNamespaceAndPath("minecraft", "furnace"))
+            .setText("This is supposed to have a second recipe that does not exist.")
+            .setRecipe2(ResourceLocation.fromNamespaceAndPath("minecraft", "does_not_exist"));
+
+        return craftingErrorBook;
     }
 
     public static BookBuilder createComprehensiveTestBook(GuidebookTestingBooksProvider builder, Provider provider) {

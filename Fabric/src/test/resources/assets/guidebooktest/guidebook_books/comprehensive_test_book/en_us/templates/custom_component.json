@@ -1,0 +1,10 @@
+{
+  "components": [
+    {
+      "type": "guidebook:custom",
+      "class": "guidebook.client.book.template.test.ComponentCustomTest",
+      "x": 10,
+      "y": 40
+    }
+  ]
+}

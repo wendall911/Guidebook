@@ -1,0 +1,13 @@
+{
+  "category": "guidebooktest:kraft_dab",
+  "icon": "minecraft:crafting_table",
+  "name": "Crafting page with an invalid recipe",
+  "pages": [
+    {
+      "type": "guidebook:crafting",
+      "recipe": "minecraft:furnace",
+      "recipe2": "minecraft:does_not_exist",
+      "text": "This is supposed to have a second recipe that does not exist."
+    }
+  ]
+}

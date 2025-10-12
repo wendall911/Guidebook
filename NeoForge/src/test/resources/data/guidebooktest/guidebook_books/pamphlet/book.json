@@ -1,0 +1,7 @@
+{
+  "advancements_tab": "guidebooktest",
+  "creative_tab": "minecraft:tools_and_utilities",
+  "landing_text": "book.guidebooktest.pamphlet.landing",
+  "name": "book.guidebooktest.pamphlet.name",
+  "pamphlet": true
+}
