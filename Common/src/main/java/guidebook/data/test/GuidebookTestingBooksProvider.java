@@ -475,6 +475,15 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
         entity.addEntityPage("minecraft:slime{Size:2}")
             .setText("This is a slime. It bounces around and splits into smaller slimes when killed.");
 
+        EntryBuilder image = category.addEntry(
+            "page_types/image",
+            "Image Page",
+            new ItemStack(Items.PAINTING)
+        );
+        image.addImagePage(bookImage("cat"))
+            .setTitle("Example Image")
+            .setText("This is an example image. It is 256x256 pixels with a transparent background.");
+
         EntryBuilder link = category.addEntry(
             "page_types/link",
             "Link",
@@ -714,6 +723,10 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
             .set("child1.image", "minecraft:textures/item/end_crystal.png");
 
         return category.build();
+    }
+
+    private static ResourceLocation bookImage(String id) {
+        return ResourceLocation.fromNamespaceAndPath(GuidebookAPI.MODID + "test", "textures/gui/book/" + id + ".png");
     }
 
 }

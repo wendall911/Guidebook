@@ -8,3 +8,5 @@ git checkout NeoForge/src/test/resources/META-INF/neoforge.mods.toml
 git checkout NeoForge/src/test/resources/pack.mcmeta
 git checkout NeoForge/src/test/resources/assets/guidebook/lang/zh_cn.json
 git checkout Fabric/src/test/resources/assets/guidebook/lang/zh_cn.json
+git checkout Fabric/src/test/resources/assets/guidebooktest/textures/gui/book/cat.png
+git checkout NeoForge/src/test/resources/assets/guidebooktest/textures/gui/book/cat.png
