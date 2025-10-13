@@ -10,6 +10,7 @@ import guidebook.client.book.gui.GuiBook;
 import guidebook.client.book.gui.GuiBookEntry;
 import guidebook.client.book.gui.button.GuiButtonBookArrowSmall;
 import guidebook.client.book.page.abstr.PageWithText;
+import guidebook.common.util.ColorHelper;
 
 public class PageImage extends PageWithText {
 
@@ -51,8 +52,8 @@ public class PageImage extends PageWithText {
         if (images.length > 1 && border) {
             int xs = x + 83;
             int ys = y + 92;
-            graphics.fill(xs, ys, xs + 20, ys + 11, 0x44000000);
-            graphics.fill(xs - 1, ys - 1, xs + 20, ys + 11, 0x44000000);
+            graphics.fill(xs, ys, xs + 20, ys + 11, ColorHelper.fillBlack(0.17F));
+            graphics.fill(xs - 1, ys - 1, xs + 20, ys + 11, ColorHelper.fillBlack(0.17F));
         }
 
         super.render(graphics, mouseX, mouseY, pticks);
@@ -62,7 +63,8 @@ public class PageImage extends PageWithText {
         boolean left = ((GuiButtonBookArrowSmall) button).left;
         if (left) {
             index--;
-        } else {
+        }
+        else {
             index++;
         }
     }

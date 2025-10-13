@@ -20,6 +20,7 @@ import guidebook.client.book.BookPage;
 import guidebook.client.book.gui.GuiBookEntry;
 import guidebook.client.book.page.PageEntity;
 import guidebook.client.book.template.TemplateComponent;
+import guidebook.common.util.ColorHelper.GuidebookColors;
 import guidebook.common.util.EntityUtil;
 
 public class ComponentEntity extends TemplateComponent {
@@ -49,7 +50,7 @@ public class ComponentEntity extends TemplateComponent {
     @Override
     public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
         if (errored) {
-            graphics.drawString(page.fontRenderer, Component.translatable("guidebook.gui.lexicon.loading_error"), x, y, 0xFF0000, false);
+            graphics.drawString(page.fontRenderer, Component.translatable("guidebook.gui.lexicon.loading_error"), x, y, GuidebookColors.ERROR_RED.toColor(), false);
         }
 
         if (entity != null) {

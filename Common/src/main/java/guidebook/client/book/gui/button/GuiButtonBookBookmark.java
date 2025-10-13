@@ -3,6 +3,7 @@ package guidebook.client.book.gui.button;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
@@ -10,6 +11,7 @@ import guidebook.client.base.PersistentData.Bookmark;
 import guidebook.client.book.BookEntry;
 import guidebook.client.book.gui.GuiBook;
 import guidebook.common.book.Book;
+import guidebook.common.util.ColorHelper.GuidebookColors;
 
 public class GuiButtonBookBookmark extends GuiButtonBook {
 
@@ -37,8 +39,11 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 
 			RenderSystem.disableDepthTest();
 			String s = Integer.toString(bookmark.spread + 1);
+            Minecraft mc = parent.getMinecraft();
 
-			graphics.drawString(parent.getMinecraft().font, s, px + 12, py + 10, 0xFFFFFF, true);
+            if (mc != null) {
+                graphics.drawString(mc.font, s, px + 12, py + 10, GuidebookColors.WHITE.toColor(), true);
+            }
 			RenderSystem.enableDepthTest();
 			graphics.pose().popPose();
 		}
@@ -48,7 +53,9 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 		BookEntry entry = bookmark == null ? null : bookmark.getEntry(book);
 
 		if (bookmark == null || entry == null) {
-			return new Component[] { Component.translatable("guidebook.gui.lexicon.add_bookmark") };
+			return new Component[] {
+                Component.translatable("guidebook.gui.lexicon.add_bookmark")
+            };
 		}
 
 		return new Component[] {

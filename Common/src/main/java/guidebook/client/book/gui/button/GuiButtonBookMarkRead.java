@@ -14,6 +14,7 @@ import guidebook.client.book.BookEntry;
 import guidebook.client.book.EntryDisplayState;
 import guidebook.client.book.gui.GuiBook;
 import guidebook.common.book.Book;
+import guidebook.common.util.ColorHelper.GuidebookColors;
 
 public class GuiButtonBookMarkRead extends GuiButtonBook {
 
@@ -43,7 +44,7 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 			parent.setTooltip(getTooltipLines());
 		}
 
-		graphics.drawString(parent.getMinecraft().font, "+", px, py, 0x00FF01, true);
+		graphics.drawString(parent.getMinecraft().font, "+", px, py, GuidebookColors.BOOKMARK_READ.toColor(), true);
 	}
 
 	@Override

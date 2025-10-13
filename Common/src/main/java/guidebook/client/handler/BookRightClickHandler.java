@@ -23,6 +23,7 @@ import net.minecraft.world.phys.HitResult;
 
 import guidebook.client.book.BookEntry;
 import guidebook.common.book.Book;
+import guidebook.common.util.ColorHelper.GuidebookColors;
 import guidebook.common.util.ItemStackUtil;
 
 public class BookRightClickHandler {
@@ -44,6 +45,9 @@ public class BookRightClickHandler {
                         Window window = mc.getWindow();
                         int x = window.getGuiScaledWidth() / 2 + 3;
                         int y = window.getGuiScaledHeight() / 2 + 3;
+                        Component s = Component.translatable("guidebook.gui.lexicon." + (player.isShiftKeyDown() ? "view" : "sneak"))
+                            .withStyle(ChatFormatting.ITALIC);
+
                         entry.getIcon().render(graphics, x, y);
 
                         graphics.pose().pushPose();
@@ -53,13 +57,12 @@ public class BookRightClickHandler {
                         graphics.renderItemDecorations(mc.font, bookStack, (x + 8) * 2, (y + 8) * 2);
                         graphics.pose().popPose();
 
-                        graphics.drawString(mc.font, entry.getName(), x + 18, y + 3, 0xFFFFFF, false);
+                        graphics.drawString(mc.font, entry.getName(), x + 18, y + 3, GuidebookColors.WHITE.toColor(), false);
 
                         graphics.pose().pushPose();
                         graphics.pose().scale(0.75F, 0.75F, 1F);
-                        Component s = Component.translatable("guidebook.gui.lexicon." + (player.isShiftKeyDown() ? "view" : "sneak"))
-                                .withStyle(ChatFormatting.ITALIC);
-                        graphics.drawString(mc.font, s, (int) ((x + 18) / 0.75F), (int) ((y + 14) / 0.75F), 0xBBBBBB, false);
+
+                        graphics.drawString(mc.font, s, (int) ((x + 18) / 0.75F), (int) ((y + 14) / 0.75F), GuidebookColors.GRAY.toColor(), false);
                         graphics.pose().popPose();
                     }
                 }

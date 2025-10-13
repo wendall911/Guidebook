@@ -29,6 +29,8 @@ import guidebook.client.book.BookEntry;
 import guidebook.client.book.BookIcon;
 import guidebook.common.base.GuidebookSounds;
 import guidebook.common.item.ItemModBook;
+import guidebook.common.util.ColorHelper;
+import guidebook.common.util.ColorHelper.GuidebookColors;
 import guidebook.common.util.ItemStackUtil;
 import guidebook.common.util.SerializationUtil;
 import guidebook.common.CommonModContainer;
@@ -101,7 +103,7 @@ public class Book {
     public final Map<String, String> macros = new HashMap<>();
 
     private static int parseColor(JsonObject root, String key, String defaultColor) {
-        return 0xFF000000 | Integer.parseInt(GsonHelper.getAsString(root, key, defaultColor), 16);
+        return ColorHelper.getGuidebookColor(GsonHelper.getAsString(root, key, defaultColor));
     }
 
     public Book(JsonObject root, CommonModContainer owner, ResourceLocation id) {
@@ -115,13 +117,13 @@ public class Book {
 
         this.owner = owner;
         this.id = id;
-        this.textColor = parseColor(root, "text_color", "000000");
-        this.headerColor = parseColor(root, "header_color", "333333");
-        this.nameplateColor = parseColor(root, "nameplate_color", "FFDD00");
-        this.linkColor = parseColor(root, "link_color", "0000EE");
-        this.linkHoverColor = parseColor(root, "link_hover_color", "8800EE");
-        this.progressBarColor = parseColor(root, "progress_bar_color", "FFFF55");
-        this.progressBarBackground = parseColor(root, "progress_bar_background", "DDDDDD");
+        this.textColor = parseColor(root, "text_color", GuidebookColors.TEXT.getHex());
+        this.headerColor = parseColor(root, "header_color", GuidebookColors.HEADER.getHex());
+        this.nameplateColor = parseColor(root, "nameplate_color", GuidebookColors.NAMEPLATE.getHex());
+        this.linkColor = parseColor(root, "link_color", GuidebookColors.LINK.getHex());
+        this.linkHoverColor = parseColor(root, "link_hover_color", GuidebookColors.LINK_HOVER.getHex());
+        this.progressBarColor = parseColor(root, "progress_bar_color", GuidebookColors.PROGRESS_BAR.getHex());
+        this.progressBarBackground = parseColor(root, "progress_bar_background", GuidebookColors.PROGRESS_BAR_BACKGROUND.getHex());
         this.openSound = SerializationUtil.getAsResourceLocation(root, "open_sound", GuidebookSounds.BOOK_OPEN.getLocation());
         this.flipSound = SerializationUtil.getAsResourceLocation(root, "flip_sound", GuidebookSounds.BOOK_FLIP.getLocation());
         this.showProgress = GsonHelper.getAsBoolean(root, "show_progress", true);

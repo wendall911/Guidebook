@@ -16,6 +16,7 @@ import guidebook.client.book.gui.GuiBook;
 import guidebook.client.book.gui.GuiBookEntry;
 import guidebook.client.book.page.abstr.PageWithText;
 import guidebook.common.book.Book;
+import guidebook.common.util.ColorHelper.GuidebookColors;
 
 public class PageQuest extends PageWithText {
 
@@ -87,7 +88,7 @@ public class PageQuest extends PageWithText {
 
             boolean completed = isCompleted(parent.book);
             String s = I18n.get(completed ? "guidebook.gui.lexicon.complete" : "guidebook.gui.lexicon.incomplete");
-            int color = completed ? 0x008b1a : book.headerColor;
+            int color = completed ? GuidebookColors.COMPLETE.toColor() : book.headerColor;
 
             parent.drawCenteredStringNoShadow(graphics, s, GuiBook.PAGE_WIDTH / 2, GuiBook.PAGE_HEIGHT - 17, color);
         }

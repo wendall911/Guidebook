@@ -24,6 +24,7 @@ import guidebook.client.book.gui.button.GuiButtonCategory;
 import guidebook.client.book.gui.button.GuiButtonEntry;
 import guidebook.client.gui.GuiAdvancementsExt;
 import guidebook.common.book.Book;
+import guidebook.common.util.ColorHelper.GuidebookColors;
 
 import static guidebook.client.book.gui.GuiBookEntryList.ENTRIES_IN_FIRST_PAGE;
 
@@ -137,8 +138,8 @@ public class GuiBookLanding extends GuiBook {
             int x = RIGHT_PAGE_X + PAGE_WIDTH / 2;
             int y = bottomSeparator + 12;
 
-            drawCenteredStringNoShadow(graphics, I18n.get("guidebook.gui.lexicon.loading_error"), x, y, 0xFF0000);
-            drawCenteredStringNoShadow(graphics, I18n.get("guidebook.gui.lexicon.loading_error_hover"), x, y + 10, 0x777777);
+            drawCenteredStringNoShadow(graphics, I18n.get("guidebook.gui.lexicon.loading_error"), x, y, GuidebookColors.ERROR_RED.toColor());
+            drawCenteredStringNoShadow(graphics, I18n.get("guidebook.gui.lexicon.loading_error_hover"), x, y + 10, GuidebookColors.ERROR_GRAY.toColor());
 
             x -= PAGE_WIDTH / 2;
             y -= 4;

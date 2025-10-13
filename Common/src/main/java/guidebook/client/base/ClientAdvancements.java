@@ -17,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import guidebook.client.book.ClientBookRegistry;
 import guidebook.common.book.Book;
+import guidebook.common.util.ColorHelper.GuidebookColors;
 import guidebook.mixin.client.AccessorClientAdvancements;
 
 public class ClientAdvancements {
@@ -85,8 +86,22 @@ public class ClientAdvancements {
 			graphics.blitSprite(BACKGROUND_SPRITE, 0, 0, width(), height());
 
 			Font font = toastGui.getMinecraft().font;
-			graphics.drawString(font, Component.translatable(book.name), 30, 7, 0xfff000f0, false);
-			graphics.drawString(font, Component.translatable("guidebook.gui.lexicon.toast.info"), 30, 17, 0xffffffff, false);
+			graphics.drawString(
+                font,
+                Component.translatable(book.name),
+                30,
+                7,
+                GuidebookColors.ADVANCEMENT.toColor(),
+                false
+            );
+			graphics.drawString(
+                font,
+                Component.translatable("guidebook.gui.lexicon.toast.info"),
+                30,
+                17,
+                GuidebookColors.WHITE.toColor(),
+                false
+            );
 
 			graphics.renderItem(book.getBookItem(), 8, 8);
 			graphics.renderItemDecorations(font, book.getBookItem(), 8, 8);

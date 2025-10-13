@@ -23,6 +23,8 @@ import guidebook.client.book.BookEntry;
 import guidebook.client.book.ClientBookRegistry;
 import guidebook.client.book.gui.GuiBook;
 import guidebook.common.book.Book;
+import guidebook.common.util.ColorHelper;
+import guidebook.common.util.ColorHelper.GuidebookColors;
 import guidebook.common.util.ItemStackUtil;
 import guidebook.config.GuidebookConfig;
 
@@ -44,6 +46,7 @@ public class TooltipHandler {
                 ItemStack stackAt = mc.player.getInventory().getItem(i);
                 if (!stackAt.isEmpty()) {
                     Book book = ItemStackUtil.getBookFromStack(stackAt);
+
                     if (book != null) {
                         Pair<BookEntry, Integer> entry = book.getContents().getEntryForStack(stack);
 
@@ -59,10 +62,11 @@ public class TooltipHandler {
 
             if (lexSlot > -1) {
                 int x = tooltipX - 34;
+
                 RenderSystem.disableDepthTest();
 
-                graphics.fill(x - 4, tooltipY - 4, x + 20, tooltipY + 26, 0x44000000);
-                graphics.fill(x - 6, tooltipY - 6, x + 22, tooltipY + 28, 0x44000000);
+                graphics.fill(x - 4, tooltipY - 4, x + 20, tooltipY + 26, ColorHelper.fillBlack(0.17F));
+                graphics.fill(x - 6, tooltipY - 6, x + 22, tooltipY + 28, ColorHelper.fillBlack(0.17F));
 
                 if (GuidebookConfig.Client.useShiftForQuickLookup() ? Screen.hasShiftDown() : Screen.hasControlDown()) {
                     lexiconLookupTime += ClientTicker.delta;
@@ -92,11 +96,14 @@ public class TooltipHandler {
                     RenderSystem.disableBlend();
 
                     if (lexiconLookupTime >= requiredTime) {
-                        mc.player.getInventory().selected = lexSlot;
                         int spread = lexiconEntry.getSecond();
+
+                        mc.player.getInventory().selected = lexSlot;
+
                         ClientBookRegistry.INSTANCE.displayBookGui(lexiconEntry.getFirst().getBook().id, lexiconEntry.getFirst().getId(), spread * 2);
                     }
-                } else {
+                }
+                else {
                     lexiconLookupTime = 0F;
                 }
 
@@ -108,13 +115,15 @@ public class TooltipHandler {
 
                 graphics.pose().pushPose();
                 graphics.pose().translate(0, 0, 500);
-                graphics.drawString(mc.font, "?", x + 10, tooltipY + 8, 0xFFFFFFFF, true);
+                graphics.drawString(mc.font, "?", x + 10, tooltipY + 8, GuidebookColors.WHITE.toColor(), true);
 
                 graphics.pose().scale(0.5F, 0.5F, 1F);
+
                 boolean mac = Minecraft.ON_OSX;
                 Component key = Component.literal(GuidebookConfig.Client.useShiftForQuickLookup() ? "Shift" : mac ? "Cmd" : "Ctrl")
-                        .withStyle(ChatFormatting.BOLD);
-                graphics.drawString(mc.font, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, 0xFFFFFFFF, true);
+                    .withStyle(ChatFormatting.BOLD);
+
+                graphics.drawString(mc.font, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, GuidebookColors.WHITE.toColor(), true);
                 graphics.pose().popPose();
 
                 RenderSystem.enableDepthTest();

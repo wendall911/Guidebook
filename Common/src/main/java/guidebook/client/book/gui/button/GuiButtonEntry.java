@@ -1,5 +1,7 @@
 package guidebook.client.book.gui.button;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.ChatFormatting;
@@ -13,6 +15,7 @@ import net.minecraft.network.chat.MutableComponent;
 import guidebook.client.base.ClientTicker;
 import guidebook.client.book.BookEntry;
 import guidebook.client.book.gui.GuiBook;
+import guidebook.common.util.ColorHelper;
 
 public class GuiButtonEntry extends Button {
 
@@ -29,7 +32,7 @@ public class GuiButtonEntry extends Button {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    protected void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         if (!active) {
             return;
         }
@@ -44,7 +47,13 @@ public class GuiButtonEntry extends Button {
         boolean locked = entry.isLocked();
 
         graphics.pose().scale(0.5F, 0.5F, 0.5F);
-        graphics.fill(getX() * 2, getY() * 2, (getX() + (int) ((float) width * widthFract)) * 2, (getY() + height) * 2, 0x22000000);
+        graphics.fill(
+            getX() * 2,
+            getY() * 2,
+            (getX() + (int) ((float) width * widthFract)) * 2,
+            (getY() + height) * 2,
+            ColorHelper.fillBlack(0.12F)
+        );
         RenderSystem.enableBlend();
 
         if (locked) {
@@ -76,16 +85,17 @@ public class GuiButtonEntry extends Button {
 
     private int getColor() {
         if (entry.isSecret()) {
-            return 0xAA000000 | (parent.book.textColor & 0x00FFFFFF);
+            return ColorHelper.getSecret(parent.book.textColor);
         }
-        if (entry.isLocked()) {
-            return 0x77000000 | (parent.book.textColor & 0x00FFFFFF);
+        else if (entry.isLocked()) {
+            return ColorHelper.getLocked(parent.book.textColor);
         }
+
         return entry.getEntryColor();
     }
 
     @Override
-    public void playDownSound(SoundManager soundHandlerIn) {
+    public void playDownSound(@NotNull SoundManager soundHandlerIn) {
         if (entry != null && !entry.isLocked()) {
             GuiBook.playBookFlipSound(parent.book);
         }

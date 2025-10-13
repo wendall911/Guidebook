@@ -19,6 +19,7 @@ import guidebook.client.book.BookEntry;
 import guidebook.client.book.gui.button.GuiButtonCategory;
 import guidebook.client.book.gui.button.GuiButtonEntry;
 import guidebook.common.book.Book;
+import guidebook.common.util.ColorHelper.GuidebookColors;
 
 public abstract class GuiBookEntryList extends GuiBook {
 
@@ -109,12 +110,30 @@ public abstract class GuiBookEntryList extends GuiBook {
 
         if (visibleEntries.isEmpty()) {
             if (!searchField.getValue().isEmpty()) {
-                drawCenteredStringNoShadow(graphics, I18n.get("guidebook.gui.lexicon.no_results"), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
+                drawCenteredStringNoShadow(
+                    graphics,
+                    I18n.get("guidebook.gui.lexicon.no_results"),
+                    GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80,
+                    GuidebookColors.HEADER.toColor()
+                );
                 graphics.pose().scale(2F, 2F, 2F);
-                drawCenteredStringNoShadow(graphics, I18n.get("guidebook.gui.lexicon.sad"), GuiBook.RIGHT_PAGE_X / 2 + GuiBook.PAGE_WIDTH / 4, 47, 0x999999);
+                drawCenteredStringNoShadow(
+                    graphics,
+                    I18n.get("guidebook.gui.lexicon.sad"),
+                    GuiBook.RIGHT_PAGE_X / 2 + GuiBook.PAGE_WIDTH / 4,
+                    47,
+                    GuidebookColors.LEXICON_SAD.toColor()
+                );
                 graphics.pose().scale(0.5F, 0.5F, 0.5F);
-            } else {
-                drawCenteredStringNoShadow(graphics, getNoEntryMessage(), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
+            }
+            else {
+                drawCenteredStringNoShadow(
+                    graphics,
+                    getNoEntryMessage(),
+                    GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2,
+                    80,
+                    GuidebookColors.HEADER.toColor()
+                );
             }
         }
     }

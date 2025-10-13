@@ -23,6 +23,7 @@ import guidebook.client.book.BookEntry;
 import guidebook.client.book.gui.GuiBook;
 import guidebook.client.book.gui.GuiBookEntry;
 import guidebook.client.book.page.abstr.PageWithText;
+import guidebook.common.util.ColorHelper.GuidebookColors;
 import guidebook.common.util.EntityUtil;
 
 public class PageEntity extends PageWithText {
@@ -51,8 +52,11 @@ public class PageEntity extends PageWithText {
     @Override
     public void onDisplayed(GuiBookEntry parent, int left, int top) {
         super.onDisplayed(parent, left, top);
+        Minecraft mc = parent.getMinecraft();
 
-        loadEntity(parent.getMinecraft().level);
+        if (mc != null) {
+            loadEntity(mc.level);
+        }
     }
 
     @Override
@@ -77,7 +81,7 @@ public class PageEntity extends PageWithText {
         }
 
         if (errored) {
-            graphics.drawString(fontRenderer, I18n.get("guidebook.gui.lexicon.loading_error"), 58, 60, 0xFF0000, true);
+            graphics.drawString(fontRenderer, I18n.get("guidebook.gui.lexicon.loading_error"), 58, 60, GuidebookColors.ERROR_RED.toColor(), true);
         }
 
         if (entity != null) {
