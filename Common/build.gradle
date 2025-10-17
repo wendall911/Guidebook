@@ -12,7 +12,7 @@ neoForge {
         accessTransformers.from(at.absolutePath)
     }
     parchment {
-        minecraftVersion = minecraft_version
+        minecraftVersion = mappings_minecraft_version
         mappingsVersion = mappings_version
     }
 }
@@ -25,7 +25,7 @@ dependencies {
     annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: "${mixin_extras_version}"
     implementation group: 'technology.roughness.whitenoise', name: "whitenoise-${minecraft_version}-common", version: "${whitenoise_version}"
 
-    compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+    compileOnly "mezz.jei:jei-${jei_minecraft_version}-common:${jei_version}"
 
     compileOnly "me.shedaniel:RoughlyEnoughItems-api:${rei_version}"
 }

@@ -4,6 +4,10 @@
   "package": "guidebook.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "AccessorRecipeManager",
+    "AccessorShapedRecipe",
+    "AccessorShapelessRecipe",
+    "AccessorSingleItemRecipe",
     "AccessorSmithingTransformRecipe",
     "AccessorSmithingTrimRecipe"
   ],

@@ -119,7 +119,6 @@ ext.expandProps = [
     'neoforge_loader_version_range': neoforge_loader_version_range,
     'neoforge_mc_version_range': neoforge_mc_version_range,
     'mod_credits': mod_credits,
-    'pack_format': pack_format,
     'fabric_whitenoise_range': fabric_whitenoise_range,
     'whitenoise_range': whitenoise_range
 ]
@@ -130,10 +129,16 @@ processResources {
         expand expandProps
     }
     inputs.properties(expandProps)
+    outputs.upToDateWhen {
+        false
+    }
 }
 processTestResources {
     filesMatching(resourceTargets) {
         expand(project.properties)
+    }
+    outputs.upToDateWhen {
+        false
     }
 }
 
