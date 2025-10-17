@@ -1,17 +1,29 @@
 package guidebook.data;
 
+import java.util.List;
+
+import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
-import net.minecraft.data.models.BlockModelGenerators;
-import net.minecraft.data.models.ItemModelGenerators;
-import net.minecraft.data.models.model.ModelTemplates;
-import net.minecraft.data.models.model.TextureMapping;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.model.ItemModelUtils;
+import net.minecraft.client.data.models.model.ModelTemplates;
+import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.resources.ResourceLocation;
 
 import guidebook.common.item.GuidebookItems;
 
-
 public class GuidebookItemModelProvider extends FabricModelProvider {
+
+    public static final List<ResourceLocation> ALL_MODELS = List.of(
+        getModelId(GuidebookItems.BOOK_BROWN_ID),
+        getModelId(GuidebookItems.BOOK_BLUE_ID),
+        getModelId(GuidebookItems.BOOK_CYAN_ID),
+        getModelId(GuidebookItems.BOOK_GRAY_ID),
+        getModelId(GuidebookItems.BOOK_GREEN_ID),
+        getModelId(GuidebookItems.BOOK_PURPLE_ID),
+        getModelId(GuidebookItems.BOOK_RED_ID)
+    );
 
     public GuidebookItemModelProvider(FabricDataOutput output) {
         super(output);
@@ -19,14 +31,29 @@ public class GuidebookItemModelProvider extends FabricModelProvider {
 
     @Override
     public void generateItemModels(ItemModelGenerators itemModelGenerator) {
-        addBookModel(itemModelGenerator, GuidebookItems.BOOK_ID, GuidebookItems.BOOK_BROWN_ID);
-        addBookModel(itemModelGenerator, GuidebookItems.BOOK_BLUE_ID, GuidebookItems.BOOK_BLUE_ID);
-        addBookModel(itemModelGenerator, GuidebookItems.BOOK_BROWN_ID, GuidebookItems.BOOK_BROWN_ID);
-        addBookModel(itemModelGenerator, GuidebookItems.BOOK_CYAN_ID, GuidebookItems.BOOK_CYAN_ID);
-        addBookModel(itemModelGenerator, GuidebookItems.BOOK_GRAY_ID, GuidebookItems.BOOK_GRAY_ID);
-        addBookModel(itemModelGenerator, GuidebookItems.BOOK_GREEN_ID, GuidebookItems.BOOK_GREEN_ID);
-        addBookModel(itemModelGenerator, GuidebookItems.BOOK_PURPLE_ID, GuidebookItems.BOOK_PURPLE_ID);
-        addBookModel(itemModelGenerator, GuidebookItems.BOOK_RED_ID, GuidebookItems.BOOK_RED_ID);
+        // Default book model (brown)
+        ResourceLocation defaultModel = getModelId(GuidebookItems.BOOK_ID);
+        ResourceLocation bookTemplate = ModelTemplates.FLAT_ITEM.create(
+            defaultModel,
+            TextureMapping.layer0(GuidebookItems.BOOK_BROWN_ID.withPrefix("item/")),
+            itemModelGenerator.modelOutput
+        );
+        itemModelGenerator.itemModelOutput.accept(GuidebookItems.BOOK, ItemModelUtils.plainModel(bookTemplate));
+
+        /*
+         * Other color variants
+         * These all use the same model, just different textures.
+         * Generate so other mods can use them if they want.
+         */
+        ALL_MODELS.stream()
+            .filter(id -> !id.equals(defaultModel)) // skip default, already done above
+            .forEach(id -> {
+                ModelTemplates.FLAT_ITEM.create(
+                    id,
+                    TextureMapping.layer0(id),
+                    itemModelGenerator.modelOutput
+                );
+            });
     }
 
     @Override
@@ -34,11 +61,8 @@ public class GuidebookItemModelProvider extends FabricModelProvider {
         // NO-OP
     }
 
-    public void addBookModel(ItemModelGenerators itemModelGenerator, ResourceLocation book, ResourceLocation bookTexture) {
-        ResourceLocation bookModel = ResourceLocation.fromNamespaceAndPath(book.getNamespace(), "item/" + book.getPath());
-        ResourceLocation bookTextureModel = ResourceLocation.fromNamespaceAndPath(bookTexture.getNamespace(), "item/" + bookTexture.getPath());
-
-        ModelTemplates.FLAT_ITEM.create(bookModel, TextureMapping.layer0(bookTextureModel), itemModelGenerator.output);
+    public static ResourceLocation getModelId(ResourceLocation variant) {
+        return variant.withPrefix("item/");
     }
 
 }

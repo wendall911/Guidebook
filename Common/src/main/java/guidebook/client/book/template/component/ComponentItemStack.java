@@ -3,9 +3,9 @@ package guidebook.client.book.template.component;
 import java.util.function.UnaryOperator;
 
 import com.google.gson.annotations.SerializedName;
-import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
 
@@ -40,18 +40,18 @@ public class ComponentItemStack extends TemplateComponent {
     }
 
     @Override
-    public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
+    public void render(GuiGraphics guiGraphics, BookPage page, int mouseX, int mouseY, float partialTicks) {
         if (items.length == 0) {
             return;
         }
 
         if (framed) {
-            RenderSystem.enableBlend();
-            graphics.setColor(1F, 1F, 1F, 1F);
-            graphics.blit(page.book.craftingTexture, x - 5, y - 5, 20, 102, 26, 26, 128, 256);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, page.book.craftingTexture,
+                x - 5, y - 5, 20, 102, 26, 26, 128, 256);
         }
 
-        page.parent.renderItemStack(graphics, x, y, mouseX, mouseY, items[(page.parent.ticksInBook / 20) % items.length]);
+        page.parent.renderItemStack(guiGraphics, x, y, mouseX, mouseY,
+            items[(page.parent.ticksInBook / 20) % items.length]);
     }
 
 }

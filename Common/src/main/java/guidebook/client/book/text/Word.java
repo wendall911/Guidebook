@@ -27,29 +27,35 @@ public class Word {
     private final Supplier<Boolean> onClick;
     public final int x, y, width, height;
 
-    public Word(GuiBook gui, Span span, MutableComponent text, int x, int y, int strWidth, List<Word> cluster) {
+    public Word(GuiBook gui, Span span, MutableComponent text, int x, int y, int strWidth, int lineHeight, List<Word> cluster) {
         this.book = gui.book;
         this.gui = gui;
         this.x = x;
         this.y = y;
         this.width = strWidth;
-        this.height = 8;
+        this.height = lineHeight;
         this.onClick = span.onClick;
         this.linkCluster = cluster;
         if (!span.tooltip.getString().isEmpty()) {
-            text = text.withStyle(s -> s.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, span.tooltip)));
+            text = text.withStyle(s -> s.withHoverEvent(new HoverEvent.ShowText(span.tooltip)));
         }
         this.text = text;
     }
 
     public void render(GuiGraphics graphics, Font font, Style styleOverride, int mouseX, int mouseY) {
         MutableComponent toRender = text.copy().withStyle(styleOverride);
+
         if (isClusterHovered(mouseX, mouseY)) {
             if (onClick != null) {
                 toRender.withStyle(s -> s.withColor(TextColor.fromRgb(book.linkHoverColor)));
             }
 
-            graphics.renderComponentHoverEffect(font, text.getStyle(), (int) gui.getRelativeX(mouseX), (int) gui.getRelativeY(mouseY));
+            graphics.renderComponentHoverEffect(
+                font,
+                text.getStyle(),
+                mouseX,
+                mouseY
+            );
         }
 
         graphics.drawString(font, toRender, x, y, -1, false);

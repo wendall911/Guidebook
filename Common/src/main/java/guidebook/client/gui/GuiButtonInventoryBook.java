@@ -26,19 +26,27 @@ public class GuiButtonInventoryBook extends Button {
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
-        graphics.setColor(1F, 1F, 1F, 1F);
-
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float pticks) {
         boolean hovered = mouseX >= getX() && mouseY >= getY() && mouseX < getX() + width && mouseY < getY() + height;
-        graphics.blit(ResourceLocation.fromNamespaceAndPath(GuidebookAPI.MODID, "textures/gui/inventory_button.png"), getX(), getY(), (hovered ? 20 : 0), 0, width, height, 64, 64);
-
         ItemStack stack = book.getBookItem();
-        graphics.renderItem(stack, getX() + 2, getY() + 2);
-        graphics.renderItemDecorations(Minecraft.getInstance().font, stack, getX() + 2, getY() + 2);
-
         EntryDisplayState readState = book.getContents().getReadState();
+
+        guiGraphics.blit(
+            ResourceLocation.fromNamespaceAndPath(GuidebookAPI.MODID, "textures/gui/inventory_button.png"),
+            getX(),
+            getY(),
+            (hovered ? 20 : 0),
+            0,
+            width,
+            height,
+            64,
+            64
+        );
+        guiGraphics.renderItem(stack, getX() + 2, getY() + 2);
+        guiGraphics.renderItemDecorations(Minecraft.getInstance().font, stack, getX() + 2, getY() + 2);
+
         if (readState.hasIcon && readState.showInInventory) {
-            GuiBook.drawMarking(graphics, book, getX(), getY(), 0, readState);
+            GuiBook.drawMarking(guiGraphics, book, getX(), getY(), 0, readState);
         }
     }
 

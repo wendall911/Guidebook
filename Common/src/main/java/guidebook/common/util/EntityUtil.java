@@ -5,11 +5,13 @@ import java.util.function.Function;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
+import net.minecraft.core.Holder.Reference;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 
@@ -23,9 +25,17 @@ public final class EntityUtil {
 
     public static String getEntityName(String entityId) {
         Pair<String, String> nameAndNbt = splitNameAndNBT(entityId);
-        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.tryParse(nameAndNbt.getLeft()));
+        ResourceLocation id = ResourceLocation.tryParse(nameAndNbt.getLeft());
+        String unknown = "Unknown Entity";
 
-        return type.getDescriptionId();
+        if (id == null) {
+            return unknown;
+        }
+
+        Optional<Reference<EntityType<?>>> type = BuiltInRegistries.ENTITY_TYPE.get(id);
+
+        return type.map(entityTypeReference -> entityTypeReference.value().getDescriptionId()).orElse(unknown);
+
     }
 
     public static Function<Level, Entity> loadEntity(String entityId) {
@@ -36,8 +46,9 @@ public final class EntityUtil {
 
         if (!nbtStr.isEmpty()) {
             try {
-                nbt = TagParser.parseTag(nbtStr);
-            } catch (CommandSyntaxException e) {
+                nbt = TagParser.parseCompoundFully(nbtStr);
+            }
+            catch (CommandSyntaxException e) {
                 GuidebookAPI.LOGGER.error("Failed to load entity data", e);
             }
         }
@@ -47,19 +58,23 @@ public final class EntityUtil {
         if (maybeType.isEmpty()) {
             throw new RuntimeException("Unknown entity id: " + entityId);
         }
-        EntityType<?> type = maybeType.get();
+        EntityType<?> entityType = maybeType.get();
         final CompoundTag useNbt = nbt;
         final String useId = entityId;
-        return (world) -> {
+
+        return (level) -> {
             Entity entity;
             try {
-                entity = type.create(world);
                 if (useNbt != null) {
-                    entity.load(useNbt);
+                    entity = EntityType.loadEntityRecursive(useNbt, level, EntitySpawnReason.LOAD, displayOnly -> displayOnly);
+                }
+                else {
+                    entity = entityType.create(level, EntitySpawnReason.LOAD);
                 }
 
                 return entity;
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 throw new IllegalArgumentException("Can't load entity " + useId, e);
             }
         };

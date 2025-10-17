@@ -10,8 +10,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -60,15 +61,17 @@ public class ClientAdvancements {
 	}
 
 	public static void sendBookToast(Book book) {
-		ToastComponent gui = Minecraft.getInstance().getToasts();
-		if (gui.getToast(LexiconToast.class, book) == null) {
-			gui.addToast(new LexiconToast(book));
+        ToastManager toastManager = Minecraft.getInstance().getToastManager();
+
+        if (toastManager.getToast(LexiconToast.class, book) == null) {
+            toastManager.addToast(new LexiconToast(book));
 		}
 	}
 
 	public static class LexiconToast implements Toast {
 		private static final ResourceLocation BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("toast/advancement");
 		private final Book book;
+        private Toast.Visibility visibility = Toast.Visibility.SHOW;
 
 		public LexiconToast(Book book) {
 			this.book = book;
@@ -80,12 +83,22 @@ public class ClientAdvancements {
 			return book;
 		}
 
-		@NotNull
-		@Override
-		public Visibility render(GuiGraphics graphics, ToastComponent toastGui, long delta) {
-			graphics.blitSprite(BACKGROUND_SPRITE, 0, 0, width(), height());
+        @Override
+        public @NotNull Visibility getWantedVisibility() {
+            return visibility;
+        }
 
-			Font font = toastGui.getMinecraft().font;
+        @Override
+        public void update(@NotNull ToastManager toastManager, long delta) {
+            if (delta >= 5000L) {
+                visibility = Toast.Visibility.HIDE;
+            }
+        }
+
+        @Override
+		public void render(GuiGraphics graphics, @NotNull Font font, long delta) {
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND_SPRITE, 0, 0, width(), height());
+
 			graphics.drawString(
                 font,
                 Component.translatable(book.name),
@@ -106,7 +119,6 @@ public class ClientAdvancements {
 			graphics.renderItem(book.getBookItem(), 8, 8);
 			graphics.renderItemDecorations(font, book.getBookItem(), 8, 8);
 
-			return delta >= 5000L ? Toast.Visibility.HIDE : Toast.Visibility.SHOW;
 		}
 
 	}

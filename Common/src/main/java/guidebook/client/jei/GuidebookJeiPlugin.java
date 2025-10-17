@@ -17,6 +17,7 @@ import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
 
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -45,21 +46,7 @@ public class GuidebookJeiPlugin implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(@NotNull ISubtypeRegistration registration) {
-        ISubtypeInterpreter<ItemStack> bookInterpreter = new ISubtypeInterpreter<>() {
-            @Override
-            public @Nullable Object getSubtypeData(@NotNull ItemStack stack, @NotNull UidContext context) {
-                return stack.get(GuidebookDataComponents.BOOK);
-            }
-
-            @Override
-            public @NotNull String getLegacyStringSubtypeInfo(@NotNull ItemStack stack, @NotNull UidContext context) {
-                if (!stack.has(GuidebookDataComponents.BOOK)) {
-                    return "";
-                }
-
-                return Objects.requireNonNull(stack.get(GuidebookDataComponents.BOOK)).toString();
-            }
-        };
+        ISubtypeInterpreter<ItemStack> bookInterpreter = (stack, context) -> stack.get(GuidebookDataComponents.BOOK);
 
         registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, GuidebookItems.BOOK, bookInterpreter);
     }
@@ -78,17 +65,17 @@ public class GuidebookJeiPlugin implements IModPlugin {
         }
     }
 
-    public static boolean handleRecipeKeybind(int keyCode, int scanCode, ItemStack stack) {
+    public static boolean handleRecipeKeybind(KeyEvent keyEvent, ItemStack stack) {
         IFocus<ItemStack> focus;
 
-        if (showRecipe != null && showRecipe.matches(keyCode, scanCode)) {
+        if (showRecipe != null && showRecipe.matches(keyEvent)) {
             focus = jeiRuntime.getJeiHelpers().getFocusFactory().createFocus(RecipeIngredientRole.OUTPUT, VanillaTypes.ITEM_STACK, stack);
 
             jeiRuntime.getRecipesGui().show(focus);
 
             return true;
         }
-        else if (showUses != null && showUses.matches(keyCode, scanCode)) {
+        else if (showUses != null && showUses.matches(keyEvent)) {
             focus = jeiRuntime.getJeiHelpers().getFocusFactory().createFocus(RecipeIngredientRole.INPUT, VanillaTypes.ITEM_STACK, stack);
 
             jeiRuntime.getRecipesGui().show(focus);

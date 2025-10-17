@@ -175,7 +175,7 @@ public class VariableAssigner {
     }
 
     private static IVariable stacks(IVariable arg, HolderLookup.Provider registries) {
-        return IVariable.from(arg.as(Ingredient.class).getItems(), registries);
+        return IVariable.from(arg.as(Ingredient.class), registries);
     }
 
     private static String ename(String arg) {

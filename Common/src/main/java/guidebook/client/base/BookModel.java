@@ -1,125 +1,48 @@
 package guidebook.client.base;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.*;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.client.renderer.item.BlockModelWrapper;
+import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.world.entity.ItemOwner;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.BlockState;
 
 import guidebook.common.book.Book;
 import guidebook.common.item.ItemModBook;
 
-public class BookModel implements BakedModel {
+public class BookModel implements ItemModel {
 
-	private final BakedModel original;
-	private final ItemOverrides itemHandler;
+    private final ItemModel itemModel;
+    private final BakingContext bakingContext;
 
-	public BookModel(BakedModel original, Function<ResourceLocation, BakedModel> modelGetter) {
-		this.original = original;
+    public BookModel(ItemModel bookModel, BakingContext bakingContext) {
+        this.itemModel = bookModel;
+        this.bakingContext = bakingContext;
+    }
 
-		this.itemHandler = new ItemOverrides(DummyModelBaker.INSTANCE, null, Collections.emptyList()) {
-			@Override
-			public BakedModel resolve(@NotNull BakedModel original, @NotNull ItemStack stack,
-					@Nullable ClientLevel world, @Nullable LivingEntity entity, int seed) {
-				Book book = ItemModBook.getBook(stack);
-				if (book != null) {
-					return modelGetter.apply(book.model);
-				}
-				return original;
-			}
-		};
-	}
+    @Override
+    public void update(@NotNull ItemStackRenderState renderState,
+            @NotNull ItemStack stack,
+            @NotNull ItemModelResolver itemModelResolver,
+            @NotNull ItemDisplayContext displayContext,
+            @Nullable ClientLevel level,
+            @Nullable ItemOwner owner,
+            int seed) {
+        ItemModel itemModel = this.itemModel;
+        Book book = ItemModBook.getBook(stack);
 
-	@NotNull
-	@Override
-	public ItemOverrides getOverrides() {
-		return itemHandler;
-	}
+        if (book != null) {
+            itemModel = new BlockModelWrapper.Unbaked(book.model, List.of()).bake(bakingContext);
+        }
 
-	@NotNull
-	@Override
-	public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand) {
-		return original.getQuads(state, side, rand);
-	}
-
-	@Override
-	public boolean useAmbientOcclusion() {
-		return original.useAmbientOcclusion();
-	}
-
-	@Override
-	public boolean isGui3d() {
-		return original.isGui3d();
-	}
-
-	@Override
-	public boolean usesBlockLight() {
-		return original.usesBlockLight();
-	}
-
-	@Override
-	public boolean isCustomRenderer() {
-		return original.isCustomRenderer();
-	}
-
-	@NotNull
-	@Override
-	public TextureAtlasSprite getParticleIcon() {
-		return original.getParticleIcon();
-	}
-
-	@Override
-	public ItemTransforms getTransforms() {
-		return original.getTransforms();
-	}
-
-	private static class DummyModelBaker implements ModelBaker {
-		static ModelBaker INSTANCE = new DummyModelBaker();
-
-		// soft implement IModelBakerExtension
-		public Function<Material, TextureAtlasSprite> getModelTextureGetter() {
-			return null;
-		}
-
-		// soft implement IModelBakerExtension
-		public BakedModel bake(ResourceLocation location, ModelState state, Function<Material, TextureAtlasSprite> sprites) {
-			return null;
-		}
-
-		// soft implement IModelBakerExtension
-		public BakedModel bakeUncached(UnbakedModel model, ModelState state, Function<Material, TextureAtlasSprite> sprites) {
-			return null;
-		}
-
-		// soft implement IModelBakerExtension
-		public UnbakedModel getTopLevelModel(ModelResourceLocation location) {
-			return null;
-		}
-
-		@Override
-		public UnbakedModel getModel(ResourceLocation resourceLocation) {
-			return null;
-		}
-
-		@Nullable
-		@Override
-		public BakedModel bake(ResourceLocation resourceLocation, ModelState modelState) {
-			return null;
-		}
-	}
+        itemModel.update(renderState, stack, itemModelResolver, displayContext, level, owner, seed);
+    }
 
 }

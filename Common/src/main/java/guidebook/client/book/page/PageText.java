@@ -30,8 +30,8 @@ public class PageText extends PageWithText {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
-        super.render(graphics, mouseX, mouseY, pticks);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
 
         if (pageNum == 0) {
             boolean renderedSmol = false;
@@ -40,21 +40,29 @@ public class PageText extends PageWithText {
             if (mc.options.advancedItemTooltips) {
                 ResourceLocation res = parent.getEntry().getId();
                 smolText = res.toString();
-            } else if (entry.getAddedBy() != null) {
+            }
+            else if (entry.getAddedBy() != null) {
                 smolText = I18n.get("guidebook.gui.lexicon.added_by", entry.getAddedBy());
             }
 
             if (!smolText.isEmpty()) {
-                graphics.pose().scale(0.5F, 0.5F, 1F);
-                parent.drawCenteredStringNoShadow(graphics, smolText, GuiBook.PAGE_WIDTH, 12, book.headerColor);
-                graphics.pose().scale(2F, 2F, 1F);
+                guiGraphics.pose().scale(0.5F, 0.5F);
+                parent.drawCenteredStringNoShadow(guiGraphics, smolText, GuiBook.PAGE_WIDTH, 12, book.headerColor);
+                guiGraphics.pose().scale(2F, 2F);
                 renderedSmol = true;
             }
 
-            parent.drawCenteredStringNoShadow(graphics, parent.getEntry().getName().getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, renderedSmol ? -3 : 0, book.headerColor);
-            GuiBook.drawSeparator(graphics, book, 0, 12);
-        } else if (title != null && !title.isEmpty()) {
-            parent.drawCenteredStringNoShadow(graphics, i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+            parent.drawCenteredStringNoShadow(
+                guiGraphics,
+                parent.getEntry().getName().getVisualOrderText(),
+                GuiBook.PAGE_WIDTH / 2,
+                renderedSmol ? -3 : 0,
+                book.headerColor
+            );
+            GuiBook.drawSeparator(guiGraphics, book, 0, 12);
+        }
+        else if (title != null && !title.isEmpty()) {
+            parent.drawCenteredStringNoShadow(guiGraphics, i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
         }
     }
 

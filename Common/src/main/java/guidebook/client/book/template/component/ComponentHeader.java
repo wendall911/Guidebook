@@ -44,18 +44,19 @@ public class ComponentHeader extends TemplateComponent {
     }
 
     @Override
-    public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
-        graphics.pose().pushPose();
-        graphics.pose().translate(x, y, 0);
-        graphics.pose().scale(scale, scale, scale);
+    public void render(GuiGraphics guiGraphics, BookPage page, int mouseX, int mouseY, float partialTicks) {
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().translate(x, y);
+        guiGraphics.pose().scale(scale, scale);
 
         if (centered) {
-            page.parent.drawCenteredStringNoShadow(graphics, page.i18n(actualText.getString()), 0, 0, color);
+            page.parent.drawCenteredStringNoShadow(guiGraphics, page.i18n(actualText.getString()), 0, 0, color);
         }
         else {
-            graphics.drawString(page.fontRenderer, page.i18n(actualText.getString()), 0, 0, color, false);
+            guiGraphics.drawString(BookPage.fontRenderer,
+                page.i18n(actualText.getString()), 0, 0, color, false);
         }
-        graphics.pose().popPose();
+        guiGraphics.pose().popMatrix();
     }
 
     @Override

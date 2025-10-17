@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -31,10 +32,7 @@ public interface IBookHelper {
 
     boolean isDevEnvironment();
 
-    // Needed because of Forge
-    default void signalBooksLoaded() {}
-
     // JEI/REI compat
-    boolean handleRecipeKeybind(int keyCode, int scanCode, ItemStack stack);
+    boolean handleRecipeKeybind(KeyEvent keyEvent, ItemStack stack);
 
 }

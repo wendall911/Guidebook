@@ -28,7 +28,7 @@ import guidebook.common.util.ItemStackUtil;
 
 public class BookRightClickHandler {
 
-    public static void onRenderHUD(GuiGraphics graphics, DeltaTracker deltaTracker) {
+    public static void onRenderHUD(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
 
@@ -48,22 +48,22 @@ public class BookRightClickHandler {
                         Component s = Component.translatable("guidebook.gui.lexicon." + (player.isShiftKeyDown() ? "view" : "sneak"))
                             .withStyle(ChatFormatting.ITALIC);
 
-                        entry.getIcon().render(graphics, x, y);
+                        entry.getIcon().render(guiGraphics, x, y);
 
-                        graphics.pose().pushPose();
-                        graphics.pose().translate(0, 0, 10);
-                        graphics.pose().scale(0.5F, 0.5F, 1);
-                        graphics.renderItem(bookStack, (x + 8) * 2, (y + 8) * 2);
-                        graphics.renderItemDecorations(mc.font, bookStack, (x + 8) * 2, (y + 8) * 2);
-                        graphics.pose().popPose();
+                        guiGraphics.pose().pushMatrix();
+                        guiGraphics.pose().translate(0, 0);
+                        guiGraphics.pose().scale(0.5F, 0.5F);
+                        guiGraphics.renderItem(bookStack, (x + 8) * 2, (y + 8) * 2);
+                        guiGraphics.renderItemDecorations(mc.font, bookStack, (x + 8) * 2, (y + 8) * 2);
+                        guiGraphics.pose().popMatrix();
 
-                        graphics.drawString(mc.font, entry.getName(), x + 18, y + 3, GuidebookColors.WHITE.toColor(), false);
+                        guiGraphics.drawString(mc.font, entry.getName(), x + 18, y + 3, GuidebookColors.WHITE.toColor(), false);
 
-                        graphics.pose().pushPose();
-                        graphics.pose().scale(0.75F, 0.75F, 1F);
+                        guiGraphics.pose().pushMatrix();
+                        guiGraphics.pose().scale(0.75F, 0.75F);
 
-                        graphics.drawString(mc.font, s, (int) ((x + 18) / 0.75F), (int) ((y + 14) / 0.75F), GuidebookColors.GRAY.toColor(), false);
-                        graphics.pose().popPose();
+                        guiGraphics.drawString(mc.font, s, (int) ((x + 18) / 0.75F), (int) ((y + 14) / 0.75F), GuidebookColors.GRAY.toColor(), false);
+                        guiGraphics.pose().popMatrix();
                     }
                 }
             }
@@ -73,7 +73,7 @@ public class BookRightClickHandler {
     public static InteractionResult onRightClick(Player player, Level world, InteractionHand hand, BlockHitResult hit) {
         ItemStack bookStack = player.getMainHandItem();
 
-        if (world.isClientSide && player.isShiftKeyDown()) {
+        if (world.isClientSide() && player.isShiftKeyDown()) {
             Book book = ItemStackUtil.getBookFromStack(bookStack);
 
             if (book != null) {
@@ -95,7 +95,7 @@ public class BookRightClickHandler {
             BlockPos pos = hit.getBlockPos();
             BlockState state = mc.level.getBlockState(pos);
             Block block = state.getBlock();
-            ItemStack picked = block.getCloneItemStack(mc.level, pos, state);
+            ItemStack picked = new ItemStack(block.asItem());
 
             if (!picked.isEmpty()) {
                 return book.getContents().getEntryForStack(picked);

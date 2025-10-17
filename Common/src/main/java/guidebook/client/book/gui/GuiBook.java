@@ -12,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.ChatFormatting;
@@ -25,6 +24,9 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
@@ -46,6 +48,7 @@ import guidebook.client.book.gui.button.GuiButtonBookMarkRead;
 import guidebook.client.jei.GuidebookJeiPlugin;
 import guidebook.common.base.GuidebookSounds;
 import guidebook.common.book.Book;
+import guidebook.common.util.ColorHelper.GuidebookColors;
 import guidebook.mixin.client.AccessorScreen;
 import guidebook.platform.Services;
 
@@ -87,16 +90,16 @@ public abstract class GuiBook extends Screen {
 
     @Override
     public void init() {
-        if (minecraft == null) {
+        if (getMinecraft() == null) {
             return;
         }
 
-        Window res = minecraft.getWindow();
-        double oldGuiScale = res.calculateScale(minecraft.options.guiScale().get(), minecraft.isEnforceUnicode());
+        Window res = getMinecraft().getWindow();
+        int oldGuiScale = res.calculateScale(getMinecraft().options.guiScale().get(), getMinecraft().isEnforceUnicode());
 
         maxScale = getMaxAllowedScale();
         int persistentScale = Math.min(PersistentData.data.bookGuiScale, maxScale);
-        double newGuiScale = res.calculateScale(persistentScale, minecraft.isEnforceUnicode());
+        int newGuiScale = res.calculateScale(persistentScale, getMinecraft().isEnforceUnicode());
 
         if (persistentScale > 0 && newGuiScale != oldGuiScale) {
             scaleFactor = (float) newGuiScale / (float) res.getGuiScale();
@@ -105,7 +108,8 @@ public abstract class GuiBook extends Screen {
             width = res.getGuiScaledWidth();
             height = res.getGuiScaledHeight();
             res.setGuiScale(oldGuiScale);
-        } else {
+        }
+        else {
             scaleFactor = 1;
         }
 
@@ -134,32 +138,34 @@ public abstract class GuiBook extends Screen {
     }
 
     public Minecraft getMinecraft() {
-        return minecraft;
+        Minecraft mc = Minecraft.getInstance();
+
+        return mc == null ? null : mc;
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        graphics.pose().pushPose();
-        if (scaleFactor != 1) {
-            graphics.pose().scale(scaleFactor, scaleFactor, scaleFactor);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        guiGraphics.pose().pushMatrix();
 
-            mouseX /= (int) scaleFactor;
-            mouseY /= (int) scaleFactor;
+        if (scaleFactor != 1) {
+            guiGraphics.pose().scale(scaleFactor, scaleFactor);
+
+            mouseX = getScaledMouseX(mouseX);
+            mouseY = getScaledMouseY(mouseY);
         }
 
-        drawScreenAfterScale(graphics, mouseX, mouseY, partialTicks);
-        graphics.pose().popPose();
+        drawScreenAfterScale(guiGraphics, mouseX, mouseY, partialTicks);
+        guiGraphics.pose().popMatrix();
     }
 
     private void drawScreenAfterScale(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         resetTooltip();
 
-        graphics.pose().pushPose();
-        graphics.pose().translate(bookLeft, bookTop, 0);
-        graphics.setColor(1F, 1F, 1F, 1F);
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(bookLeft, bookTop);
         drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
         drawForegroundElements(graphics, mouseX, mouseY, partialTicks);
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
 
         super.render(graphics, mouseX, mouseY, partialTicks);
 
@@ -222,12 +228,16 @@ public abstract class GuiBook extends Screen {
     }
 
     public void onFirstOpened() {
-        // NO-OP
+        playBookOpenSound(book);
     }
 
     @Override
     public void tick() {
-        if (!hasShiftDown()) {
+        if (getMinecraft() == null) {
+            return;
+        }
+
+        if (!getMinecraft().hasShiftDown()) {
             ticksInBook++;
         }
 
@@ -243,23 +253,26 @@ public abstract class GuiBook extends Screen {
 
     void drawForegroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {}
 
-    final void drawTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
-        if (minecraft != null && tooltipStack != null) {
-            List<Component> tooltip = Screen.getTooltipFromItem(this.minecraft, tooltipStack);
+    final void drawTooltip(GuiGraphics guiGraphics, int x, int y) {
+        int mouseX = (int) ((float) x * scaleFactor);
+        int mouseY = (int) ((float) y * scaleFactor);
 
+        if (getMinecraft() != null && tooltipStack != null) {
+            List<Component> tooltip = Screen.getTooltipFromItem(getMinecraft(), tooltipStack);
             Pair<BookEntry, Integer> provider = book.getContents().getEntryForStack(tooltipStack);
+
             if (provider != null && (!(this instanceof GuiBookEntry) || ((GuiBookEntry) this).entry != provider.getFirst())) {
                 Component t = Component.literal("(")
-                        .append(Component.translatable("guidebook.gui.lexicon.shift_for_recipe"))
-                        .append(")")
-                        .withStyle(ChatFormatting.GOLD);
+                    .append(Component.translatable("guidebook.gui.lexicon.shift_for_recipe"))
+                    .append(")")
+                    .withStyle(ChatFormatting.GOLD);
                 tooltip.add(t);
                 targetPage = provider;
             }
-            graphics.renderComponentTooltip(this.font, tooltip, mouseX, mouseY);
+            guiGraphics.setComponentTooltipForNextFrame(this.font, tooltip, mouseX, mouseY);
         }
         else if (tooltip != null && !tooltip.isEmpty()) {
-            graphics.renderComponentTooltip(this.font, tooltip, mouseX, mouseY);
+            guiGraphics.setComponentTooltipForNextFrame(this.font, tooltip, mouseX, mouseY);
         }
     }
 
@@ -269,8 +282,12 @@ public abstract class GuiBook extends Screen {
         targetPage = null;
     }
 
-    public static void drawFromTexture(GuiGraphics graphics, Book book, int x, int y, int u, int v, int w, int h) {
-        graphics.blit(book.bookTexture, x, y, u, v, w, h, 512, 256);
+    public static void drawFromTexture(GuiGraphics guiGraphics, Book book, int x, int y, int u, int v, int w, int h) {
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, book.bookTexture, x, y, u, v, w, h, 512, 256);
+    }
+
+    public static void drawFromTexture(GuiGraphics guiGraphics, Book book, int x, int y, int u, int v, int w, int h, float alpha) {
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, book.bookTexture, x, y, u, v, w, h, 512, 256, GuidebookColors.WHITE.toAlphaColor(alpha));
     }
 
     @Override
@@ -289,11 +306,12 @@ public abstract class GuiBook extends Screen {
     public void handleButtonBookmark(Button button) {
         GuiButtonBookBookmark bookmarkButton = (GuiButtonBookBookmark) button;
         Bookmark bookmark = bookmarkButton.bookmark;
+
         if (bookmark == null || bookmark.getEntry(book) == null) {
             bookmarkThis();
         }
-        else {
-            if (hasShiftDown()) {
+        else if (getMinecraft() != null) {
+            if (getMinecraft().hasShiftDown()) {
                 List<Bookmark> bookmarks = PersistentData.data.getBookData(book).bookmarks;
                 bookmarks.remove(bookmark);
                 PersistentData.save();
@@ -306,36 +324,41 @@ public abstract class GuiBook extends Screen {
     }
 
     @Override
-    public final boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        return mouseClickedScaled(mouseX / scaleFactor, mouseY / scaleFactor, mouseButton);
+    public final boolean mouseClicked(@NotNull MouseButtonEvent mouseButtonEvent, boolean isDoubleClick) {
+        return mouseClickedScaled(mouseButtonEvent, isDoubleClick);
     }
 
-    public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
-        switch (mouseButton) {
-        case GLFW.GLFW_MOUSE_BUTTON_LEFT -> {
-            if (targetPage != null && hasShiftDown()) {
-                displayLexiconGui(new GuiBookEntry(book, targetPage.getFirst(), targetPage.getSecond()), true);
-                playBookFlipSound(book);
+    public boolean mouseClickedScaled(MouseButtonEvent mouseButtonEvent, boolean isDoubleClick) {
+        double mouseX = getScaledMouseX((int) mouseButtonEvent.x());
+        double mouseY = getScaledMouseY((int) mouseButtonEvent.y());
+
+        MouseButtonEvent scaledMouseEvent = new MouseButtonEvent(mouseX, mouseY, mouseButtonEvent.buttonInfo());
+
+        switch (mouseButtonEvent.button()) {
+            case GLFW.GLFW_MOUSE_BUTTON_LEFT -> {
+                if (targetPage != null && getMinecraft() != null && getMinecraft().hasShiftDown()) {
+                    displayLexiconGui(new GuiBookEntry(book, targetPage.getFirst(), targetPage.getSecond()), true);
+                    playBookFlipSound(book);
+                    return true;
+                }
+            }
+            case GLFW.GLFW_MOUSE_BUTTON_RIGHT -> {
+                back(true);
+                return true;
+            }
+            case GLFW.GLFW_MOUSE_BUTTON_4 -> {
+                changePage(true, true);
+                return true;
+            }
+            case GLFW.GLFW_MOUSE_BUTTON_5 -> {
+                changePage(false, true);
                 return true;
             }
         }
-        case GLFW.GLFW_MOUSE_BUTTON_RIGHT -> {
-            back(true);
-            return true;
-        }
-        case GLFW.GLFW_MOUSE_BUTTON_4 -> {
-            changePage(true, true);
-            return true;
-        }
-        case GLFW.GLFW_MOUSE_BUTTON_5 -> {
-            changePage(false, true);
-            return true;
-        }
-        }
 
         for (GuiEventListener listener : children()) {
-            if (listener.mouseClicked(mouseX, mouseY, mouseButton)) {
-                if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (listener.mouseClicked(scaledMouseEvent, isDoubleClick)) {
+                if (mouseButtonEvent.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                     setDragging(true);
                 }
                 return true;
@@ -345,8 +368,10 @@ public abstract class GuiBook extends Screen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (Minecraft.getInstance().options.keyInventory.matches(keyCode, scanCode) && !this.canSeeBackButton()) {
+    public boolean keyPressed(@NotNull KeyEvent keyEvent) {
+        int keyCode = keyEvent.key();
+
+        if (Minecraft.getInstance().options.keyInventory.matches(keyEvent) && !this.canSeeBackButton()) {
             this.onClose();
             return true;
         }
@@ -354,14 +379,15 @@ public abstract class GuiBook extends Screen {
             back(true);
             return true;
         }
-        else if (tooltipStack != null && Services.BOOK_HELPER.handleRecipeKeybind(keyCode, scanCode, tooltipStack)) {
+        else if (tooltipStack != null && Services.BOOK_HELPER.handleRecipeKeybind(keyEvent, tooltipStack)) {
             return true;
         }
         else if (tooltipStack != null && PLATFORM.isModLoaded("jei")
-                && GuidebookJeiPlugin.handleRecipeKeybind(keyCode, scanCode, tooltipStack)) {
+                && GuidebookJeiPlugin.handleRecipeKeybind(keyEvent, tooltipStack)) {
             return true;
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+
+        return super.keyPressed(keyEvent);
     }
 
     @Override
@@ -378,7 +404,7 @@ public abstract class GuiBook extends Screen {
 
     void back(boolean sfx) {
         if (!book.getContents().guiStack.isEmpty()) {
-            if (hasShiftDown()) {
+            if (getMinecraft() != null && getMinecraft().hasShiftDown()) {
                 displayLexiconGui(new GuiBookLanding(book), false);
                 book.getContents().guiStack.clear();
             }
@@ -456,6 +482,14 @@ public abstract class GuiBook extends Screen {
      */
     public double getRelativeY(double absY) {
         return absY - bookTop;
+    }
+
+    public int getScaledMouseX(int mouseX) {
+        return (int) ((float) mouseX / scaleFactor);
+    }
+
+    public int getScaledMouseY(int mouseY) {
+        return (int) ((float) mouseY / scaleFactor);
     }
 
     public void drawProgressBar(GuiGraphics graphics, Book book, int mouseX, int mouseY, Predicate<BookEntry> filter) {
@@ -541,60 +575,72 @@ public abstract class GuiBook extends Screen {
     }
 
     private int getMaxAllowedScale() {
-        if (minecraft == null) {
+        if (getMinecraft() == null) {
             return 1;
         }
 
-        return minecraft.getWindow().calculateScale(0, minecraft.isEnforceUnicode());
+        return getMinecraft().getWindow().calculateScale(0, getMinecraft().isEnforceUnicode());
     }
 
     public int getSpread() {
         return spread;
     }
 
-    public static void drawSeparator(GuiGraphics graphics, Book book, int x, int y) {
+    public static void drawSeparator(GuiGraphics guiGraphics, Book book, int x, int y) {
         int w = 110;
         int h = 3;
         int rx = x + PAGE_WIDTH / 2 - w / 2;
 
-        RenderSystem.enableBlend();
-        graphics.setColor(1F, 1F, 1F, 0.8F);
-        drawFromTexture(graphics, book, rx, y, 140, 180, w, h);
-        graphics.setColor(1F, 1F, 1F, 1F);
+        drawFromTexture(guiGraphics, book, rx, y, 140, 180, w, h, 0.8F);
     }
 
-    public static void drawLock(GuiGraphics graphics, Book book, int x, int y) {
-        drawFromTexture(graphics, book, x, y, 250, 180, 16, 16);
+    public static void drawLock(GuiGraphics guiGraphics, Book book, int x, int y) {
+        drawFromTexture(guiGraphics, book, x, y, 250, 180, 16, 16, 0.7F);
     }
 
-    public static void drawMarking(GuiGraphics graphics, Book book, int x, int y, int rand, EntryDisplayState state) {
+    public static void drawMarking(GuiGraphics guiGraphics, Book book, int x, int y, int rand, EntryDisplayState state) {
         if (!state.hasIcon) {
             return;
         }
 
-        RenderSystem.enableBlend();
         float alpha = state.hasAnimation ? ((float) Math.sin(ClientTicker.total * 0.2F) * 0.3F + 0.7F) : 1F;
-        RenderSystem.setShaderColor(1F, 1F, 1F, alpha);
-        drawFromTexture(graphics, book, x, y, state.u, 197, 8, 8);
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+
+        drawFromTexture(guiGraphics, book, x, y, state.u, 197, 8, 8, alpha);
     }
 
-    public static void drawPageFiller(GuiGraphics graphics, Book book) {
-        drawPageFiller(graphics, book, RIGHT_PAGE_X, TOP_PADDING);
+    public static void drawPageFiller(GuiGraphics guiGraphics, Book book) {
+        drawPageFiller(guiGraphics, book, RIGHT_PAGE_X, TOP_PADDING);
     }
 
-    public static void drawPageFiller(GuiGraphics graphics, Book book, int x, int y) {
-        RenderSystem.enableBlend();
-        graphics.setColor(1F, 1F, 1F, 1F);
-        graphics.blit(book.fillerTexture, x + PAGE_WIDTH / 2 - 64, y + PAGE_HEIGHT / 2 - 74, 0, 0, 128, 128, 128, 128);
+    public static void drawPageFiller(GuiGraphics guiGraphics, Book book, int x, int y) {
+        guiGraphics.blit(
+            RenderPipelines.GUI_TEXTURED,
+            book.fillerTexture,
+            x + PAGE_WIDTH / 2 - 64,
+            y + PAGE_HEIGHT / 2 - 74,
+            0,
+            0,
+            128,
+            128,
+            128,
+            128,
+            GuidebookColors.WHITE.toAlphaColor(0.7F)
+        );
     }
 
     public static void playBookFlipSound(Book book) {
         if (ClientTicker.ticksInGame - lastSound > 6) {
             SoundEvent sfx = GuidebookSounds.getSound(book.flipSound, GuidebookSounds.BOOK_FLIP);
+
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(sfx, (float) (0.7 + Math.random() * 0.3)));
             lastSound = ClientTicker.ticksInGame;
         }
+    }
+
+    public static void playBookOpenSound(Book book) {
+        SoundEvent sfx = GuidebookSounds.getSound(book.openSound, GuidebookSounds.BOOK_OPEN);
+
+        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(sfx, 1F,  (float) (0.7 + Math.random() * 0.4)));
     }
 
     public static void openWebLink(Screen prevScreen, String address) {

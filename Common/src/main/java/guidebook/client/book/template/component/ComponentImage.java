@@ -3,9 +3,9 @@ package guidebook.client.book.template.component;
 import java.util.function.UnaryOperator;
 
 import com.google.gson.annotations.SerializedName;
-import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 
@@ -40,18 +40,17 @@ public class ComponentImage extends TemplateComponent {
     }
 
     @Override
-    public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
+    public void render(GuiGraphics guiGraphics, BookPage page, int mouseX, int mouseY, float pticks) {
         if (scale == 0F) {
             return;
         }
 
-        graphics.pose().pushPose();
-        graphics.pose().translate(x, y, 0);
-        graphics.pose().scale(scale, scale, scale);
-        graphics.setColor(1F, 1F, 1F, 1F);
-        RenderSystem.enableBlend();
-        graphics.blit(resource, 0, 0, u, v, width, height, textureWidth, textureHeight);
-        graphics.pose().popPose();
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().translate(x, y);
+        guiGraphics.pose().scale(scale, scale);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, resource,
+            0, 0, u, v, width, height, textureWidth, textureHeight);
+        guiGraphics.pose().popMatrix();
     }
 
 }

@@ -24,9 +24,8 @@ public sealed interface BookIcon permits BookIcon.StackIcon, BookIcon.TextureIco
 
     record TextureIcon(ResourceLocation texture) implements BookIcon {
         @Override
-        public void render(GuiGraphics graphics, int x, int y) {
-            graphics.setColor(1F, 1F, 1F, 1F);
-            graphics.blit(texture(), x, y, 0, 0, 16, 16, 16, 16);
+        public void render(GuiGraphics guiGraphics, int x, int y) {
+            guiGraphics.blit(texture(), x, y, 0, 0, 16, 16, 16, 16);
         }
     }
 

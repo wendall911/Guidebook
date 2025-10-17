@@ -1,12 +1,18 @@
 package guidebook.client.book.page;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import java.util.Optional;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SmithingRecipe;
+import net.minecraft.world.item.crafting.SmithingTransformRecipe;
+import net.minecraft.world.item.crafting.SmithingTrimRecipe;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 
 import guidebook.client.book.gui.GuiBook;
 import guidebook.client.book.page.abstr.PageDoubleRecipeRegistry;
@@ -20,60 +26,81 @@ public class PageSmithing extends PageDoubleRecipeRegistry<SmithingRecipe> {
     }
 
     @Override
-    protected void drawRecipe(GuiGraphics graphics, SmithingRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
+    protected void drawRecipe(GuiGraphics guiGraphics, SmithingRecipe recipe, int recipeX, int recipeY,
+                              int mouseX, int mouseY, boolean second) {
         Level level = Minecraft.getInstance().level;
         if (level == null) {
             return;
         }
+        // Manually setting this, as I'm not sure how to get it now
+        ItemStack symbol = new ItemStack(Blocks.SMITHING_TABLE);
+        Ingredient base = getBase(recipe);
+        Optional<Ingredient> additional = getAddition(recipe);
+        Optional<Ingredient> template = getTemplate(recipe);
 
-        RenderSystem.enableBlend();
-        graphics.blit(book.craftingTexture, recipeX, recipeY, 11, 135, 96, 43, 128, 256);
-        parent.drawCenteredStringNoShadow(graphics, getTitle(second).getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, book.craftingTexture, recipeX, recipeY,
+            11, 135, 96, 43, 128, 256);
+        parent.drawCenteredStringNoShadow(guiGraphics, getTitle(second).getVisualOrderText(),
+            GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 
-        parent.renderIngredient(graphics, recipeX + 4, recipeY + 4, mouseX, mouseY, getBase(recipe));
-        parent.renderIngredient(graphics, recipeX + 4, recipeY + 23, mouseX, mouseY, getAddition(recipe));
-        parent.renderIngredient(graphics, recipeX + 40, recipeY + 4, mouseX, mouseY, getTemplate(recipe));
-        parent.renderItemStack(graphics, recipeX + 40, recipeY + 20, mouseX, mouseY, recipe.getToastSymbol());
-        parent.renderItemStack(graphics, recipeX + 76, recipeY + 13, mouseX, mouseY, recipe.getResultItem(level.registryAccess()));
+        parent.renderIngredient(guiGraphics, recipeX + 4, recipeY + 4, mouseX, mouseY, base);
+        additional.ifPresent(ingredient -> parent.renderIngredient(
+            guiGraphics,
+            recipeX + 4,
+            recipeY + 23,
+            mouseX,
+            mouseY,
+            ingredient
+        ));
+        template.ifPresent(ingredient -> parent.renderIngredient(
+            guiGraphics,
+            recipeX + 40,
+            recipeY + 4,
+            mouseX,
+            mouseY,
+            ingredient
+        ));
+        parent.renderItemStack(guiGraphics, recipeX + 40, recipeY + 20, mouseX, mouseY, symbol);
+        parent.renderItemStack(guiGraphics, recipeX + 76, recipeY + 13,
+            mouseX, mouseY, getRecipeOutput(level, recipe));
     }
 
-    private Ingredient getBase(SmithingRecipe recipe) {
+    public static Ingredient getBase(SmithingRecipe recipe) {
         if (recipe instanceof SmithingTrimRecipe) {
             return ((AccessorSmithingTrimRecipe) recipe).getBase();
         }
         if (recipe instanceof SmithingTransformRecipe) {
             return ((AccessorSmithingTransformRecipe) recipe).getBase();
         }
-        return Ingredient.EMPTY;
+
+        return Ingredient.of(ItemStack.EMPTY.getItem());
     }
 
-    private Ingredient getAddition(SmithingRecipe recipe) {
+    public static Optional<Ingredient> getAddition(SmithingRecipe recipe) {
         if (recipe instanceof SmithingTrimRecipe) {
-            return ((AccessorSmithingTrimRecipe) recipe).getAddition();
+            return Optional.of(((AccessorSmithingTrimRecipe) recipe).getAddition());
         }
         if (recipe instanceof SmithingTransformRecipe) {
             return ((AccessorSmithingTransformRecipe) recipe).getAddition();
         }
-        return Ingredient.EMPTY;
+
+        return Optional.of(Ingredient.of(ItemStack.EMPTY.getItem()));
     }
 
-    private Ingredient getTemplate(SmithingRecipe recipe) {
+    public static Optional<Ingredient> getTemplate(SmithingRecipe recipe) {
         if (recipe instanceof SmithingTrimRecipe) {
-            return ((AccessorSmithingTrimRecipe) recipe).getTemplate();
+            return Optional.of(((AccessorSmithingTrimRecipe) recipe).getTemplate());
         }
         if (recipe instanceof SmithingTransformRecipe) {
             return ((AccessorSmithingTransformRecipe) recipe).getTemplate();
         }
-        return Ingredient.EMPTY;
+
+        return Optional.of(Ingredient.of(ItemStack.EMPTY.getItem()));
     }
 
     @Override
     protected ItemStack getRecipeOutput(Level level, SmithingRecipe recipe) {
-        if (recipe == null || level == null) {
-            return ItemStack.EMPTY;
-        }
-
-        return recipe.getResultItem(level.registryAccess());
+        return getAnyRecipeOutput(level, recipe);
     }
 
     @Override

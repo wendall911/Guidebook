@@ -9,8 +9,10 @@ public class GuiButtonBookArrow extends GuiButtonBook {
 	public final boolean left;
 
 	public GuiButtonBookArrow(GuiBook parent, int x, int y, boolean left) {
-		super(parent, x, y, 272, left ? 10 : 0, 18, 10, () -> parent.canSeePageButton(left), parent::handleButtonArrow,
-				Component.translatable(left ? "guidebook.gui.lexicon.button.prev_page" : "guidebook.gui.lexicon.button.next_page"));
+		super(parent, x, y, 272, left ? 10 : 0, 18, 10, () -> parent.canSeePageButton(left),
+            parent::handleButtonArrow,
+            Component.translatable(left ?
+                "guidebook.gui.lexicon.button.prev_page" : "guidebook.gui.lexicon.button.next_page"));
 		this.left = left;
 	}
 

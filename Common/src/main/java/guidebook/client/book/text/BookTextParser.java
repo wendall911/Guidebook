@@ -140,18 +140,24 @@ public class BookTextParser {
                 state.isExternalLink = true;
                 state.onClick = () -> {
                     GuiBook.openWebLink(state.gui, url);
+
                     return true;
                 };
-            } else {
+            }
+            else {
                 int hash = parameter.indexOf('#');
                 String anchor = null;
+                ResourceLocation href;
+
                 if (hash >= 0) {
                     anchor = parameter.substring(hash + 1);
                     parameter = parameter.substring(0, hash);
                 }
 
-                ResourceLocation href;
-                href = parameter.contains(":") ? ResourceLocation.tryParse(parameter) : ResourceLocation.fromNamespaceAndPath(state.book.id.getNamespace(), parameter);
+                href = parameter.contains(":") ?
+                    ResourceLocation.tryParse(parameter)
+                        : ResourceLocation.fromNamespaceAndPath(state.book.id.getNamespace(), parameter);
+
                 GuiBook gui = state.gui;
                 Book book = state.book;
                 BookEntry entry = book.getContents().entries.get(href);
@@ -181,6 +187,7 @@ public class BookTextParser {
                         GuiBookEntry entryGui = new GuiBookEntry(book, entry, finalPage);
                         gui.displayLexiconGui(entryGui, true);
                         GuiBook.playBookFlipSound(book);
+
                         return true;
                     };
                 }
@@ -193,6 +200,7 @@ public class BookTextParser {
                         state.onClick = () -> {
                             gui.displayLexiconGui(new GuiBookCategory(book, category), true);
                             GuiBook.playBookFlipSound(book);
+
                             return true;
                         };
                     }
@@ -266,6 +274,7 @@ public class BookTextParser {
 
         text.visit((style, string) -> {
             spans.addAll(processCommands(expandMacros(string), state, style));
+
             return Optional.empty();
         }, baseStyle);
 
@@ -374,7 +383,8 @@ public class BookTextParser {
             }
             try {
                 color = TextColor.fromRgb(Integer.parseInt(parse, 16));
-            } catch (NumberFormatException e) {
+            }
+            catch (NumberFormatException e) {
                 color = state.getBase().getColor();
             }
             state.color(color);
@@ -405,10 +415,12 @@ public class BookTextParser {
 
         if (index > 0) {
             String fname = functionName.substring(0, index), param = functionName.substring(index + 1);
+
             return Optional.of(
-                    Optional.ofNullable(FUNCTIONS.get(fname))
-                            .map(f -> f.process(param, state))
-                            .orElse("[MISSING FUNCTION: " + fname + "]"));
+                Optional.ofNullable(FUNCTIONS.get(fname))
+                    .map(f -> f.process(param, state))
+                    .orElse("[MISSING FUNCTION: " + fname + "]")
+            );
         }
 
         return Optional.empty();

@@ -1,8 +1,13 @@
 package guidebook.client.book.gui;
 
+import org.jetbrains.annotations.NotNull;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
@@ -39,55 +44,65 @@ public class GuiBookWriter extends GuiBook {
     }
 
     @Override
-    void drawForegroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.drawForegroundElements(graphics, mouseX, mouseY, partialTicks);
+    void drawForegroundElements(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.drawForegroundElements(guiGraphics, mouseX, mouseY, partialTicks);
 
-        drawCenteredStringNoShadow(graphics, I18n.get("guidebook.gui.lexicon.editor"), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
-        drawSeparator(graphics, book, LEFT_PAGE_X, TOP_PADDING + 12);
+        drawCenteredStringNoShadow(guiGraphics, I18n.get("guidebook.gui.lexicon.editor"), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+        drawSeparator(guiGraphics, book, LEFT_PAGE_X, TOP_PADDING + 12);
 
         if (drawHeader) {
-            drawCenteredStringNoShadow(graphics, I18n.get("guidebook.gui.lexicon.editor.mock_header"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
-            drawSeparator(graphics, book, RIGHT_PAGE_X, TOP_PADDING + 12);
+            drawCenteredStringNoShadow(guiGraphics, I18n.get("guidebook.gui.lexicon.editor.mock_header"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+            drawSeparator(guiGraphics, book, RIGHT_PAGE_X, TOP_PADDING + 12);
         }
 
-        textfield.render(graphics, mouseX, mouseY, partialTicks);
-        text.render(graphics, mouseX, mouseY, partialTicks);
-        editableText.render(graphics, mouseX, mouseY, partialTicks);
+        textfield.render(guiGraphics, mouseX, mouseY, partialTicks);
+        text.render(guiGraphics, mouseX, mouseY, partialTicks);
+        editableText.render(guiGraphics, mouseX, mouseY, partialTicks);
     }
 
     @Override
-    public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
-        if (textfield.mouseClicked(getRelativeX(mouseX), getRelativeY(mouseY), mouseButton)) {
+    public boolean mouseClickedScaled(MouseButtonEvent mouseButtonEvent, boolean isDoubleClick) {
+        MouseButtonEvent relevantEvent = new MouseButtonEvent(
+            getRelativeX(mouseButtonEvent.x()),
+            getRelativeY(mouseButtonEvent.y()),
+            mouseButtonEvent.buttonInfo()
+        );
+
+        if (textfield.mouseClicked(relevantEvent, isDoubleClick)) {
             textfield.setFocused(true);
+
             return true;
         }
-        if (text.click(mouseX, mouseY, mouseButton)) {
+        else if (text.click(mouseButtonEvent)) {
             return true;
         }
-        if (editableText.click(mouseX, mouseY, mouseButton)) {
+        else if (editableText.click(mouseButtonEvent)) {
             return true;
         }
-        return super.mouseClickedScaled(mouseX, mouseY, mouseButton);
+
+        return super.mouseClickedScaled(mouseButtonEvent, isDoubleClick);
     }
 
     @Override
-    public boolean keyPressed(int key, int scanCode, int modifiers) {
-        if (textfield.keyPressed(key, scanCode, modifiers)) {
+    public boolean keyPressed(@NotNull KeyEvent keyEvent) {
+        if (textfield.keyPressed(keyEvent)) {
             refreshText();
+
             return true;
         }
 
-        return super.keyPressed(key, scanCode, modifiers);
+        return super.keyPressed(keyEvent);
     }
 
     @Override
-    public boolean charTyped(char c, int i) {
-        if (textfield.charTyped(c, i)) {
+    public boolean charTyped(@NotNull CharacterEvent charEvent) {
+        if (textfield.charTyped(charEvent)) {
             refreshText();
+
             return true;
         }
 
-        return super.charTyped(c, i);
+        return super.charTyped(charEvent);
     }
 
     private void handleToggleHeaderButton(Button button) {

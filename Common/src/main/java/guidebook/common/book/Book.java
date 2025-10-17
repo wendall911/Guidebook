@@ -14,6 +14,7 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
@@ -40,7 +41,6 @@ public class Book {
 
     private static final String[] ORDINAL_SUFFIXES = new String[] { "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
     private static final ResourceLocation DEFAULT_MODEL = GuidebookAPI.prefix("book_brown");
-    private static final ResourceLocation DEFAULT_BOOK_TEXTURE = GuidebookAPI.prefix("textures/gui/book_brown.png");
     private static final ResourceLocation DEFAULT_FILLER_TEXTURE = GuidebookAPI.prefix("textures/gui/page_filler.png");
     private static final ResourceLocation DEFAULT_CRAFTING_TEXTURE = GuidebookAPI.prefix("textures/gui/crafting.png");
 
@@ -109,7 +109,7 @@ public class Book {
     public Book(JsonObject root, CommonModContainer owner, ResourceLocation id) {
         this.name = GsonHelper.getAsString(root, "name");
         this.landingText = GsonHelper.getAsString(root, "landing_text", "guidebook.gui.lexicon.landing_info");
-        this.bookTexture = SerializationUtil.getAsResourceLocation(root, "book_texture", DEFAULT_BOOK_TEXTURE);
+        this.bookTexture = SerializationUtil.getAsResourceLocation(root, "book_texture", BookLayoutTexture.DEFAULT.texture());
         this.fillerTexture = SerializationUtil.getAsResourceLocation(root, "filler_texture", DEFAULT_FILLER_TEXTURE);
         this.craftingTexture = SerializationUtil.getAsResourceLocation(root, "crafting_texture", DEFAULT_CRAFTING_TEXTURE);
         this.model = SerializationUtil.getAsResourceLocation(root, "model", DEFAULT_MODEL).withPrefix("item/");
@@ -124,8 +124,8 @@ public class Book {
         this.linkHoverColor = parseColor(root, "link_hover_color", GuidebookColors.LINK_HOVER.getHex());
         this.progressBarColor = parseColor(root, "progress_bar_color", GuidebookColors.PROGRESS_BAR.getHex());
         this.progressBarBackground = parseColor(root, "progress_bar_background", GuidebookColors.PROGRESS_BAR_BACKGROUND.getHex());
-        this.openSound = SerializationUtil.getAsResourceLocation(root, "open_sound", GuidebookSounds.BOOK_OPEN.getLocation());
-        this.flipSound = SerializationUtil.getAsResourceLocation(root, "flip_sound", GuidebookSounds.BOOK_FLIP.getLocation());
+        this.openSound = SerializationUtil.getAsResourceLocation(root, "open_sound", GuidebookSounds.BOOK_OPEN.location());
+        this.flipSound = SerializationUtil.getAsResourceLocation(root, "flip_sound", GuidebookSounds.BOOK_FLIP.location());
         this.showProgress = GsonHelper.getAsBoolean(root, "show_progress", true);
         this.indexIconRaw = GsonHelper.getAsString(root, "index_icon", "");
         this.version = GsonHelper.getAsString(root, "version", "0");
@@ -220,8 +220,9 @@ public class Book {
     public Style getFontStyle() {
         if (useBlockyFont) {
             return Style.EMPTY;
-        } else {
-            return Style.EMPTY.withFont(Minecraft.UNIFORM_FONT);
+        }
+        else {
+            return Style.EMPTY.withFont(new FontDescription.Resource(Minecraft.UNIFORM_FONT));
         }
     }
 
@@ -257,6 +258,35 @@ public class Book {
 
     public BookContents getContents() {
         return contents != null ? contents : BookContents.empty(this, null);
+    }
+
+    public enum BookLayoutTexture {
+        BLUE,
+        BROWN,
+        CYAN,
+        GRAY,
+        GREEN,
+        PURPLE,
+        RED,
+        DEFAULT;
+
+        @Override
+        public String toString() {
+            return switch (this) {
+                case BLUE -> "book_blue";
+                case BROWN -> "book_brown";
+                case CYAN -> "book_cyan";
+                case GRAY -> "book_gray";
+                case GREEN -> "book_green";
+                case PURPLE -> "book_purple";
+                case RED -> "book_red";
+                case DEFAULT -> "book_brown";
+            };
+        }
+
+        public ResourceLocation texture() {
+            return GuidebookAPI.prefix("textures/gui/" + this + ".png");
+        }
     }
 
 }

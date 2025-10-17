@@ -4,6 +4,7 @@ import java.util.function.UnaryOperator;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 
@@ -24,15 +25,20 @@ public class ComponentCustomTest implements ICustomComponent {
     }
 
     @Override
-    public void render(GuiGraphics graphics, IComponentRenderContext context, float pticks, int mouseX, int mouseY) {
-        Component toRender = Component.literal(text).setStyle(context.getFont());
+    public void render(GuiGraphics guiGraphics, IComponentRenderContext context, float pticks, int mouseX, int mouseY) {
+        Component toRender = Component.literal(text).setStyle(context.getFontStyle());
 
-        graphics.drawString(Minecraft.getInstance().font, toRender, x, y, -1, true);
+        guiGraphics.drawString(Minecraft.getInstance().font, toRender, x, y, -1, true);
     }
 
     @Override
-    public boolean mouseClicked(IComponentRenderContext context, double mouseX, double mouseY, int mouseButton) {
-        GuidebookAPI.LOGGER.debug("Custom Component Test clicked at ({}, {}) button {}", mouseX, mouseY, mouseButton);
+    public boolean mouseClicked(IComponentRenderContext context, MouseButtonEvent mouseButtonEvent) {
+        GuidebookAPI.LOGGER.debug(
+            "Custom Component Test clicked at ({}, {}) button {}",
+            mouseButtonEvent.x(),
+            mouseButtonEvent.y(),
+            mouseButtonEvent.button()
+        );
 
         return false;
     }

@@ -1,6 +1,7 @@
 package guidebook.client.book.page.abstr;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 import guidebook.api.IVariable;
@@ -28,15 +29,15 @@ public abstract class PageWithText extends BookPage {
     public abstract int getTextHeight();
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         if (shouldRenderText()) {
-            textRender.render(graphics, mouseX, mouseY, pticks);
+            textRender.render(guiGraphics, mouseX, mouseY, partialTicks);
         }
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        return shouldRenderText() && textRender.click(mouseX, mouseY, mouseButton);
+    public boolean mouseClicked(MouseButtonEvent mouseButtonEvent) {
+        return shouldRenderText() && textRender.click(mouseButtonEvent);
     }
 
     public boolean shouldRenderText() {

@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.level.Level;
 
@@ -40,7 +41,8 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 
     public transient JsonObject sourceObject;
 
-    public final void compile(Level level, IVariableProvider variables, IComponentProcessor processor, @Nullable TemplateInclusion encapsulation) {
+    public final void compile(Level level, IVariableProvider variables, IComponentProcessor processor,
+                              @Nullable TemplateInclusion encapsulation) {
         if (compiled) {
             return;
         }
@@ -86,7 +88,7 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
         // NO-OP
     }
 
-    public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
+    public boolean mouseClicked(BookPage page, MouseButtonEvent mouseButtonEvent) {
         return false;
     }
 
@@ -98,4 +100,5 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
         advancement = lookup.apply(IVariable.wrap(advancement, registries)).asString();
         guardPass = (guard == null || lookup.apply(IVariable.wrap(guard, registries)).asBoolean());
     }
+
 }

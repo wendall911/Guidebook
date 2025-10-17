@@ -5,11 +5,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
@@ -83,52 +86,52 @@ public abstract class GuiBookEntryList extends GuiBook {
     }
 
     @Override
-    void drawForegroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.drawForegroundElements(graphics, mouseX, mouseY, partialTicks);
+    void drawForegroundElements(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.drawForegroundElements(guiGraphics, mouseX, mouseY, partialTicks);
 
         if (spread == 0) {
-            drawCenteredStringNoShadow(graphics, getTitle().getVisualOrderText(), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
-            drawCenteredStringNoShadow(graphics, getChapterListTitle(), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+            drawCenteredStringNoShadow(guiGraphics, getTitle().getVisualOrderText(), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+            drawCenteredStringNoShadow(guiGraphics, getChapterListTitle(), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 
-            drawSeparator(graphics, book, LEFT_PAGE_X, TOP_PADDING + 12);
-            drawSeparator(graphics, book, RIGHT_PAGE_X, TOP_PADDING + 12);
+            drawSeparator(guiGraphics, book, LEFT_PAGE_X, TOP_PADDING + 12);
+            drawSeparator(guiGraphics, book, RIGHT_PAGE_X, TOP_PADDING + 12);
 
-            text.render(graphics, mouseX, mouseY, partialTicks);
+            text.render(guiGraphics, mouseX, mouseY, partialTicks);
             if (shouldDrawProgressBar()) {
-                drawProgressBar(graphics, book, mouseX, mouseY, this::doesEntryCountForProgress);
+                drawProgressBar(guiGraphics, book, mouseX, mouseY, this::doesEntryCountForProgress);
             }
-        } else if (spread % 2 == 1 && spread == maxSpreads - 1 && entryButtons.size() <= ENTRIES_PER_PAGE) {
-            drawPageFiller(graphics, book);
+        }
+        else if (spread % 2 == 1 && spread == maxSpreads - 1 && entryButtons.size() <= ENTRIES_PER_PAGE) {
+            drawPageFiller(guiGraphics, book);
         }
 
         if (!searchField.getValue().isEmpty()) {
-            RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-            drawFromTexture(graphics, book, searchField.getX() - 8, searchField.getY(), 140, 183, 99, 14);
+            drawFromTexture(guiGraphics, book, searchField.getX() - 8, searchField.getY(), 140, 183, 99, 14);
             Component toDraw = Component.literal(searchField.getValue()).setStyle(book.getFontStyle());
-            graphics.drawString(font, toDraw, searchField.getX() + 7, searchField.getY() + 1, book.textColor, false);
+            guiGraphics.drawString(font, toDraw, searchField.getX() + 7, searchField.getY() + 1, book.textColor, false);
         }
 
         if (visibleEntries.isEmpty()) {
             if (!searchField.getValue().isEmpty()) {
                 drawCenteredStringNoShadow(
-                    graphics,
+                    guiGraphics,
                     I18n.get("guidebook.gui.lexicon.no_results"),
                     GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80,
                     GuidebookColors.HEADER.toColor()
                 );
-                graphics.pose().scale(2F, 2F, 2F);
+                guiGraphics.pose().scale(2F, 2F);
                 drawCenteredStringNoShadow(
-                    graphics,
+                    guiGraphics,
                     I18n.get("guidebook.gui.lexicon.sad"),
                     GuiBook.RIGHT_PAGE_X / 2 + GuiBook.PAGE_WIDTH / 4,
                     47,
                     GuidebookColors.LEXICON_SAD.toColor()
                 );
-                graphics.pose().scale(0.5F, 0.5F, 0.5F);
+                guiGraphics.pose().scale(0.5F, 0.5F);
             }
             else {
                 drawCenteredStringNoShadow(
-                    graphics,
+                    guiGraphics,
                     getNoEntryMessage(),
                     GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2,
                     80,
@@ -147,16 +150,22 @@ public abstract class GuiBookEntryList extends GuiBook {
     }
 
     @Override
-    public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
-        return text.click(mouseX, mouseY, mouseButton)
-                || searchField.mouseClicked(mouseX - bookLeft, mouseY - bookTop, mouseButton)
-                || super.mouseClickedScaled(mouseX, mouseY, mouseButton);
+    public boolean mouseClickedScaled(MouseButtonEvent mouseButtonEvent, boolean isDoubleClick) {
+        MouseButtonEvent searchButtonEvent = new MouseButtonEvent(
+            mouseButtonEvent.x() - bookLeft,
+            mouseButtonEvent.y() - bookTop,
+            mouseButtonEvent.buttonInfo()
+        );
+
+        return text.click(mouseButtonEvent)
+            || searchField.mouseClicked(searchButtonEvent, isDoubleClick)
+            || super.mouseClickedScaled(mouseButtonEvent, isDoubleClick);
     }
 
     @Override
-    public boolean charTyped(char c, int i) {
+    public boolean charTyped(@NotNull CharacterEvent charEvent) {
         String currQuery = searchField.getValue();
-        if (searchField.charTyped(c, i)) {
+        if (searchField.charTyped(charEvent)) {
             if (!searchField.getValue().equals(currQuery)) {
                 buildEntryButtons();
             }
@@ -164,19 +173,21 @@ public abstract class GuiBookEntryList extends GuiBook {
             return true;
         }
 
-        return super.charTyped(c, i);
+        return super.charTyped(charEvent);
     }
 
     @Override
-    public boolean keyPressed(int key, int scanCode, int modifiers) {
+    public boolean keyPressed(@NotNull KeyEvent keyEvent) {
+        int key = keyEvent.key();
         String currQuery = searchField.getValue();
 
         if (key == GLFW.GLFW_KEY_ENTER) {
             if (visibleEntries.size() == 1) {
-                displayLexiconGui(new GuiBookEntry(book, visibleEntries.get(0)), true);
+                displayLexiconGui(new GuiBookEntry(book, visibleEntries.getFirst()), true);
+
                 return true;
             }
-        } else if (searchField.keyPressed(key, scanCode, modifiers)) {
+        } else if (searchField.keyPressed(keyEvent)) {
             if (!searchField.getValue().equals(currQuery)) {
                 buildEntryButtons();
             }
@@ -184,11 +195,15 @@ public abstract class GuiBookEntryList extends GuiBook {
             return true;
         }
 
-        return super.keyPressed(key, scanCode, modifiers);
+        return super.keyPressed(keyEvent);
     }
 
     public void handleButtonCategory(Button button) {
-        displayLexiconGui(new GuiBookCategory(book, ((GuiButtonCategory) button).getCategory()), true);
+        GuiButtonCategory guiButtonCategory = (GuiButtonCategory) button;
+
+        if (guiButtonCategory.getCategory() != null) {
+            displayLexiconGui(new GuiBookCategory(book, guiButtonCategory.getCategory()), true);
+        }
     }
 
     public void handleButtonEntry(Button button) {

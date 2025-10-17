@@ -171,7 +171,8 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
             book.markUpdated();
         }
 
-        if (!dirty && !readStateDirty && getReadState() == EntryDisplayState.PENDING && ClientAdvancements.hasDone(turnin.toString())) {
+        if (!dirty && !readStateDirty && getReadState() == EntryDisplayState.PENDING &&
+                turnin != null && ClientAdvancements.hasDone(turnin.toString())) {
             dirty = true;
         }
 
@@ -268,10 +269,17 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
                 int pageNumber = entry.getValue();
 
                 try {
-                    stacks = ItemStackUtil.loadStackListFromString(key, RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
+                    stacks = ItemStackUtil.loadStackListFromString(
+                        key, RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
                 }
                 catch (Exception e) {
-                    GuidebookAPI.LOGGER.warn("Invalid extra recipe mapping: {} to page {} in entry {}: {}", key, pageNumber, id, e.getMessage());
+                    GuidebookAPI.LOGGER.warn(
+                        "Invalid extra recipe mapping: {} to page {} in entry {}: {}",
+                        key,
+                        pageNumber,
+                        id,
+                        e.getMessage()
+                    );
                     continue;
                 }
                 if (!stacks.isEmpty() && pageNumber < pages.length) {
@@ -280,7 +288,12 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
                     }
                 }
                 else {
-                    GuidebookAPI.LOGGER.warn("Invalid extra recipe mapping: {} to page {} in entry {}: Empty entry or page out of bounds", key, pageNumber, id);
+                    GuidebookAPI.LOGGER.warn(
+                        "Invalid extra recipe mapping: {} to page {} in entry {}: Empty entry or page out of bounds",
+                        key,
+                        pageNumber,
+                        id
+                    );
                 }
             }
         }

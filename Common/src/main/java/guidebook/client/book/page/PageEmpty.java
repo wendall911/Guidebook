@@ -12,9 +12,9 @@ public class PageEmpty extends BookPage {
     @SerializedName("draw_filler") boolean filler = true;
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         if (filler) {
-            GuiBook.drawPageFiller(graphics, book, 0, 0);
+            GuiBook.drawPageFiller(guiGraphics, book, 0, 0);
         }
     }
 

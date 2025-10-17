@@ -38,11 +38,11 @@ public class GuiBookCategory extends GuiBookEntryList {
     }
 
     @Override
-    void drawForegroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.drawForegroundElements(graphics, mouseX, mouseY, partialTicks);
+    void drawForegroundElements(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.drawForegroundElements(guiGraphics, mouseX, mouseY, partialTicks);
         if (getEntries().isEmpty() && subcategoryButtonCount <= 16 && subcategoryButtonCount > 0) {
             int bottomSeparator = TOP_PADDING + 37 + 24 * ((subcategoryButtonCount - 1) / 4 + 1);
-            drawSeparator(graphics, book, RIGHT_PAGE_X, bottomSeparator);
+            drawSeparator(guiGraphics, book, RIGHT_PAGE_X, bottomSeparator);
         }
     }
 
@@ -110,7 +110,9 @@ public class GuiBookCategory extends GuiBookEntryList {
 
     @Override
     public boolean equals(Object obj) {
-        return obj == this || (obj instanceof GuiBookCategory && ((GuiBookCategory) obj).category == category && ((GuiBookCategory) obj).spread == spread);
+        return obj == this
+            || (obj instanceof GuiBookCategory
+                && ((GuiBookCategory) obj).category == category && ((GuiBookCategory) obj).spread == spread);
     }
 
     @Override

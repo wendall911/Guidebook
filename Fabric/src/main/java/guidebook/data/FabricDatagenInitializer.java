@@ -2,7 +2,6 @@ package guidebook.data;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 
 import guidebook.api.GuidebookAPI;
 import guidebook.data.test.GuidebookTestLanguageProvider;
@@ -26,9 +25,7 @@ public class FabricDatagenInitializer implements DataGeneratorEntrypoint {
     }
 
     public static void configureCommonDatagen(FabricDataGenerator.Pack pack) {
-        FabricTagProvider.BlockTagProvider fabricBlockTagProvider = pack.addProvider(FabricBlockTagProvider::new);
-
-        pack.addProvider((dataOutput, registryFuture) -> new GuidebookItemTagsProvider(dataOutput, registryFuture, fabricBlockTagProvider.contentsGetter()));
+        pack.addProvider(GuidebookItemTagsProvider::new);
         pack.addProvider(GuidebookItemModelProvider::new);
         pack.addProvider(GuidebookLanguageProvider::new);
         pack.addProvider(GuidebookInternalBookProvider::new);
@@ -37,15 +34,11 @@ public class FabricDatagenInitializer implements DataGeneratorEntrypoint {
     public static void configureFabicTestDatagen(FabricDataGenerator.Pack pack) {
         pack.addProvider(GuidebookTestLanguageProvider::new);
         pack.addProvider(GuidebookTestingBooksProvider::new);
-        //pack.addProvider(GuidebookRecipeProvider::new);
-        //pack.addProvider(GuidebookAdvancementProvider::new);
     }
 
     public static void configureNeoForgeTestDatagen(FabricDataGenerator.Pack pack) {
         pack.addProvider(GuidebookTestLanguageProvider::new);
         pack.addProvider(GuidebookTestingBooksProvider::new);
-        //pack.addProvider(GuidebookRecipeProvider::new);
-        //pack.addProvider(GuidebookAdvancementProvider::new);
     }
 
 }

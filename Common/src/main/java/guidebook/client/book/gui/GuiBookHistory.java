@@ -37,9 +37,9 @@ public class GuiBookHistory extends GuiBookEntryList {
         BookData data = PersistentData.data.getBookData(book);
 
         return data.history.stream()
-                .map((res) -> book.getContents().entries.get(res))
-                .filter((e) -> e != null && !e.isLocked())
-                .collect(Collectors.toList());
+            .map((res) -> book.getContents().entries.get(res))
+            .filter((e) -> e != null && !e.isLocked())
+            .collect(Collectors.toList());
     }
 
 }

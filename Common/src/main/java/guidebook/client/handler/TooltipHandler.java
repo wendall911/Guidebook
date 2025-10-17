@@ -1,22 +1,18 @@
 package guidebook.client.handler;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-
-import org.lwjgl.opengl.GL11;
 
 import guidebook.client.base.ClientTicker;
 import guidebook.client.book.BookEntry;
@@ -32,7 +28,7 @@ public class TooltipHandler {
 
     private static float lexiconLookupTime = 0;
 
-    public static void onTooltip(GuiGraphics graphics, ItemStack stack, int mouseX, int mouseY) {
+    public static void onTooltip(GuiGraphics guiGraphics, ItemStack stack, int mouseX, int mouseY) {
         Minecraft mc = Minecraft.getInstance();
         int tooltipX = mouseX;
         int tooltipY = mouseY - 4;
@@ -63,12 +59,12 @@ public class TooltipHandler {
             if (lexSlot > -1) {
                 int x = tooltipX - 34;
 
-                RenderSystem.disableDepthTest();
+                guiGraphics.fill(x - 4, tooltipY - 4, x + 20,
+                    tooltipY + 26, ColorHelper.fillBlack(0.17F));
+                guiGraphics.fill(x - 6, tooltipY - 6, x + 22,
+                    tooltipY + 28, ColorHelper.fillBlack(0.17F));
 
-                graphics.fill(x - 4, tooltipY - 4, x + 20, tooltipY + 26, ColorHelper.fillBlack(0.17F));
-                graphics.fill(x - 6, tooltipY - 6, x + 22, tooltipY + 28, ColorHelper.fillBlack(0.17F));
-
-                if (GuidebookConfig.Client.useShiftForQuickLookup() ? Screen.hasShiftDown() : Screen.hasControlDown()) {
+                if (GuidebookConfig.Client.useShiftForQuickLookup() ? mc.hasShiftDown() : mc.hasControlDown()) {
                     lexiconLookupTime += ClientTicker.delta;
 
                     int cx = x + 8;
@@ -77,56 +73,51 @@ public class TooltipHandler {
                     float requiredTime = GuidebookConfig.Client.quickLookupTime();
                     float angles = lexiconLookupTime / requiredTime * 360F;
 
-                    RenderSystem.enableBlend();
-                    RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-                    BufferBuilder buf = Tesselator.getInstance().begin(Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
+                    BufferBuilder buf = Tesselator.getInstance()
+                        .begin(Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
 
                     float a = 0.5F + 0.2F * ((float) Math.cos(ClientTicker.total / 10) * 0.5F + 0.5F);
                     buf.addVertex(cx, cy, 0).setColor(0F, 0.5F, 0F, a);
 
                     for (float i = angles; i > 0; i--) {
                         double rad = (i - 90) / 180F * Math.PI;
-                        buf.addVertex((float) (cx + Math.cos(rad) * r), (float) (cy + Math.sin(rad) * r), 0).setColor(0F, 1F, 0F, 1F);
+                        buf.addVertex((float) (cx + Math.cos(rad) * r),
+                            (float) (cy + Math.sin(rad) * r), 0).setColor(0F, 1F, 0F, 1F);
                     }
 
                     buf.addVertex(cx, cy, 0).setColor(0F, 1F, 0F, 0F);
-                    BufferUploader.drawWithShader(buf.buildOrThrow());
-
-                    RenderSystem.disableBlend();
 
                     if (lexiconLookupTime >= requiredTime) {
                         int spread = lexiconEntry.getSecond();
 
-                        mc.player.getInventory().selected = lexSlot;
+                        mc.player.getInventory().setSelectedSlot(lexSlot);
 
-                        ClientBookRegistry.INSTANCE.displayBookGui(lexiconEntry.getFirst().getBook().id, lexiconEntry.getFirst().getId(), spread * 2);
+                        ClientBookRegistry.INSTANCE.displayBookGui(
+                            lexiconEntry.getFirst().getBook().id, lexiconEntry.getFirst().getId(), spread * 2);
                     }
                 }
                 else {
                     lexiconLookupTime = 0F;
                 }
 
-                graphics.pose().pushPose();
-                graphics.pose().translate(0, 0, 300);
-                graphics.renderItem(lexiconStack, x, tooltipY);
-                graphics.renderItemDecorations(mc.font, lexiconStack, x, tooltipY);
-                graphics.pose().popPose();
+                guiGraphics.pose().pushMatrix();
+                guiGraphics.pose().translate(0, 0);
+                guiGraphics.renderItem(lexiconStack, x, tooltipY);
+                guiGraphics.renderItemDecorations(mc.font, lexiconStack, x, tooltipY);
+                guiGraphics.pose().popMatrix();
 
-                graphics.pose().pushPose();
-                graphics.pose().translate(0, 0, 500);
-                graphics.drawString(mc.font, "?", x + 10, tooltipY + 8, GuidebookColors.WHITE.toColor(), true);
+                guiGraphics.pose().pushMatrix();
+                guiGraphics.pose().translate(0, 0);
+                guiGraphics.drawString(mc.font, "?", x + 10, tooltipY + 8, GuidebookColors.WHITE.toColor(), true);
 
-                graphics.pose().scale(0.5F, 0.5F, 1F);
+                guiGraphics.pose().scale(0.5F, 0.5F);
 
-                boolean mac = Minecraft.ON_OSX;
+                boolean mac = Util.getPlatform() == Util.OS.OSX;
                 Component key = Component.literal(GuidebookConfig.Client.useShiftForQuickLookup() ? "Shift" : mac ? "Cmd" : "Ctrl")
                     .withStyle(ChatFormatting.BOLD);
 
-                graphics.drawString(mc.font, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, GuidebookColors.WHITE.toColor(), true);
-                graphics.pose().popPose();
-
-                RenderSystem.enableDepthTest();
+                guiGraphics.drawString(mc.font, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, GuidebookColors.WHITE.toColor(), true);
+                guiGraphics.pose().popMatrix();
             }
             else {
                 lexiconLookupTime = 0F;

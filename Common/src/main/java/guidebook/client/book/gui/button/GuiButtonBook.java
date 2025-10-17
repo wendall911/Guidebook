@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -20,11 +20,13 @@ public class GuiButtonBook extends Button {
 	private final Supplier<Boolean> displayCondition;
 	protected final List<Component> tooltip;
 
-	public GuiButtonBook(GuiBook parent, int x, int y, int u, int v, int w, int h, OnPress onPress, Component... tooltip) {
+	public GuiButtonBook(GuiBook parent, int x, int y, int u, int v, int w, int h,
+                         OnPress onPress, Component... tooltip) {
 		this(parent, x, y, u, v, w, h, () -> true, onPress, tooltip);
 	}
 
-	public GuiButtonBook(GuiBook parent, int x, int y, int u, int v, int w, int h, Supplier<Boolean> displayCondition, OnPress onPress, Component... tooltip) {
+	public GuiButtonBook(GuiBook parent, int x, int y, int u, int v, int w, int h,
+                         Supplier<Boolean> displayCondition, OnPress onPress, Component... tooltip) {
 		super(x, y, w, h, tooltip[0], onPress, DEFAULT_NARRATION);
 		this.parent = parent;
 		this.u = u;
@@ -34,13 +36,23 @@ public class GuiButtonBook extends Button {
 	}
 
 	@Override
-	public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
 		active = displayCondition.get();
 		if (!active) {
 			return;
 		}
-		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-		GuiBook.drawFromTexture(graphics, parent.book, getX(), getY(), u + (isHoveredOrFocused() ? width : 0), v, width, height);
+
+		GuiBook.drawFromTexture(
+            guiGraphics,
+            parent.book,
+            getX(),
+            getY(),
+            u + (isHoveredOrFocused() ? width : 0),
+            v,
+            width,
+            height
+        );
+
 		if (isHoveredOrFocused()) {
 			parent.setTooltip(getTooltipLines());
 		}

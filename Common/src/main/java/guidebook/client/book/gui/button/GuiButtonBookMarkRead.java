@@ -1,10 +1,11 @@
 package guidebook.client.book.gui.button;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -21,13 +22,13 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 	private final Book book;
 
 	public GuiButtonBookMarkRead(GuiBook parent, int x, int y) {
-		super(parent, x, y, 308, 31, 11, 11, Button::onPress, getTooltip(parent.book));
+		super(parent, x, y, 308, 31, 11, 11, button -> {}, getTooltip(parent.book));
 
 		this.book = parent.book;
 	}
 
 	@Override
-	public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
 		int px = getX() + 1;
 		int py = (int) (getY() + 0.5);
         Minecraft mc = parent.getMinecraft();
@@ -36,19 +37,19 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
             return;
         }
 
-		GuiBook.drawFromTexture(graphics, book, getX(), getY(), 285, 160, 13, 10);
-		GuiBook.drawFromTexture(graphics, book, px, py, u, v, width, height);
+		GuiBook.drawFromTexture(guiGraphics, book, getX(), getY(), 285, 160, 13, 10);
+		GuiBook.drawFromTexture(guiGraphics, book, px, py, u, v, width, height);
 
 		if (isHoveredOrFocused()) {
-			GuiBook.drawFromTexture(graphics, book, px, py, u + 11, v, width, height);
+			GuiBook.drawFromTexture(guiGraphics, book, px, py, u + 11, v, width, height);
 			parent.setTooltip(getTooltipLines());
 		}
 
-		graphics.drawString(parent.getMinecraft().font, "+", px, py, GuidebookColors.BOOKMARK_READ.toColor(), true);
+		guiGraphics.drawString(parent.getMinecraft().font, "+", px, py, GuidebookColors.BOOKMARK_READ.toColor(), true);
 	}
 
 	@Override
-	public void onPress() {
+	public void onPress(@NotNull InputWithModifiers input) {
 		for (BookEntry entry : this.book.getContents().entries.values()) {
 			if (isMainPage(this.book)) {
 				markEntry(entry);

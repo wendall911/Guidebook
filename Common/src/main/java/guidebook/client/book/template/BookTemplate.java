@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
@@ -65,7 +66,8 @@ public class BookTemplate {
 	transient boolean compiled = false;
 	transient boolean attemptedCreatingProcessor = false;
 
-	public static BookTemplate createTemplate(Book book, BookContentsBuilder builder, String type, @Nullable TemplateInclusion inclusion) {
+	public static BookTemplate createTemplate(Book book, BookContentsBuilder builder, String type,
+                                              @Nullable TemplateInclusion inclusion) {
 		ResourceLocation key;
 		if (type.contains(":")) {
 			key = ResourceLocation.tryParse(type);
@@ -154,10 +156,10 @@ public class BookTemplate {
 		}
 	}
 
-	public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
+	public boolean mouseClicked(BookPage page, MouseButtonEvent mouseButtonEvent) {
 		if (compiled) {
 			for (TemplateComponent c : components) {
-				if (c.isVisible && c.mouseClicked(page, mouseX, mouseY, mouseButton)) {
+				if (c.isVisible && c.mouseClicked(page, mouseButtonEvent)) {
 					return true;
 				}
 			}

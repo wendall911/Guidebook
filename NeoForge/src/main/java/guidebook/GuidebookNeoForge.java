@@ -2,6 +2,7 @@ package guidebook;
 
 import guidebook.network.NeoForgeNetworkHandler;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
@@ -36,7 +37,7 @@ public class GuidebookNeoForge {
 
     public GuidebookNeoForge(IEventBus eventBus) {
         Guidebook.initConfig();
-
+        BookRegistry.INSTANCE.init();
         eventBus.addListener(NeoForgeNetworkHandler::setupPackets);
     }
 
@@ -59,11 +60,13 @@ public class GuidebookNeoForge {
         BookRegistry.INSTANCE.books.values().forEach(b -> {
             if (!b.noBook) {
                 ItemStack book = ItemModBook.forBook(b);
+
                 if (event.getTabKey() == CreativeModeTabs.SEARCH) {
                     if (!event.getSearchEntries().contains(book)) {
                         event.accept(book, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
                     }
-                } else if (b.creativeTab != null) {
+                }
+                else if (b.creativeTab != null) {
                     if (event.getTab() == CreativeModeTabRegistry.getTab(b.creativeTab)) {
                         event.accept(book);
                     }
@@ -76,14 +79,13 @@ public class GuidebookNeoForge {
     public static void onInitialize(FMLCommonSetupEvent event) {
         NeoForge.EVENT_BUS.addListener((RegisterCommandsEvent e) -> OpenBookCommand.register(e.getDispatcher()));
         NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> {
-            var result = LecternEventHandler.rightClick(e.getEntity(), e.getLevel(), e.getHand(), e.getHitVec());
+            InteractionResult result = LecternEventHandler.rightClick(e.getEntity(), e.getLevel(), e.getHand(), e.getHitVec());
+
             if (result.consumesAction()) {
                 e.setCanceled(true);
                 e.setCancellationResult(result);
             }
         });
-
-        BookRegistry.INSTANCE.init();
 
         NeoForge.EVENT_BUS.addListener((ServerStartedEvent e) -> ReloadContentsHandler.dataReloaded(e.getServer()));
     }

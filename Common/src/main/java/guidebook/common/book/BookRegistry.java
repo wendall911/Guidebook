@@ -31,6 +31,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import guidebook.api.GuidebookAPI;
 import guidebook.client.book.ClientBookRegistry;
 import guidebook.common.CommonModContainer;
+import guidebook.common.util.SerializationUtil.ResourceLocationSerializer;
 import guidebook.config.GuidebookConfig;
 import guidebook.platform.Services;
 
@@ -41,8 +42,7 @@ public class BookRegistry {
 
     public final Map<ResourceLocation, Book> books = new HashMap<>();
     public static final Gson GSON = new GsonBuilder()
-            .registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
-            .create();
+        .registerTypeAdapter(ResourceLocation.class, new ResourceLocationSerializer()).create();
 
     private BookRegistry() {}
 
@@ -87,8 +87,6 @@ public class BookRegistry {
                         res, mod.getId(), e);
             }
         });
-
-        Services.BOOK_HELPER.signalBooksLoaded();
     }
 
     public void loadBook(CommonModContainer mod, ResourceLocation res, InputStream stream) {

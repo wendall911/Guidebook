@@ -5,6 +5,7 @@ import java.util.function.UnaryOperator;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.HolderLookup;
 
 import guidebook.api.ICustomComponent;
@@ -29,7 +30,8 @@ public class ComponentCustom extends TemplateComponent {
             Class<?> classObj = Class.forName(clazz);
             callbacks = (ICustomComponent) SerializationUtil.RAW_GSON.fromJson(sourceObject, classObj);
             callbacks.onVariablesAvailable(lookup, registries);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to create custom component " + clazz, e);
         }
     }
@@ -40,8 +42,8 @@ public class ComponentCustom extends TemplateComponent {
     }
 
     @Override
-    public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
-        callbacks.render(graphics, page.parent, pticks, mouseX, mouseY);
+    public void render(GuiGraphics guiGraphics, BookPage page, int mouseX, int mouseY, float pticks) {
+        callbacks.render(guiGraphics, page.parent, pticks, mouseX, mouseY);
     }
 
     @Override
@@ -50,8 +52,8 @@ public class ComponentCustom extends TemplateComponent {
     }
 
     @Override
-    public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
-        return callbacks.mouseClicked(page.parent, mouseX, mouseY, mouseButton);
+    public boolean mouseClicked(BookPage page, MouseButtonEvent mouseButtonEvent) {
+        return callbacks.mouseClicked(page.parent, mouseButtonEvent);
     }
 
 }

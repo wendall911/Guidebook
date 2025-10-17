@@ -19,9 +19,9 @@ public class Variable implements IVariable {
 	@Nullable private final Class<?> sourceClass;
 	private final HolderLookup.Provider registries;
 
-	public Variable(JsonElement elem, Class<?> c, HolderLookup.Provider provider) {
+	public Variable(JsonElement elem, @Nullable Class<?> sourceClass, HolderLookup.Provider provider) {
 		value = Objects.requireNonNull(elem);
-		sourceClass = c;
+		this.sourceClass = sourceClass;
 		registries = provider;
 	}
 

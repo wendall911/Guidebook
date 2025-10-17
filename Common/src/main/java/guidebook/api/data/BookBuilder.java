@@ -15,6 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import guidebook.api.data.util.ItemStackHelper;
+import guidebook.common.book.Book;
 import guidebook.config.GuidebookConfig.TextOverflowMode;
 
 public class BookBuilder {
@@ -206,6 +207,14 @@ public class BookBuilder {
         this.bookTexture = bookTexture;
 
         return this;
+    }
+
+    public BookBuilder setBookTexture(ResourceLocation bookTexture) {
+        return this.setBookTexture(bookTexture.toString());
+    }
+
+    public BookBuilder setBookTexture(Book.BookLayoutTexture bookTexture) {
+        return this.setBookTexture(bookTexture.texture());
     }
 
     public BookBuilder setFillerTexture(String fillerTexture) {

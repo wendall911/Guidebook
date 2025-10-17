@@ -48,14 +48,16 @@ public class ComponentEntity extends TemplateComponent {
     }
 
     @Override
-    public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
+    public void render(GuiGraphics guiGraphics, BookPage page, int mouseX, int mouseY, float pticks) {
         if (errored) {
-            graphics.drawString(page.fontRenderer, Component.translatable("guidebook.gui.lexicon.loading_error"), x, y, GuidebookColors.ERROR_RED.toColor(), false);
+            guiGraphics.drawString(BookPage.fontRenderer,
+                Component.translatable("guidebook.gui.lexicon.loading_error"),
+                x, y, GuidebookColors.ERROR_RED.toColor(), false);
         }
 
         if (entity != null) {
             float rotation = rotate ? ClientTicker.total : defaultRotation;
-            PageEntity.renderEntity(graphics, entity, x, y, rotation, renderScale, offset);
+            PageEntity.renderEntity(guiGraphics, entity, x, y, rotation, renderScale, offset, mouseX, mouseY);
         }
     }
 

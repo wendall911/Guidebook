@@ -3,6 +3,7 @@ package guidebook.client.gui;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.advancements.AdvancementsScreen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.resources.ResourceLocation;
 
 import guidebook.client.base.ClientAdvancements;
@@ -23,14 +24,14 @@ public class GuiAdvancementsExt extends AdvancementsScreen {
     }
 
     @Override
-    public boolean keyPressed(int key, int scanCode, int modifiers) {
-        if (minecraft != null && (minecraft.options.keyAdvancements.matches(key, scanCode) || scanCode == 1)) {
+    public boolean keyPressed(KeyEvent keyEvent) {
+        if (minecraft != null && (minecraft.options.keyAdvancements.matches(keyEvent) || keyEvent.scancode() == 1)) {
             minecraft.setScreen(parent);
 
             return true;
         }
         else {
-            return super.keyPressed(key, scanCode, modifiers);
+            return super.keyPressed(keyEvent);
         }
     }
 

@@ -33,7 +33,7 @@ public class LecternEventHandler {
                     Book book = ItemStackUtil.getBookFromStack(lectern.getBook());
 
                     if (book != null) {
-                        if (!world.isClientSide) {
+                        if (!world.isClientSide()) {
                             GuidebookAPI.get().openBookGUI((ServerPlayer) player, book.id);
                         }
                         return InteractionResult.SUCCESS;
@@ -56,8 +56,12 @@ public class LecternEventHandler {
 
     private static void takeBook(Player player, LecternBlockEntity tileEntity) {
         ItemStack itemstack = tileEntity.getBook();
+
         tileEntity.setBook(ItemStack.EMPTY);
-        LecternBlock.resetBookState(player, tileEntity.getLevel(), tileEntity.getBlockPos(), tileEntity.getBlockState(), false);
+
+        if (tileEntity.getLevel() != null) {
+            LecternBlock.resetBookState(player, tileEntity.getLevel(), tileEntity.getBlockPos(), tileEntity.getBlockState(), false);
+        }
 
         if (!player.getInventory().add(itemstack)) {
             player.drop(itemstack, false);

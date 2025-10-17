@@ -13,8 +13,8 @@ import guidebook.client.base.ClientAdvancements;
 @Mixin(Minecraft.class)
 public class MixinMinecraft {
 
-    @Inject(at = @At("HEAD"), method = "disconnect(Lnet/minecraft/client/gui/screens/Screen;)V")
-    public void guidebook$onLogout(Screen screen, CallbackInfo info) {
+    @Inject(at = @At("HEAD"), method = "disconnect")
+    public void guidebook$onLogout(Screen nextScreen, boolean keepResourcePacks, CallbackInfo ci) {
         ClientAdvancements.playerLogout();
     }
 

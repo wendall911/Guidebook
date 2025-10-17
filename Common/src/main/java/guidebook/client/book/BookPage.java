@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
@@ -21,7 +22,7 @@ import guidebook.common.book.Book;
 public abstract class BookPage {
 
     public transient Minecraft mc;
-    public transient Font fontRenderer;
+    public static Font fontRenderer;
     public transient GuiBookEntry parent;
 
     public transient Book book;
@@ -64,9 +65,9 @@ public abstract class BookPage {
         parent.addRenderableWidget(button);
     }
 
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {}
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {}
 
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+    public boolean mouseClicked(MouseButtonEvent mouseButtonEvent) {
         return false;
     }
 

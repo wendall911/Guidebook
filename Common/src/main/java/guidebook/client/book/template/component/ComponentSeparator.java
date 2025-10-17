@@ -21,8 +21,8 @@ public class ComponentSeparator extends TemplateComponent {
     }
 
     @Override
-    public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
-        GuiBook.drawSeparator(graphics, page.book, x, y);
+    public void render(GuiGraphics guiGraphics, BookPage page, int mouseX, int mouseY, float partialTicks) {
+        GuiBook.drawSeparator(guiGraphics, page.book, x, y);
     }
 
 }

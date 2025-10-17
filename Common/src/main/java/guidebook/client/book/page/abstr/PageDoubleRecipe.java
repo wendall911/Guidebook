@@ -47,18 +47,26 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         if (recipe1 != null) {
             int recipeX = getX();
             int recipeY = getY();
-            drawRecipe(graphics, recipe1, recipeX, recipeY, mouseX, mouseY, false);
+            drawRecipe(guiGraphics, recipe1, recipeX, recipeY, mouseX, mouseY, false);
 
             if (recipe2 != null) {
-                drawRecipe(graphics, recipe2, recipeX, recipeY + getRecipeHeight() - (title2.getString().isEmpty() ? 10 : 0), mouseX, mouseY, true);
+                drawRecipe(
+                    guiGraphics,
+                    recipe2,
+                    recipeX,
+                    recipeY + getRecipeHeight() - (title2.getString().isEmpty() ? 10 : 0),
+                    mouseX,
+                    mouseY,
+                    true
+                );
             }
         }
 
-        super.render(graphics, mouseX, mouseY, pticks);
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
     }
 
     @Override
@@ -71,9 +79,14 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
         return getTextHeight() + 10 < GuiBook.PAGE_HEIGHT;
     }
 
-    protected abstract void drawRecipe(GuiGraphics graphics, T recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second);
-    protected abstract T loadRecipe(Level level, BookContentsBuilder builder, BookEntry entry, ResourceLocation loc, boolean linkRecipe);
+    protected abstract void drawRecipe(GuiGraphics graphics, T recipe, int recipeX, int recipeY,
+                                       int mouseX, int mouseY, boolean second);
+
+    protected abstract T loadRecipe(Level level, BookContentsBuilder builder, BookEntry entry,
+                                    ResourceLocation loc, boolean linkRecipe);
+
     protected abstract ItemStack getRecipeOutput(Level level, T recipe);
+
     protected abstract int getRecipeHeight();
 
     protected int getX() {

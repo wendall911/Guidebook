@@ -38,7 +38,8 @@ public class ItemStackVariableSerializer implements IVariableSerializer<ItemStac
 		}
 		if (!stack.getComponents().isEmpty()) {
 			DataComponentMap data = stack.getComponents();
-			DataComponentMap.CODEC.encodeStart(registries.createSerializationContext(JsonOps.INSTANCE), data).result().ifPresent(e -> ret.add("components", e));
+			DataComponentMap.CODEC.encodeStart(registries.createSerializationContext(JsonOps.INSTANCE), data)
+                .result().ifPresent(e -> ret.add("components", e));
 		}
 		return ret;
 	}

@@ -1,9 +1,9 @@
 package guidebook.client.book.page;
 
 import com.google.gson.annotations.SerializedName;
-import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -35,26 +35,50 @@ public class PageSpotlight extends PageWithText {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         int w = 66;
         int h = 26;
-
-        RenderSystem.enableBlend();
-        graphics.blit(book.craftingTexture, GuiBook.PAGE_WIDTH / 2 - w / 2, 10, 0, 128 - h, w, h, 128, 256);
-
         Component toDraw;
+
+        guiGraphics.blit(
+            RenderPipelines.GUI_TEXTURED,
+            book.craftingTexture,
+            GuiBook.PAGE_WIDTH / 2 - w / 2,
+            10,
+            0,
+            128 - h,
+            w,
+            h,
+            128,
+            256
+        );
+
         if (title != null && !title.isEmpty()) {
             toDraw = i18nText(title);
-        } else {
+        }
+        else {
             toDraw = stacks[0].getHoverName();
         }
 
-        parent.drawCenteredStringNoShadow(graphics, toDraw.getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+        parent.drawCenteredStringNoShadow(
+            guiGraphics,
+            toDraw.getVisualOrderText(),
+            GuiBook.PAGE_WIDTH / 2,
+            0,
+            book.headerColor
+        );
         if (stacks.length > 0) {
-            parent.renderItemStack(graphics, GuiBook.PAGE_WIDTH / 2 - 8, 15, mouseX, mouseY, stacks[(parent.ticksInBook / 20) % stacks.length]);
+            parent.renderItemStack(
+                guiGraphics,
+                GuiBook.PAGE_WIDTH / 2 - 8,
+                15,
+                mouseX,
+                mouseY,
+                stacks[(parent.ticksInBook / 20) % stacks.length]
+            );
         }
 
-        super.render(graphics, mouseX, mouseY, pticks);
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
     }
 
     @Override

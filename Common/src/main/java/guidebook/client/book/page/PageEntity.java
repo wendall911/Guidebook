@@ -4,17 +4,18 @@ import java.util.function.Function;
 
 import com.google.gson.annotations.SerializedName;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+
+import org.joml.Matrix3x2fStack;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import guidebook.api.GuidebookAPI;
 import guidebook.client.base.ClientTicker;
@@ -65,54 +66,81 @@ public class PageEntity extends PageWithText {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         int x = GuiBook.PAGE_WIDTH / 2 - 53;
         int y = 7;
-        RenderSystem.enableBlend();
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-        GuiBook.drawFromTexture(graphics, book, x, y, 405, 149, 106, 106);
+
+        GuiBook.drawFromTexture(guiGraphics, book, x, y, 405, 149, 106, 106);
 
         if (name == null || name.isEmpty()) {
             if (entity != null) {
-                parent.drawCenteredStringNoShadow(graphics, entity.getName().getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+                parent.drawCenteredStringNoShadow(guiGraphics, entity.getName().getVisualOrderText(),
+                    GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
             }
         } else {
-            parent.drawCenteredStringNoShadow(graphics, name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+            parent.drawCenteredStringNoShadow(guiGraphics, name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
         }
 
         if (errored) {
-            graphics.drawString(fontRenderer, I18n.get("guidebook.gui.lexicon.loading_error"), 58, 60, GuidebookColors.ERROR_RED.toColor(), true);
+            guiGraphics.drawString(fontRenderer, I18n.get("guidebook.gui.lexicon.loading_error"),
+                18, 60, GuidebookColors.ERROR_RED.toColor(), true);
         }
 
         if (entity != null) {
             float rotation = rotate ? ClientTicker.total : defaultRotation;
-            renderEntity(graphics, entity, 58, 60, rotation, renderScale, offset);
+
+            renderEntity(guiGraphics, entity, 58, 60, rotation, renderScale, offset, mouseX, mouseY);
         }
 
-        super.render(graphics, mouseX, mouseY, pticks);
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
     }
 
-    public static void renderEntity(GuiGraphics graphics, Entity entity, float x, float y, float rotation, float renderScale, float offset) {
-        PoseStack ms = graphics.pose();
-        ms.pushPose();
-        ms.translate(x, y, 50);
-        ms.scale(renderScale, renderScale, renderScale);
-        ms.translate(0, offset, 0);
-        ms.mulPose(Axis.ZP.rotationDegrees(180));
-        ms.mulPose(Axis.YP.rotationDegrees(rotation));
-        EntityRenderDispatcher erd = Minecraft.getInstance().getEntityRenderDispatcher();
-        MultiBufferSource.BufferSource immediate = Minecraft.getInstance().renderBuffers().bufferSource();
-        erd.setRenderShadow(false);
-        erd.render(entity, 0, 0, 0, 0, 1, ms, immediate, 0xF000F0);
-        erd.setRenderShadow(true);
-        immediate.endBatch();
-        ms.popPose();
+    /*
+     * Render an entity at the given position with the given scale and rotation.
+     * TODO: Figure out why this isn't working
+     */
+    public static void renderEntity(GuiGraphics guiGraphics, Entity entity, float x, float y, float rotation,
+                                    float renderScale, float offset, int mouseX, int mouseY) {
+        Matrix3x2fStack poseStack = guiGraphics.pose();
+        EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+        EntityRenderer<? super Entity, ?> renderer = entityRenderDispatcher.getRenderer(entity);
+        EntityRenderState renderState = renderer.createRenderState(entity, 1.0F);
+        Vector3f translation = new Vector3f(0F, (28F / renderScale / 2F), 0F);
+        Quaternionf rotationQuat = new Quaternionf().rotateYXZ((float) Math.toRadians(180 + rotation), 0F, 0F);
+
+        //TODO remove this when entity rendering is implemented
+        guiGraphics.drawString(fontRenderer, "Not Implemented!", 18, 60, GuidebookColors.ERROR_RED.toColor(), true);
+
+        guiGraphics.enableScissor((int) x, (int) y, (int) x + 106, (int) y + 106);
+
+        renderState.lightCoords = 0xF000F0; // Full brightness
+        renderState.hitboxesRenderState = null; // Disable hitboxes
+        renderState.shadowPieces.clear();
+        renderState.outlineColor = 0;
+
+        poseStack.pushMatrix();
+        poseStack.translate(x, y);
+        poseStack.scale(renderScale, renderScale);
+        poseStack.translate(0, offset);
+
+        guiGraphics.submitEntityRenderState(renderState, renderScale, translation, rotationQuat,
+            null, 0, 0, 0, 1);
+
+        poseStack.popMatrix();
+
+        guiGraphics.disableScissor();
     }
 
-    private void loadEntity(Level world) {
-        if (!errored && (entity == null || !entity.isAlive() || entity.level() != world)) {
+    private void loadEntity(Level level) {
+        if (!errored && (entity == null || !entity.isAlive() || entity.level() != level)) {
             try {
-                entity = creator.apply(world);
+                entity = creator.apply(level);
+
+                if (entity == null) {
+                    errored = true;
+                    GuidebookAPI.LOGGER.error("Failed to load entity: {}", entityId);
+                    return;
+                }
 
                 float width = entity.getBbWidth();
                 float height = entity.getBbHeight();
@@ -121,8 +149,10 @@ public class PageEntity extends PageWithText {
 
                 renderScale = 100F / entitySize * 0.8F * scale;
                 offset = Math.max(height, entitySize) * 0.5F + extraOffset;
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 errored = true;
+
                 GuidebookAPI.LOGGER.error("Failed to load entity", e);
             }
         }

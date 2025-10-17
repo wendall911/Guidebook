@@ -9,7 +9,6 @@ import java.util.function.UnaryOperator;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -44,7 +43,7 @@ public class SpanState implements IStyleStack {
         this.book = book;
         this.baseStyle = baseStyle;
         this.stateStack.push(new SpanPartialState(baseStyle, null));
-        this.spaceWidth = Minecraft.getInstance().font.width(Component.literal(" ").setStyle(baseStyle));
+        this.spaceWidth = gui.getMinecraft().font.width(Component.literal(" ").setStyle(baseStyle));
     }
 
     public Style getBase() {

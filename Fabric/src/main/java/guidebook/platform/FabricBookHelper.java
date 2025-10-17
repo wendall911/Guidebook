@@ -10,6 +10,7 @@ import net.fabricmc.loader.api.FabricLoader;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -60,12 +61,12 @@ public class FabricBookHelper implements IBookHelper {
     }
 
     @Override
-    public boolean handleRecipeKeybind(int keyCode, int scanCode, @Nullable ItemStack stack) {
+    public boolean handleRecipeKeybind(KeyEvent keyEvent, @Nullable ItemStack stack) {
         if (stack == null || stack.isEmpty()) {
             return false;
         }
         else if (FabricLoader.getInstance().isModLoaded("roughlyenoughitems")) {
-            return ReiCompat.handleRecipeKeybind(keyCode, scanCode, stack);
+            return ReiCompat.handleRecipeKeybind(keyEvent, stack);
         }
 
         return false;

@@ -49,7 +49,11 @@ public class TemplateInclusion {
         }
 
         if (parent.visitedTemplates.contains(template)) {
-            throw new IllegalArgumentException("Breaking when include template " + template + ", circular dependencies aren't allowed (stack = " + parent.visitedTemplates + ")");
+            throw new IllegalArgumentException(
+                "Breaking when include template " +
+                template + ", circular dependencies aren't allowed (stack = " +
+                parent.visitedTemplates + ")"
+            );
         }
 
         visitedTemplates = new LinkedHashSet<>(parent.visitedTemplates);
@@ -95,7 +99,8 @@ public class TemplateInclusion {
         String query = prefixed ? name.substring(1) : name;
 
         // if it's an upreference, return the upreference
-        String result = IVariable.wrap(localBindings.get(query), RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY)).asString();
+        String result = IVariable.wrap(localBindings.get(query),
+            RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY)).asString();
 
         if (result.startsWith("#")) {
             return result.substring(1);

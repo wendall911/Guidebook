@@ -35,7 +35,8 @@ public class VariableHelperImpl implements VariableHelper {
 			IVariableSerializer<?> componentSerializer = serializerForClass(componentType);
 			if (componentSerializer != null) {
 				@SuppressWarnings({ "unchecked", "rawtypes" })
-				IVariableSerializer<T> arraySerializer = (IVariableSerializer<T>) new GenericArrayVariableSerializer(componentSerializer, componentType);
+				IVariableSerializer<T> arraySerializer =
+                    (IVariableSerializer<T>) new GenericArrayVariableSerializer(componentSerializer, componentType);
 				serializers.put(clazz, arraySerializer);
 				return arraySerializer;
 			}
@@ -47,13 +48,15 @@ public class VariableHelperImpl implements VariableHelper {
 	@SuppressWarnings("unchecked")
 	public <T> IVariable createFromObject(T object, HolderLookup.Provider registries) {
 		Class<?> clazz = object.getClass();
+
 		for (Entry<Class<?>, IVariableSerializer<?>> e : serializers.entrySet()) {
 			if (e.getKey().isAssignableFrom(clazz)) {
 				return create(((IVariableSerializer<T>) e.getValue()).toJson(object, registries), clazz, registries);
 			}
 		}
 
-		throw new IllegalArgumentException(String.format("Can't serialize object %s of type %s to IVariable", object, clazz));
+		throw new IllegalArgumentException(
+            String.format("Can't serialize object %s of type %s to IVariable", object, clazz));
 	}
 
 	@Override

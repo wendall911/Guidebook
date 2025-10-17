@@ -48,7 +48,12 @@ public class PageQuest extends PageWithText {
         super.onDisplayed(parent, left, top);
 
         if (isManual) {
-            Button button = Button.builder(Component.empty(), this::questButtonClicked).pos(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35).size(100, 20).build();
+            Button button = Button.builder(
+                Component.empty(),
+                this::questButtonClicked).pos(
+                    GuiBook.PAGE_WIDTH / 2 - 50,
+                    GuiBook.PAGE_HEIGHT - 35
+                ).size(100, 20).build();
             addButton(button);
             updateButtonText(button);
         }
@@ -56,7 +61,8 @@ public class PageQuest extends PageWithText {
 
     private void updateButtonText(Button button) {
         boolean completed = isCompleted(parent.book);
-        Component s = Component.translatable(completed ? "guidebook.gui.lexicon.mark_incomplete" : "guidebook.gui.lexicon.mark_complete");
+        Component s = Component.translatable(completed ?
+            "guidebook.gui.lexicon.mark_incomplete" : "guidebook.gui.lexicon.mark_complete");
         button.setMessage(s);
     }
 
@@ -77,20 +83,27 @@ public class PageQuest extends PageWithText {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
-        super.render(graphics, mouseX, mouseY, pticks);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
 
-        parent.drawCenteredStringNoShadow(graphics, title == null || title.isEmpty() ? I18n.get("guidebook.gui.lexicon.objective") : i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
-        GuiBook.drawSeparator(graphics, book, 0, 12);
+        parent.drawCenteredStringNoShadow(
+            guiGraphics,
+            title == null || title.isEmpty() ? I18n.get("guidebook.gui.lexicon.objective") : i18n(title),
+            GuiBook.PAGE_WIDTH / 2,
+            0,
+            book.headerColor
+        );
+        GuiBook.drawSeparator(guiGraphics, book, 0, 12);
 
         if (!isManual) {
-            GuiBook.drawSeparator(graphics, book, 0, GuiBook.PAGE_HEIGHT - 25);
+            GuiBook.drawSeparator(guiGraphics, book, 0, GuiBook.PAGE_HEIGHT - 25);
 
             boolean completed = isCompleted(parent.book);
             String s = I18n.get(completed ? "guidebook.gui.lexicon.complete" : "guidebook.gui.lexicon.incomplete");
             int color = completed ? GuidebookColors.COMPLETE.toColor() : book.headerColor;
 
-            parent.drawCenteredStringNoShadow(graphics, s, GuiBook.PAGE_WIDTH / 2, GuiBook.PAGE_HEIGHT - 17, color);
+            parent.drawCenteredStringNoShadow(guiGraphics, s,
+                GuiBook.PAGE_WIDTH / 2, GuiBook.PAGE_HEIGHT - 17, color);
         }
 
     }

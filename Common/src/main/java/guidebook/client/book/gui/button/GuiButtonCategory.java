@@ -1,8 +1,7 @@
 package guidebook.client.book.gui.button;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -41,7 +40,7 @@ public class GuiButtonCategory extends Button {
 	}
 
 	@Override
-	public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
 		if (active) {
 			if (isHoveredOrFocused()) {
 				timeHovered = Math.min(ANIM_TIME, timeHovered + ClientTicker.delta);
@@ -54,23 +53,20 @@ public class GuiButtonCategory extends Button {
 			boolean locked = category != null && category.isLocked();
 
 			if (locked) {
-				RenderSystem.setShaderColor(1F, 1F, 1F, 0.7F);
-				GuiBook.drawLock(graphics, parent.book, getX() + 2, getY() + 2);
-			} else {
-				icon.render(graphics, getX() + 2, getY() + 2);
+				GuiBook.drawLock(guiGraphics, parent.book, getX() + 2, getY() + 2);
+			}
+            else {
+				icon.render(guiGraphics, getX() + 2, getY() + 2);
 			}
 
-			graphics.pose().pushPose();
-			RenderSystem.enableBlend();
-			RenderSystem.setShaderColor(1F, 1F, 1F, transparency);
-			graphics.pose().translate(0, 0, 200);
-			GuiBook.drawFromTexture(graphics, parent.book, getX(), getY(), u, v, width, height);
-			RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+			guiGraphics.pose().pushMatrix();
+			guiGraphics.pose().translate(0, 0);
+			GuiBook.drawFromTexture(guiGraphics, parent.book, getX(), getY(), u, v, width, height, transparency);
 
 			if (category != null && !category.isLocked()) {
-				GuiBook.drawMarking(graphics, parent.book, getX(), getY(), 0, category.getReadState());
+				GuiBook.drawMarking(guiGraphics, parent.book, getX(), getY(), 0, category.getReadState());
 			}
-			graphics.pose().popPose();
+			guiGraphics.pose().popMatrix();
 
 			if (isHoveredOrFocused()) {
 				parent.setTooltip(locked
@@ -81,13 +77,13 @@ public class GuiButtonCategory extends Button {
 	}
 
 	@Override
-	public void playDownSound(SoundManager soundHandlerIn) {
+	public void playDownSound(@NotNull SoundManager soundHandlerIn) {
 		if (category != null && !category.isLocked()) {
 			GuiBook.playBookFlipSound(parent.book);
 		}
 	}
 
-	public BookCategory getCategory() {
+	public @Nullable BookCategory getCategory() {
 		return category;
 	}
 

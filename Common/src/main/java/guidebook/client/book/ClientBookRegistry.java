@@ -3,7 +3,10 @@ package guidebook.client.book;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.gson.Gson;
@@ -17,7 +20,7 @@ import com.google.gson.JsonPrimitive;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.util.GsonHelper;
 
 import guidebook.api.GuidebookAPI;
@@ -39,13 +42,13 @@ import guidebook.client.book.page.PageTemplate;
 import guidebook.client.book.page.PageText;
 import guidebook.client.book.template.BookTemplate;
 import guidebook.client.book.template.TemplateComponent;
-import guidebook.common.base.GuidebookSounds;
 import guidebook.common.book.Book;
 import guidebook.common.book.BookRegistry;
 import guidebook.common.util.SerializationUtil;
 
-public class ClientBookRegistry {
+public class ClientBookRegistry implements PreparableReloadListener {
 
+    public static final ResourceLocation ID = GuidebookAPI.prefix("reload_hook");
     public final Map<ResourceLocation, Class<? extends BookPage>> pageTypes = new HashMap<>();
 
     public final Gson gson = new GsonBuilder()
@@ -80,6 +83,24 @@ public class ClientBookRegistry {
         pageTypes.put(GuidebookAPI.prefix("quest"), PageQuest.class);
     }
 
+    @Override
+    public @NotNull String getName() {
+        return "Guidebook Client Book Registry";
+    }
+
+    @Override
+    public @NotNull CompletableFuture<Void> reload(@NotNull SharedState sharedState,
+            @NotNull Executor prepareExecutor, PreparationBarrier preparationBarrier, @NotNull Executor applyExecutor) {
+        return CompletableFuture.supplyAsync(() -> null, prepareExecutor)
+            .thenCompose(preparationBarrier::wait).thenAcceptAsync((v) -> {
+                // Only reload if resource packs changed after initial load
+                if (Minecraft.getInstance().level != null) {
+                    GuidebookAPI.LOGGER.info("Reloading resource pack-based books");
+                    reload();
+                }
+            }, applyExecutor);
+    }
+
     public void reload() {
         currentLang = Minecraft.getInstance().getLanguageManager().getSelected();
         BookRegistry.INSTANCE.reloadContents(Minecraft.getInstance().level);
@@ -107,11 +128,6 @@ public class ClientBookRegistry {
             }
 
             book.getContents().openLexiconGui(book.getContents().getCurrentGui(), false);
-
-            if (mc.player != null) {
-                SoundEvent sfx = GuidebookSounds.getSound(book.openSound, GuidebookSounds.BOOK_OPEN);
-                mc.player.playSound(sfx, 1F, (float) (0.7 + Math.random() * 0.4));
-            }
         }
     }
 

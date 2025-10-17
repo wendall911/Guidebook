@@ -31,6 +31,7 @@ import org.apache.commons.lang3.tuple.Triple;
 
 import technology.roughness.whitenoise.util.ResourceLocationHelper;
 
+import guidebook.api.GuidebookAPI;
 import guidebook.common.book.Book;
 import guidebook.common.book.BookRegistry;
 import guidebook.common.item.ItemModBook;
@@ -39,7 +40,8 @@ public final class ItemStackUtil {
 
     private ItemStackUtil() {}
 
-    public static Triple<Holder<Item>, DataComponentPatch, Integer> deserializeStack(String string, HolderLookup.Provider registries) {
+    public static Triple<Holder<Item>, DataComponentPatch, Integer> deserializeStack(String string,
+            HolderLookup.Provider registries) {
         StringReader reader = new StringReader(string.trim());
         ItemParser itemParser = new ItemParser(registries);
         try {
@@ -50,7 +52,8 @@ public final class ItemStackUtil {
                 count = reader.readInt();
             }
             return Triple.of(result.item(), result.components(), count);
-        } catch (CommandSyntaxException e) {
+        }
+        catch (CommandSyntaxException e) {
             throw new RuntimeException(e);
         }
     }
@@ -79,7 +82,16 @@ public final class ItemStackUtil {
     }
 
     public static Ingredient loadIngredientFromString(String ingredientString, HolderLookup.Provider registries) {
-        return Ingredient.of(loadStackListFromString(ingredientString, registries).toArray(new ItemStack[0]));
+        List<Item> items = loadStackListFromString(ingredientString, registries).stream().map(ItemStack::getItem).toList();
+
+        if (!items.isEmpty()) {
+            return Ingredient.of(items.stream());
+        }
+        else {
+            GuidebookAPI.LOGGER.error("Empty ingredient not allowed. ID: {}", ingredientString);
+
+            return null;
+        }
     }
 
     public static List<ItemStack> loadStackListFromString(String ingredientString, HolderLookup.Provider registries) {
@@ -93,12 +105,16 @@ public final class ItemStackUtil {
                 ResourceLocation location = ResourceLocation.tryParse(s.substring(4));
 
                 if (location == null) {
-                    throw new IllegalArgumentException("Invalid tag ID: " + s.substring(4));
+                    GuidebookAPI.LOGGER.error("Invalid tag ID: " + s.substring(4));
+
+                    continue;
                 }
 
                 TagKey<Item> key = TagKey.create(Registries.ITEM, location);
 
-                registries.lookupOrThrow(Registries.ITEM).get(key).stream().flatMap(HolderSet::stream).forEach(item -> stacks.add(new ItemStack(item)));
+                registries.lookupOrThrow(Registries.ITEM).get(key).stream().flatMap(HolderSet::stream).forEach(
+                    item -> stacks.add(new ItemStack(item))
+                );
             }
             else {
                 stacks.add(loadStackFromString(s, registries));
@@ -232,6 +248,17 @@ public final class ItemStackUtil {
         }
 
         return stack;
+    }
+
+    public static Ingredient loadTagFromJson(JsonObject json, HolderLookup.Provider registries) {
+        if (json.has("tag")) {
+            return loadIngredientFromString(
+                "tag:" + json.get("tag").getAsString(),
+                registries
+            );
+        }
+
+        return null;
     }
 
 }

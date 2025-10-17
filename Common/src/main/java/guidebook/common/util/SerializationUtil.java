@@ -1,13 +1,26 @@
 package guidebook.common.util;
 
+import java.lang.reflect.Type;
 import java.util.Locale;
 
 import org.jetbrains.annotations.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.mojang.serialization.JsonOps;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 
@@ -17,7 +30,7 @@ public final class SerializationUtil {
 
     public static final IVariable.Serializer VARIABLE_SERIALIZER = new IVariable.Serializer();
     public static final Gson RAW_GSON = new GsonBuilder()
-        .registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
+        .registerTypeAdapter(ResourceLocation.class, new ResourceLocationSerializer())
         .registerTypeAdapter(IVariable.class, VARIABLE_SERIALIZER)
         .create();
     public static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -42,6 +55,35 @@ public final class SerializationUtil {
         else {
             return fallback;
         }
+    }
+
+    public static class ResourceLocationSerializer implements JsonDeserializer<ResourceLocation>, JsonSerializer<ResourceLocation> {
+
+        @Override
+        public ResourceLocation deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException {
+            return ResourceLocation.parse(GsonHelper.convertToString(jsonElement, "location"));
+        }
+
+        @Override
+        public JsonElement serialize(ResourceLocation location, Type type, JsonSerializationContext context) {
+            return new JsonPrimitive(location.toString());
+        }
+
+    }
+
+    public static class ComponentSerializer {
+
+        public static MutableComponent fromJson(JsonElement json, HolderLookup.Provider provider) {
+            return json == null ? null : deserialize(json, provider);
+        }
+
+        private static MutableComponent deserialize(JsonElement json, Provider provider) {
+            return (MutableComponent) ComponentSerialization.CODEC.parse(
+                provider.createSerializationContext(JsonOps.INSTANCE),
+                json
+            ).getOrThrow(JsonParseException::new);
+        }
+
     }
 
 }

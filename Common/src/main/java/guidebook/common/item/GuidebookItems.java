@@ -2,6 +2,8 @@ package guidebook.common.item;
 
 import java.util.function.BiConsumer;
 
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 
@@ -17,7 +19,11 @@ public class GuidebookItems {
     public static final ResourceLocation BOOK_GREEN_ID = GuidebookAPI.prefix("book_green");
     public static final ResourceLocation BOOK_PURPLE_ID = GuidebookAPI.prefix("book_purple");
     public static final ResourceLocation BOOK_RED_ID = GuidebookAPI.prefix("book_red");
-    public static final Item BOOK = new ItemModBook();
+    public static final Item BOOK = new ItemModBook(
+        new Item.Properties()
+            .stacksTo(1)
+            .setId(ResourceKey.create(Registries.ITEM, BOOK_ID))
+    );
 
     public static void submitItemRegistrations(BiConsumer<ResourceLocation, Item> consumer) {
         consumer.accept(BOOK_ID, BOOK);

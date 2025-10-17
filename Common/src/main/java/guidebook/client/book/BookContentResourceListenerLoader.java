@@ -6,42 +6,47 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.base.Stopwatch;
 import com.google.gson.JsonElement;
 
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.profiling.ProfilerFiller;
 
 import guidebook.api.GuidebookAPI;
 import guidebook.common.book.Book;
-import guidebook.common.book.BookRegistry;
 
 /**
  * BookContentLoader similar to {@link BookContentResourceDirectLoader}, but it
  * pre-caches the JSONs at during resource load to avoid I/O during book reloads.
  */
-public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadListener
+public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadListener<JsonElement>
         implements BookContentLoader {
+
+    public static final ResourceLocation ID = GuidebookAPI.prefix("resource_pack_books");
     public static final BookContentResourceListenerLoader INSTANCE = new BookContentResourceListenerLoader();
     private static final Pattern ID_READER = Pattern.compile(
-            "(?<bookId>[a-z0-9_.-]+)" +
-                    "/(?<lang>[a-z0-9_.-]+)" +
-                    "/(?<folder>[a-z0-9_.-]+)" +
-                    "/(?<entryId>[a-z0-9/._-]+)");
+        "(?<bookId>[a-z0-9_.-]+)" +
+        "/(?<lang>[a-z0-9_.-]+)" +
+        "/(?<folder>[a-z0-9_.-]+)" +
+        "/(?<entryId>[a-z0-9/._-]+)"
+    );
 
     // book id -> (entry id -> entry json)
     private Map<ResourceLocation, Map<ResourceLocation, JsonElement>> data;
 
     private BookContentResourceListenerLoader() {
-        super(BookRegistry.GSON, "guidebook_books");
+        super(ExtraCodecs.JSON, FileToIdConverter.json("guidebook_books"));
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager manager, ProfilerFiller profiler) {
+    protected void apply(Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager manager, @NotNull ProfilerFiller profiler) {
         Map<ResourceLocation, Map<ResourceLocation, JsonElement>> data = new HashMap<>();
         for (Map.Entry<ResourceLocation, JsonElement> entry : map.entrySet()) {
             // namespace:book_name/en_us/entries/entry

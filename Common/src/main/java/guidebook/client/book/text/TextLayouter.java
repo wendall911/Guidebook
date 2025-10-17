@@ -244,10 +244,12 @@ public class TextLayouter {
 
         public Word position(GuiBook gui, int x, int y, int length) {
             x += span.spacingLeft;
-            Word result = new Word(gui, span, span.styledSubstring(start, start + length), x, y, width, cluster);
+            Word result = new Word(gui, span, span.styledSubstring(start, start + length), x, y, width, lineHeight, cluster);
+
             if (cluster != null) {
                 cluster.add(result);
             }
+
             return result;
         }
 

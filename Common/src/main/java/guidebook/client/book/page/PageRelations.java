@@ -47,7 +47,8 @@ public class PageRelations extends PageWithText {
         displayedEntries.removeIf(BookEntry::shouldHide);
         Collections.sort(displayedEntries);
         for (int i = 0; i < displayedEntries.size(); i++) {
-            Button button = new GuiButtonEntry(parent, 0, 20 + i * 11, displayedEntries.get(i), this::handleButtonEntry);
+            Button button = new GuiButtonEntry(parent, 0, 20 + i * 11,
+                displayedEntries.get(i), this::handleButtonEntry);
             addButton(button);
         }
     }
@@ -57,11 +58,17 @@ public class PageRelations extends PageWithText {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
-        parent.drawCenteredStringNoShadow(graphics, title == null || title.isEmpty() ? I18n.get("guidebook.gui.lexicon.relations") : i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
-        GuiBook.drawSeparator(graphics, book, 0, 12);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        parent.drawCenteredStringNoShadow(
+            guiGraphics,
+            title == null || title.isEmpty() ? I18n.get("guidebook.gui.lexicon.relations") : i18n(title),
+            GuiBook.PAGE_WIDTH / 2,
+            0,
+            book.headerColor
+        );
+        GuiBook.drawSeparator(guiGraphics, book, 0, 12);
 
-        super.render(graphics, mouseX, mouseY, pticks);
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
     }
 
     @Override

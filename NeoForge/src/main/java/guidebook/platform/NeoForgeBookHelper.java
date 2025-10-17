@@ -8,21 +8,21 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforgespi.language.IModInfo;
 
 import guidebook.common.CommonModContainer;
 import guidebook.common.NeoForgeModContainer;
 import guidebook.event.BookDrawScreenEvent;
 import guidebook.network.NeoForgeNetworkHandler;
-import guidebook.GuidebookClientNeoForge;
 import guidebook.platform.services.IBookHelper;
 
 public class NeoForgeBookHelper implements IBookHelper {
@@ -45,31 +45,26 @@ public class NeoForgeBookHelper implements IBookHelper {
     @Override
     public Collection<CommonModContainer> getAllMods() {
         List<CommonModContainer> ret = new ArrayList<>();
-        for (var info : ModList.get().getMods()) {
-            ret.add(new NeoForgeModContainer(ModList.get().getModContainerById(info.getModId()).get()));
+
+        for (IModInfo info : ModList.get().getMods()) {
+            ret.add(new NeoForgeModContainer(ModList.get().getModContainerById(info.getModId()).orElseThrow()));
         }
+
         return ret;
     }
 
     @Override
     public CommonModContainer getModContainer(String modId) {
-        return new NeoForgeModContainer(ModList.get().getModContainerById(modId).get());
+        return new NeoForgeModContainer(ModList.get().getModContainerById(modId).orElseThrow());
     }
 
     @Override
     public boolean isDevEnvironment() {
-        return !FMLEnvironment.production;
+        return !FMLEnvironment.isProduction();
     }
 
     @Override
-    public void signalBooksLoaded() {
-        if (FMLEnvironment.dist == Dist.CLIENT) {
-            GuidebookClientNeoForge.signalBooksLoaded();
-        }
-    }
-
-    @Override
-    public boolean handleRecipeKeybind(int keyCode, int scanCode, @Nullable ItemStack stack) {
+    public boolean handleRecipeKeybind(KeyEvent keyEvent, @Nullable ItemStack stack) {
         return false;
     }
 

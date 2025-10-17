@@ -142,7 +142,6 @@ public interface IVariable {
         return wrap(arr, registries);
     }
 
-    @Deprecated // Use HolderLookup.Provider version
     static IVariable wrap(@Nullable Number n) {
         return wrap(n, RegistryAccess.EMPTY);
     }
@@ -151,7 +150,6 @@ public interface IVariable {
         return n != null ? wrap(new JsonPrimitive(n), registries) : empty();
     }
 
-    @Deprecated // Use HolderLookup.Provider version
     static IVariable wrap(@Nullable Boolean b) {
         return wrap(b, RegistryAccess.EMPTY);
     }
@@ -160,7 +158,6 @@ public interface IVariable {
         return b != null ? wrap(new JsonPrimitive(b), registries) : empty();
     }
 
-    @Deprecated // Use HolderLookup.Provider version
     static IVariable wrap(@Nullable String s) {
         return wrap(s, RegistryAccess.EMPTY);
     }

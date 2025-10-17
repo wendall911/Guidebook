@@ -1,6 +1,7 @@
 package guidebook.client.book.page;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.world.level.Level;
 
 import guidebook.client.book.BookContentsBuilder;
@@ -38,13 +39,13 @@ public class PageTemplate extends BookPage {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
-        template.render(graphics, this, mouseX, mouseY, pticks);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        template.render(guiGraphics, this, mouseX, mouseY, partialTicks);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        return template.mouseClicked(this, mouseX, mouseY, mouseButton);
+    public boolean mouseClicked(MouseButtonEvent mouseButtonEvent) {
+        return template.mouseClicked(this, mouseButtonEvent);
     }
 
 }

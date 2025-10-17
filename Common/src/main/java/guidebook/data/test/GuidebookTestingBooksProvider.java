@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -19,6 +20,7 @@ import guidebook.api.data.CategoryBuilder;
 import guidebook.api.data.EntryBuilder;
 import guidebook.api.data.GuidebookBookProvider;
 import guidebook.api.data.TemplateBuilder;
+import guidebook.common.book.Book.BookLayoutTexture;
 import guidebook.config.GuidebookConfig.TextOverflowMode;
 
 public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
@@ -45,6 +47,7 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
                 PAMPHLET_TRANSLATION_KEY + ".landing",
                 provider
             )
+            .setBookTexture(BookLayoutTexture.CYAN)
             .setPamphlet(true)
             .setCreativeTab("minecraft:tools_and_utilities")
             .setAdvancementsTab("guidebooktest");
@@ -101,6 +104,7 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
                 "DO NOT OPEN",
                 provider
             )
+            .setBookTexture(BookLayoutTexture.RED)
             .setCreativeTab("minecraft:tools_and_utilities")
             .setSubtitle("DO NOT OPEN")
             .setModel("minecraft:barrier")
@@ -133,6 +137,7 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
             "DO NOT OPEN",
             provider
         )
+        .setBookTexture(BookLayoutTexture.RED)
         .setCreativeTab("minecraft:tools_and_utilities")
         .setSubtitle("DO NOT OPEN")
         .setModel("minecraft:barrier")
@@ -165,6 +170,7 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
             COMPREHENSIVE_BOOK_TRANSLATION_KEY + ".landing",
             provider
         )
+        .setBookTexture(BookLayoutTexture.GREEN)
         .setVersion("50")
         .setSubtitle("Comprehensive Test Book Subtitle")
         // Don't set creative tab if you want book to not appear in creative inventory or JEI/REI
@@ -411,7 +417,7 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
                 "propagate its formatting to the rest of the string!").build()
             .addTextPage(
                 "This link should lead to the recipe_mapping category: " +
-                " $(l:guidebook:recipe_mapping)click me$(/l)"
+                " $(l:guidebooktest:recipe_mapping)click me$(/l)"
             );
 
         return category.build();
@@ -487,7 +493,7 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
         EntryBuilder link = category.addEntry(
             "page_types/link",
             "Link",
-            new ItemStack(Items.CHAIN)
+            new ItemStack(Items.IRON_CHAIN)
         );
         link.addLinkPage("https://example.com", "Link to example.com")
             .setText("Button below opens example.com");
@@ -670,7 +676,7 @@ public class GuidebookTestingBooksProvider extends GuidebookBookProvider {
     private static BookBuilder addTemplates(BookBuilder bookBuilder) {
         JsonElement input = new JsonObject();
 
-        input.getAsJsonObject().addProperty("tag", "minecraft:music_discs");
+        input.getAsJsonObject().addProperty("tag", ItemTags.CREEPER_DROP_MUSIC_DISCS.location().toString());
 
         CategoryBuilder category = bookBuilder
             .addCategory(

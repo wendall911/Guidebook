@@ -23,7 +23,7 @@ public class FabricMessageReloadBookContents {
     public static void handle(MessageReloadBookContents message, ClientPlayNetworking.Context handler) {
         Minecraft client = handler.client();
 
-        client.submit(ClientBookRegistry.INSTANCE::reload);
+        client.submit(() -> ClientBookRegistry.INSTANCE.reload());
     }
 
 }

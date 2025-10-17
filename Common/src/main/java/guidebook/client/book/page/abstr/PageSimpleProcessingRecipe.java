@@ -1,15 +1,17 @@
 package guidebook.client.book.page.abstr;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 
 import guidebook.client.book.gui.GuiBook;
+import guidebook.mixin.AccessorSingleItemRecipe;
 
 public abstract class PageSimpleProcessingRecipe<T extends Recipe<?>> extends PageDoubleRecipeRegistry<T> {
 
@@ -18,28 +20,51 @@ public abstract class PageSimpleProcessingRecipe<T extends Recipe<?>> extends Pa
     }
 
     @Override
-    protected void drawRecipe(GuiGraphics graphics, T recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
+    protected void drawRecipe(GuiGraphics guiGraphics, T recipe, int recipeX, int recipeY, int mouseX,
+                              int mouseY, boolean second) {
         Level level = Minecraft.getInstance().level;
+        ItemStack toastSymbol = ItemStack.EMPTY;
+        AccessorSingleItemRecipe recipeAccessor = (AccessorSingleItemRecipe) recipe;
+        Ingredient input = recipeAccessor.getInput();
+        ItemStack result = recipeAccessor.getResult();
+
         if (level == null) {
             return;
         }
 
-        RenderSystem.enableBlend();
-        graphics.blit(book.craftingTexture, recipeX, recipeY, 11, 71, 96, 24, 128, 256);
-        parent.drawCenteredStringNoShadow(graphics, getTitle(second).getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
+        if (recipe.getType() == RecipeType.BLASTING) {
+            toastSymbol = new ItemStack(Blocks.BLAST_FURNACE);
+        }
+        else if (recipe.getType() == RecipeType.CAMPFIRE_COOKING) {
+            toastSymbol = new ItemStack(Blocks.CAMPFIRE);
+        }
+        else if (recipe.getType() == RecipeType.SMELTING) {
+            toastSymbol = new ItemStack(Blocks.FURNACE);
+        }
+        else if (recipe.getType() == RecipeType.SMOKING) {
+            toastSymbol = new ItemStack(Blocks.SMOKER);
+        }
+        else if (recipe.getType() == RecipeType.STONECUTTING) {
+            toastSymbol = new ItemStack(Blocks.STONECUTTER);
+        }
 
-        parent.renderIngredient(graphics, recipeX + 4, recipeY + 4, mouseX, mouseY, recipe.getIngredients().get(0));
-        parent.renderItemStack(graphics, recipeX + 40, recipeY + 4, mouseX, mouseY, recipe.getToastSymbol());
-        parent.renderItemStack(graphics, recipeX + 76, recipeY + 4, mouseX, mouseY, recipe.getResultItem(level.registryAccess()));
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, book.craftingTexture, recipeX, recipeY,
+            11, 71, 96, 24, 128, 256);
+        parent.drawCenteredStringNoShadow(guiGraphics, getTitle(second).getVisualOrderText(),
+            GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
+
+        parent.renderIngredient(guiGraphics, recipeX + 4, recipeY + 4, mouseX, mouseY, input);
+        parent.renderItemStack(guiGraphics, recipeX + 40, recipeY + 4, mouseX, mouseY, toastSymbol);
+        parent.renderItemStack(guiGraphics, recipeX + 76, recipeY + 4, mouseX, mouseY, result);
     }
 
     @Override
     protected ItemStack getRecipeOutput(Level level, T recipe) {
-        if (recipe == null || level == null) {
+        if (recipe == null) {
             return ItemStack.EMPTY;
         }
 
-        return recipe.getResultItem(level.registryAccess());
+        return ((AccessorSingleItemRecipe) recipe).getResult();
     }
 
     @Override

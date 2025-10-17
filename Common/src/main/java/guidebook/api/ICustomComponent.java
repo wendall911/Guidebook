@@ -1,6 +1,7 @@
 package guidebook.api;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 
 /**
  * An interface for API level custom components for templates.
@@ -37,7 +38,7 @@ public interface ICustomComponent extends IVariablesAvailableCallback {
      * Called on mouse click. Note that the click may not be inside your component, so
      * you need to validate the position.
      */
-    default boolean mouseClicked(IComponentRenderContext context, double mouseX, double mouseY, int mouseButton) {
+    default boolean mouseClicked(IComponentRenderContext context, MouseButtonEvent mouseButtonEvent) {
         return false;
     }
 
