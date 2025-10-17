@@ -55,7 +55,11 @@ public class GuidebookConfig {
 
             inventoryButtonBook = builder
                 .comment(getTranslation("inventorybuttonbook"))
-                .define("inventoryButtonBook", "", resourceLocationValidator);
+                .define(
+                    "inventoryButtonBook",
+                    "",
+                    resourceLocationValidator.or(s -> s instanceof String && ((String) s).isEmpty())
+                );
 
             useShiftForQuickLookup = builder
                 .comment(getTranslation("useshiftforquicklookup"))
