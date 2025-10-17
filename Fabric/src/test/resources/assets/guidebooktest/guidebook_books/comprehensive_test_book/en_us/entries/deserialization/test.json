@@ -23,7 +23,7 @@
     },
     {
       "type": "guidebook:text",
-      "text": "This link should lead to the recipe_mapping category:  $(l:guidebook:recipe_mapping)click me$(/l)"
+      "text": "This link should lead to the recipe_mapping category:  $(l:guidebooktest:recipe_mapping)click me$(/l)"
     }
   ]
 }

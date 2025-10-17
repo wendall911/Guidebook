@@ -1,6 +1,6 @@
 {
   "category": "guidebooktest:page_types",
-  "icon": "minecraft:chain",
+  "icon": "minecraft:iron_chain",
   "name": "Link",
   "pages": [
     {

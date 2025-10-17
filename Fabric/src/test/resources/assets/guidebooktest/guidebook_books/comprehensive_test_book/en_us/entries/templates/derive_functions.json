@@ -6,7 +6,7 @@
     {
       "type": "guidebooktest:derive_ingr_to_stack",
       "input": {
-        "tag": "minecraft:music_discs"
+        "tag": "minecraft:creeper_drop_music_discs"
       }
     }
   ]
