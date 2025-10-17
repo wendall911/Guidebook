@@ -143,8 +143,8 @@ public abstract class GuiBook extends Screen {
         if (scaleFactor != 1) {
             graphics.pose().scale(scaleFactor, scaleFactor, scaleFactor);
 
-            mouseX /= (int) scaleFactor;
-            mouseY /= (int) scaleFactor;
+            mouseX = getScaledMouseX(mouseX);
+            mouseY = getScaledMouseY(mouseY);
         }
 
         drawScreenAfterScale(graphics, mouseX, mouseY, partialTicks);
@@ -456,6 +456,14 @@ public abstract class GuiBook extends Screen {
      */
     public double getRelativeY(double absY) {
         return absY - bookTop;
+    }
+
+    public int getScaledMouseX(int mouseX) {
+        return (int) ((float) mouseX / scaleFactor);
+    }
+
+    public int getScaledMouseY(int mouseY) {
+        return (int) ((float) mouseY / scaleFactor);
     }
 
     public void drawProgressBar(GuiGraphics graphics, Book book, int mouseX, int mouseY, Predicate<BookEntry> filter) {

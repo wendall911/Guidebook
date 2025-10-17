@@ -7,7 +7,6 @@ import java.util.function.Supplier;
 
 import net.minecraft.SystemReport;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 
 import guidebook.api.GuidebookAPI;
 import guidebook.client.book.gui.GuiBook;
@@ -22,7 +21,11 @@ public class BookCrashHandler implements Supplier<String> {
     public static void appendToCrashReport(SystemReport report) {
         Minecraft mc = Minecraft.getInstance();
 
-        if (mc != null && !(mc.screen instanceof GuiBook)) {
+        if (mc == null) {
+            return;
+        }
+
+        if (mc.screen != null && !(mc.screen instanceof GuiBook)) {
             return;
         }
 
@@ -36,11 +39,18 @@ public class BookCrashHandler implements Supplier<String> {
 
     @Override
     public String get() {
-        Screen screen = Minecraft.getInstance().screen;
+        Minecraft mc = Minecraft.getInstance();
+        String errorText = "n/a";
 
-        if (!(screen instanceof GuiBook gui)) {
-            return "n/a";
+        if (mc == null) {
+            return errorText;
         }
+
+        if (mc.screen != null && !(mc.screen instanceof GuiBook gui)) {
+            return errorText;
+        }
+
+        GuiBook gui = (GuiBook) mc.screen;
 
         Book book = gui.book;
         StringBuilder builder = new StringBuilder(INDENT);
