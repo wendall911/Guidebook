@@ -40,7 +40,6 @@ public class Book {
 
     private static final String[] ORDINAL_SUFFIXES = new String[] { "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
     private static final ResourceLocation DEFAULT_MODEL = GuidebookAPI.prefix("book_brown");
-    private static final ResourceLocation DEFAULT_BOOK_TEXTURE = GuidebookAPI.prefix("textures/gui/book_brown.png");
     private static final ResourceLocation DEFAULT_FILLER_TEXTURE = GuidebookAPI.prefix("textures/gui/page_filler.png");
     private static final ResourceLocation DEFAULT_CRAFTING_TEXTURE = GuidebookAPI.prefix("textures/gui/crafting.png");
 
@@ -109,7 +108,7 @@ public class Book {
     public Book(JsonObject root, CommonModContainer owner, ResourceLocation id) {
         this.name = GsonHelper.getAsString(root, "name");
         this.landingText = GsonHelper.getAsString(root, "landing_text", "guidebook.gui.lexicon.landing_info");
-        this.bookTexture = SerializationUtil.getAsResourceLocation(root, "book_texture", DEFAULT_BOOK_TEXTURE);
+        this.bookTexture = SerializationUtil.getAsResourceLocation(root, "book_texture", BookLayoutTexture.DEFAULT.texture());
         this.fillerTexture = SerializationUtil.getAsResourceLocation(root, "filler_texture", DEFAULT_FILLER_TEXTURE);
         this.craftingTexture = SerializationUtil.getAsResourceLocation(root, "crafting_texture", DEFAULT_CRAFTING_TEXTURE);
         this.model = SerializationUtil.getAsResourceLocation(root, "model", DEFAULT_MODEL).withPrefix("item/");
@@ -257,6 +256,35 @@ public class Book {
 
     public BookContents getContents() {
         return contents != null ? contents : BookContents.empty(this, null);
+    }
+
+    public enum BookLayoutTexture {
+        BLUE,
+        BROWN,
+        CYAN,
+        GRAY,
+        GREEN,
+        PURPLE,
+        RED,
+        DEFAULT;
+
+        @Override
+        public String toString() {
+            return switch (this) {
+                case BLUE -> "book_blue";
+                case BROWN -> "book_brown";
+                case CYAN -> "book_cyan";
+                case GRAY -> "book_gray";
+                case GREEN -> "book_green";
+                case PURPLE -> "book_purple";
+                case RED -> "book_red";
+                case DEFAULT -> "book_brown";
+            };
+        }
+
+        public ResourceLocation texture() {
+            return GuidebookAPI.prefix("textures/gui/" + this + ".png");
+        }
     }
 
 }
