@@ -1,4 +1,5 @@
 {
+  "book_texture": "guidebook:textures/gui/book_green.png",
   "creative_tab": "minecraft:tools_and_utilities",
   "i18n": true,
   "landing_text": "book.guidebooktest.comprehensive_test_book.landing",
