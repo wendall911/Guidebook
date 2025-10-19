@@ -1,4 +1,4 @@
 {
-	"book_flip": { "category": "player", "sounds": ["guidebook:book_flip"], "subtitle": "guidebook.subtitle.book_flip" },
-	"book_open": { "category": "player", "sounds": ["guidebook:book_open"], "subtitle": "guidebook.subtitle.book_open" }
+	"book_flip": { "category": "player", "sounds": ["handbook:book_flip"], "subtitle": "handbook.subtitle.book_flip" },
+	"book_open": { "category": "player", "sounds": ["handbook:book_open"], "subtitle": "handbook.subtitle.book_open" }
 }

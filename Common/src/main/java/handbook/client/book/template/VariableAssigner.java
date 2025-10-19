@@ -1,0 +1,209 @@
+package handbook.client.book.template;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.text.WordUtils;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.Level;
+
+import handbook.api.IComponentProcessor;
+import handbook.api.IVariable;
+import handbook.api.IVariableProvider;
+import handbook.api.IVariablesAvailableCallback;
+import handbook.common.util.EntityUtil;
+
+@SuppressWarnings("deprecation")
+public class VariableAssigner {
+
+    private static final Pattern INLINE_VAR_PATTERN = Pattern.compile("([^#]*)(#[^#]+)#(.*)");
+    private static final Pattern FUNCTION_PATTERN = Pattern.compile("(.+)->(.+)");
+    private static final Map<String, BiFunction<IVariable, HolderLookup.Provider, IVariable>> FUNCTIONS = new HashMap<>();
+
+    static {
+        FUNCTIONS.put("iname", VariableAssigner::iname);
+        FUNCTIONS.put("icount", VariableAssigner::icount);
+        FUNCTIONS.put("ename", wrapStringFunc(VariableAssigner::ename));
+        FUNCTIONS.put("lower", wrapStringFunc(String::toLowerCase));
+        FUNCTIONS.put("upper", wrapStringFunc(String::toUpperCase));
+        FUNCTIONS.put("trim", wrapStringFunc(String::trim));
+        FUNCTIONS.put("capital", wrapStringFunc(WordUtils::capitalize));
+        FUNCTIONS.put("fcapital", wrapStringFunc(WordUtils::capitalizeFully));
+        FUNCTIONS.put("i18n", wrapStringFunc(I18n::get));
+        FUNCTIONS.put("exists", VariableAssigner::exists);
+        FUNCTIONS.put("iexists", VariableAssigner::iexists);
+        FUNCTIONS.put("inv", VariableAssigner::inv);
+        FUNCTIONS.put("stacks", VariableAssigner::stacks);
+    }
+
+    public static void assignVariableHolders(Level level, IVariablesAvailableCallback object,
+            IVariableProvider variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
+        Context context = new Context(variables, processor, encapsulation);
+
+        object.onVariablesAvailable(input -> {
+            if (input == null) {
+                return IVariable.empty();
+            }
+            else if (input.unwrap().isJsonPrimitive() && input.unwrap().getAsJsonPrimitive().isString()) {
+                IVariable resolved = resolveString(level, input.asString(), context);
+                if (resolved != null) {
+                    return resolved;
+                }
+            }
+
+            return input;
+        }, level.registryAccess());
+    }
+
+    private static IVariable resolveString(Level level, @Nullable String inputText, Context context) {
+        if (inputText == null || inputText.isEmpty()) {
+            return null;
+        }
+
+        String inputTextCopy = inputText;
+        Matcher matcher = INLINE_VAR_PATTERN.matcher(inputTextCopy);
+
+        while (matcher.matches()) {
+            String before = matcher.group(1);
+            String current = matcher.group(2);
+            String after = matcher.group(3);
+
+            String resolved = resolveStringFunctions(level, current, context).asString();
+
+            inputTextCopy = String.format("%s%s%s", before, resolved, after);
+            matcher = INLINE_VAR_PATTERN.matcher(inputTextCopy);
+        }
+
+        return resolveStringFunctions(level, inputTextCopy, context);
+    }
+
+    private static IVariable resolveStringFunctions(Level level, String curr, Context c) {
+        IVariable cached = c.getCached(curr);
+        if (cached != null) {
+            return cached;
+        }
+
+        Matcher m = FUNCTION_PATTERN.matcher(curr);
+
+        if (m.matches()) {
+            String funcStr = m.group(2);
+            String arg = m.group(1);
+
+            if (FUNCTIONS.containsKey(funcStr)) {
+                BiFunction<IVariable, HolderLookup.Provider, IVariable> func = FUNCTIONS.get(funcStr);
+                IVariable parsedArg = resolveStringFunctions(level, arg, c);
+                return c.cache(curr, func.apply(parsedArg, level.registryAccess()));
+            } else {
+                throw new IllegalArgumentException("Invalid Function " + funcStr);
+            }
+        }
+
+        IVariable ret = resolveStringVar(level, curr, c);
+
+        return c.cache(curr, ret);
+    }
+
+    private static IVariable resolveStringVar(Level level, String original, Context c) {
+        String curr = original;
+        IVariable val = null;
+
+        if (curr == null) {
+            return IVariable.empty();
+        }
+
+        if (curr.startsWith("#")) {
+            if (c.encapsulation != null) {
+                val = c.encapsulation.attemptVariableLookup(curr, level.registryAccess());
+                if (val != null) {
+                    return val;
+                } else {
+                    curr = c.encapsulation.qualifyName(curr);
+                }
+            }
+
+            String key = curr.startsWith("#") ? curr.substring(1) : curr;
+            String originalKey = original.substring(1);
+
+            if (c.processor != null) {
+                val = c.processor.process(level, originalKey);
+            }
+
+            if (val == null && c.variables.has(key)) {
+                val = c.variables.get(key, level.registryAccess());
+            }
+
+            return val == null ? IVariable.empty() : val;
+        }
+        return IVariable.wrap(curr, level.registryAccess());
+    }
+
+    private static BiFunction<IVariable, HolderLookup.Provider, IVariable> wrapStringFunc(Function<String, String> inner) {
+        return (x, r) -> IVariable.wrap(inner.apply(x.asString()), r);
+    }
+
+    private static IVariable iname(IVariable arg, HolderLookup.Provider registries) {
+        ItemStack stack = arg.as(ItemStack.class);
+        return IVariable.wrap(stack.getHoverName().getString(), registries);
+    }
+
+    private static IVariable icount(IVariable arg, HolderLookup.Provider registries) {
+        ItemStack stack = arg.as(ItemStack.class);
+        return IVariable.wrap(stack.getCount(), registries);
+    }
+
+    private static IVariable exists(IVariable arg, HolderLookup.Provider registries) {
+        return IVariable.wrap(!arg.unwrap().isJsonNull(), registries);
+    }
+
+    private static IVariable iexists(IVariable arg, HolderLookup.Provider registries) {
+        ItemStack stack = arg.as(ItemStack.class);
+        return IVariable.wrap(stack != null && !stack.isEmpty(), registries);
+    }
+
+    private static IVariable inv(IVariable arg, HolderLookup.Provider registries) {
+        return IVariable.wrap(!arg.unwrap().getAsBoolean(), registries);
+    }
+
+    private static IVariable stacks(IVariable arg, HolderLookup.Provider registries) {
+        return IVariable.from(arg.as(Ingredient.class), registries);
+    }
+
+    private static String ename(String arg) {
+        return EntityUtil.getEntityName(arg);
+    }
+
+    private static class Context {
+
+        final IVariableProvider variables;
+        final IComponentProcessor processor;
+        final TemplateInclusion encapsulation;
+        final Map<String, IVariable> cachedVars = new HashMap<>();
+
+        Context(IVariableProvider variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
+            this.variables = variables;
+            this.processor = processor;
+            this.encapsulation = encapsulation;
+        }
+
+        IVariable getCached(String s) {
+            return cachedVars.get(s);
+        }
+
+        IVariable cache(String k, IVariable v) {
+            cachedVars.put(k, v);
+            return v;
+        }
+
+    }
+
+}

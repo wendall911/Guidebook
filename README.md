@@ -1,4 +1,4 @@
-# Guidebook
+# Handbook
 Datapack driven in-game documentation for Minecraft mods. For mod and modpack
 developers who are tired of not being able to support the latest versions, as
 Patchouli and other derivitives often takes six months or longer to update, or
@@ -10,7 +10,7 @@ For more information, see the [docs](https://vazkiimods.github.io/Patchouli/docs
 
 ## License Information
 
-Much of guidebook's original code and assets are licensed under the CC-BY-NC-SA 3.0 Unported
+Much of Handbook's original code and assets are licensed under the CC-BY-NC-SA 3.0 Unported
 license, and the repository is a direct fork for historical purposes.
 
-Code for datagen is under the MIT licence.
+Code for datagen and all other future updates or additions are under the MIT licence.

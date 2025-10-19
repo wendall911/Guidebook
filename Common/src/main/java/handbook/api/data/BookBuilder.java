@@ -1,0 +1,409 @@
+package handbook.api.data;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Consumer;
+
+import com.google.gson.JsonObject;
+
+import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+
+import handbook.api.data.util.ItemStackHelper;
+import handbook.common.book.Book;
+import handbook.config.HandbookConfig.TextOverflowMode;
+
+public class BookBuilder {
+
+    private final ResourceLocation id;
+    private final String displayName;
+    private final String landingText;
+    private final List<CategoryBuilder> categories = new ArrayList<>();
+    private final List<TemplateBuilder> templates = new ArrayList<>();
+    private String bookTexture;
+    private String fillerTexture;
+    private String craftingTexture;
+    private String model;
+    private String textColor;
+    private String headerColor;
+    private String nameplateColor;
+    private String linkColor;
+    private String linkHoverColor;
+    private String progressBarColor;
+    private String progressBarBackground;
+    private String openSound;
+    private String flipSound;
+    private String indexIcon;
+    private Boolean showProgress;
+    private String version;
+    private String subtitle;
+    private String creativeTab;
+    private String advancementsTab;
+    private Boolean dontGenerateBook;
+    private String customBookItem;
+    private Boolean showToasts;
+    private Boolean useBlockyFont;
+    private Boolean i18n;
+    private Boolean pauseGame;
+    private Enum<TextOverflowMode> textOverflowMode;
+    private Boolean pamphlet;
+    private Map<String, String> macros;
+    private HolderLookup.Provider provider;
+
+    protected BookBuilder(String modid, String id, String displayName, String landingText, HolderLookup.Provider provider) {
+        this(ResourceLocation.fromNamespaceAndPath(modid, id), displayName, landingText, provider);
+    }
+
+    protected BookBuilder(ResourceLocation id, String displayName, String landingText, HolderLookup.Provider provider) {
+        this.id = id;
+        this.displayName = displayName;
+        this.landingText = landingText;
+        this.provider = provider;
+    }
+
+    JsonObject toJson() {
+        JsonObject json = new JsonObject();
+        json.addProperty("name", displayName);
+        json.addProperty("landing_text", landingText);
+
+        if (bookTexture != null) {
+            json.addProperty("book_texture", bookTexture);
+        }
+        if (fillerTexture != null) {
+            json.addProperty("filler_texture", fillerTexture);
+        }
+        if (craftingTexture != null) {
+            json.addProperty("crafting_texture", craftingTexture);
+        }
+        if (model != null) {
+            json.addProperty("model", model);
+        }
+        if (textColor != null) {
+            json.addProperty("text_color", textColor);
+        }
+        if (headerColor != null) {
+            json.addProperty("header_color", headerColor);
+        }
+        if (nameplateColor != null) {
+            json.addProperty("nameplate_color", nameplateColor);
+        }
+        if (linkColor != null) {
+            json.addProperty("link_color", linkColor);
+        }
+        if (linkHoverColor != null) {
+            json.addProperty("link_hover_color", linkHoverColor);
+        }
+        if (progressBarColor != null) {
+            json.addProperty("progress_bar_color", progressBarColor);
+        }
+        if (progressBarBackground != null) {
+            json.addProperty("progress_bar_background", progressBarBackground);
+        }
+        if (openSound != null) {
+            json.addProperty("open_sound", openSound);
+        }
+        if (flipSound != null) {
+            json.addProperty("flip_sound", flipSound);
+        }
+        if (indexIcon != null) {
+            json.addProperty("index_icon", indexIcon);
+        }
+        if (showProgress != null) {
+            json.addProperty("show_progress", showProgress);
+        }
+        if (version != null) {
+            json.addProperty("version", version);
+        }
+        if (subtitle != null) {
+            json.addProperty("subtitle", subtitle);
+        }
+        if (creativeTab != null) {
+            json.addProperty("creative_tab", creativeTab);
+        }
+        if (advancementsTab != null) {
+            json.addProperty("advancements_tab", advancementsTab);
+        }
+        if (dontGenerateBook != null) {
+            json.addProperty("dont_generate_book", dontGenerateBook);
+        }
+        if (customBookItem != null) {
+            json.addProperty("custom_book_item", customBookItem);
+        }
+        if (showToasts != null) {
+            json.addProperty("show_toasts", showToasts);
+        }
+        if (useBlockyFont != null) {
+            json.addProperty("use_blocky_font", useBlockyFont);
+        }
+        if (i18n != null) {
+            json.addProperty("i18n", i18n);
+        }
+        if (pauseGame != null) {
+            json.addProperty("pause_game", pauseGame);
+        }
+        if (textOverflowMode != null) {
+            json.addProperty("text_overflow_mode", textOverflowMode.toString());
+        }
+        if (pamphlet != null) {
+            json.addProperty("pamphlet", pamphlet);
+        }
+        if (macros != null) {
+            JsonObject macroObject = new JsonObject();
+            for (Map.Entry<String, String> entry : macros.entrySet()) {
+                macroObject.addProperty(entry.getKey(), entry.getValue());
+            }
+            json.add("macros", macroObject);
+        }
+
+        this.serialize(json);
+
+        return json;
+    }
+
+    protected void serialize(JsonObject json) {}
+
+    protected List<CategoryBuilder> getCategories() {
+        return Collections.unmodifiableList(categories);
+    }
+
+    protected List<TemplateBuilder> getTemplates() {
+        return Collections.unmodifiableList(templates);
+    }
+
+    public void build(Consumer<BookBuilder> consumer) {
+        consumer.accept(this);
+    }
+
+    public CategoryBuilder addCategory(String id, String name, String description, ItemStack icon) {
+        return this.addCategory(new CategoryBuilder(id, name, description, icon, this));
+    }
+
+    public CategoryBuilder addCategory(String id, String name, String description, String icon) {
+        return this.addCategory(new CategoryBuilder(id, name, description, icon, this));
+    }
+
+    protected <T extends CategoryBuilder> T addCategory(T builder) {
+        this.categories.add(builder);
+
+        return builder;
+    }
+
+    public TemplateBuilder addTemplate(String id) {
+        return this.addTemplate(new TemplateBuilder(id, this));
+    }
+
+    protected <T extends TemplateBuilder> T addTemplate(T builder) {
+        this.templates.add(builder);
+
+        return builder;
+    }
+
+    public BookBuilder setBookTexture(String bookTexture) {
+        this.bookTexture = bookTexture;
+
+        return this;
+    }
+
+    public BookBuilder setBookTexture(ResourceLocation bookTexture) {
+        return this.setBookTexture(bookTexture.toString());
+    }
+
+    public BookBuilder setBookTexture(Book.BookLayoutTexture bookTexture) {
+        return this.setBookTexture(bookTexture.texture());
+    }
+
+    public BookBuilder setFillerTexture(String fillerTexture) {
+        this.fillerTexture = fillerTexture;
+
+        return this;
+    }
+
+    public BookBuilder setCraftingTexture(String craftingTexture) {
+        this.craftingTexture = craftingTexture;
+
+        return this;
+    }
+
+    public BookBuilder setModel(ResourceLocation model) {
+        return this.setModel(model.toString());
+    }
+
+    public BookBuilder setModel(String model) {
+        this.model = model;
+
+        return this;
+    }
+
+    public BookBuilder setTextColor(String textColor) {
+        this.textColor = textColor;
+
+        return this;
+    }
+
+    public BookBuilder setHeaderColor(String headerColor) {
+        this.headerColor = headerColor;
+
+        return this;
+    }
+
+    public BookBuilder setNameplateColor(String nameplateColor) {
+        this.nameplateColor = nameplateColor;
+
+        return this;
+    }
+
+    public BookBuilder setLinkColor(String linkColor) {
+        this.linkColor = linkColor;
+
+        return this;
+    }
+
+    public BookBuilder setLinkHoverColor(String linkHoverColor) {
+        this.linkHoverColor = linkHoverColor;
+
+        return this;
+    }
+
+    public BookBuilder setProgressBarColor(String progressBarColor) {
+        this.progressBarColor = progressBarColor;
+
+        return this;
+    }
+
+    public BookBuilder setProgressBarBackground(String progressBarBackground) {
+        this.progressBarBackground = progressBarBackground;
+
+        return this;
+    }
+
+    public BookBuilder setOpenSound(String openSound) {
+        this.openSound = openSound;
+
+        return this;
+    }
+
+    public BookBuilder setFlipSound(String flipSound) {
+        this.flipSound = flipSound;
+
+        return this;
+    }
+
+    public BookBuilder setIndexIcon(String indexIcon) {
+        this.indexIcon = indexIcon;
+
+        return this;
+    }
+
+    public BookBuilder setIndexIcon(ItemStack indexIcon) {
+        this.indexIcon = ItemStackHelper.serializeStack(indexIcon, provider);
+
+        return this;
+    }
+
+    public BookBuilder setVersion(String version) {
+        this.version = version;
+
+        return this;
+    }
+
+    public BookBuilder setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+
+        return this;
+    }
+
+    public BookBuilder setCreativeTab(String creativeTab) {
+        this.creativeTab = creativeTab;
+
+        return this;
+    }
+
+    public BookBuilder setAdvancementsTab(String advancementsTab) {
+        this.advancementsTab = advancementsTab;
+
+        return this;
+    }
+
+    public BookBuilder setCustomBookItem(ItemStack customBookItem) {
+        this.customBookItem = ItemStackHelper.serializeStack(customBookItem, provider);
+
+        return this;
+    }
+
+    public BookBuilder setShowProgress(boolean showProgress) {
+        this.showProgress = showProgress;
+
+        return this;
+    }
+
+    public BookBuilder setDontGenerateBook(boolean dontGenerateBook) {
+        this.dontGenerateBook = dontGenerateBook;
+
+        return this;
+    }
+
+    public BookBuilder setShowToasts(boolean showToasts) {
+        this.showToasts = showToasts;
+
+        return this;
+    }
+
+    public BookBuilder setUseBlockyFont(boolean useBlockyFont) {
+        this.useBlockyFont = useBlockyFont;
+
+        return this;
+    }
+
+    public BookBuilder setI18n(boolean i18n) {
+        this.i18n = i18n;
+
+        return this;
+    }
+
+    public BookBuilder setPauseGame(boolean pauseGame) {
+        this.pauseGame = pauseGame;
+
+        return this;
+    }
+
+    public BookBuilder setTextOverflowMode(Enum<TextOverflowMode> textOverflowMode) {
+        this.textOverflowMode = textOverflowMode;
+
+        return this;
+    }
+
+    public BookBuilder setPamphlet(boolean pamphlet) {
+        this.pamphlet = pamphlet;
+
+        return this;
+    }
+
+    public BookBuilder addMacro(String key, String entry) {
+        if (this.macros == null) {
+            this.macros = new HashMap<>();
+        }
+        this.macros.put(key, entry);
+
+        return this;
+    }
+
+    public HolderLookup.Provider getProvider() {
+        return provider;
+    }
+
+    protected ResourceLocation getId() {
+        return id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof BookBuilder
+            && Objects.equals(((BookBuilder) obj).getId(), this.getId());
+    }
+
+}

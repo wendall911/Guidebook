@@ -1,0 +1,90 @@
+package handbook.client.book.template.component;
+
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
+
+import com.google.gson.annotations.SerializedName;
+
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+
+import handbook.api.IVariable;
+import handbook.api.HandbookAPI;
+import handbook.client.base.ClientTicker;
+import handbook.client.book.BookContentsBuilder;
+import handbook.client.book.BookEntry;
+import handbook.client.book.BookPage;
+import handbook.client.book.gui.GuiBookEntry;
+import handbook.client.book.page.PageEntity;
+import handbook.client.book.template.TemplateComponent;
+import handbook.common.util.ColorHelper.HandbookColors;
+import handbook.common.util.EntityUtil;
+
+public class ComponentEntity extends TemplateComponent {
+
+    @SerializedName("entity") public IVariable entityId;
+
+    @SerializedName("render_size") float renderSize = 100;
+
+    boolean rotate = true;
+    @SerializedName("default_rotation") float defaultRotation = -45f;
+
+    transient boolean errored;
+    transient Entity entity;
+    transient Function<Level, Entity> creator;
+    transient float renderScale, offset;
+
+    @Override
+    public void build(BookContentsBuilder builder, BookPage page, BookEntry entry, int pageNum) {
+        creator = EntityUtil.loadEntity(entityId.asString());
+    }
+
+    @Override
+    public void onDisplayed(BookPage page, GuiBookEntry parent, int left, int top) {
+        loadEntity(page.mc.level);
+    }
+
+    @Override
+    public void render(GuiGraphics guiGraphics, BookPage page, int mouseX, int mouseY, float pticks) {
+        if (errored) {
+            guiGraphics.drawString(BookPage.fontRenderer,
+                Component.translatable("handbook.gui.lexicon.loading_error"),
+                x, y, HandbookColors.ERROR_RED.toColor(), false);
+        }
+
+        if (entity != null) {
+            float rotation = rotate ? ClientTicker.total : defaultRotation;
+            PageEntity.renderEntity(guiGraphics, entity, x, y, rotation, renderScale, offset, mouseX, mouseY);
+        }
+    }
+
+    @Override
+    public void onVariablesAvailable(UnaryOperator<IVariable> lookup, HolderLookup.Provider registries) {
+        super.onVariablesAvailable(lookup, registries);
+        entityId = lookup.apply(entityId);
+    }
+
+    private void loadEntity(Level world) {
+        if (!errored && (entity == null || !entity.isAlive() || entity.level() != world)) {
+            try {
+                entity = creator.apply(world);
+                float width = entity.getBbWidth();
+                float height = entity.getBbHeight();
+
+                float entitySize = Math.max(width, height);
+                entitySize = Math.max(1F, entitySize);
+
+                renderScale = renderSize / entitySize * 0.8F;
+                offset = Math.max(height, entitySize) * 0.5F;
+            }
+            catch (Exception e) {
+                errored = true;
+                HandbookAPI.LOGGER.error("Failed to load entity", e);
+            }
+        }
+    }
+
+}
