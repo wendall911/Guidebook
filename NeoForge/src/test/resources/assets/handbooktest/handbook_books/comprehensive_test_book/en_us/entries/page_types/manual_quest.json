@@ -1,0 +1,11 @@
+{
+  "category": "handbooktest:page_types",
+  "icon": "minecraft:book",
+  "name": "Manual Quest",
+  "pages": [
+    {
+      "type": "handbook:quest",
+      "text": "This is a manual quest. Click the button below to complete it."
+    }
+  ]
+}

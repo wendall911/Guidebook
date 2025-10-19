@@ -1,0 +1,8 @@
+{
+  "advancements_tab": "handbooktest",
+  "book_texture": "handbook:textures/gui/book_cyan.png",
+  "creative_tab": "minecraft:tools_and_utilities",
+  "landing_text": "book.handbooktest.pamphlet.landing",
+  "name": "book.handbooktest.pamphlet.name",
+  "pamphlet": true
+}

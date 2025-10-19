@@ -1,0 +1,6 @@
+{
+  "parent": "handbooktest:subcategories",
+  "description": "Empty subcategory with no entries",
+  "icon": "minecraft:chicken",
+  "name": "Empty Subcategory"
+}

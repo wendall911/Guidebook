@@ -1,0 +1,13 @@
+{
+  "category": "handbooktest:burning_dab",
+  "icon": "minecraft:furnace",
+  "name": "Smelting page with an invalid recipe",
+  "pages": [
+    {
+      "type": "handbook:smelting",
+      "recipe": "minecraft:charcoal",
+      "recipe2": "minecraft:carrot",
+      "text": "This is supposed to have a second recipe that does not exist."
+    }
+  ]
+}

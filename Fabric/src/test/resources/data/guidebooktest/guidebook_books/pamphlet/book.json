@@ -1,8 +1,0 @@
-{
-  "advancements_tab": "guidebooktest",
-  "book_texture": "guidebook:textures/gui/book_cyan.png",
-  "creative_tab": "minecraft:tools_and_utilities",
-  "landing_text": "book.guidebooktest.pamphlet.landing",
-  "name": "book.guidebooktest.pamphlet.name",
-  "pamphlet": true
-}

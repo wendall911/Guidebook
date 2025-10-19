@@ -1,0 +1,156 @@
+package handbook.common.item;
+
+import java.util.List;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+
+import technology.roughness.whitenoise.util.ResourceLocationHelper;
+
+import handbook.api.HandbookAPI;
+import handbook.client.book.BookEntry;
+import handbook.common.base.HandbookSounds;
+import handbook.common.book.Book;
+import handbook.common.book.BookRegistry;
+
+import static handbook.data.HandbookInternalBookProvider.INTRO_BOOK_TRANSLATION_KEY;
+
+public class HandbookBook extends Item {
+
+    public HandbookBook() {
+        super(new Item.Properties().stacksTo(1));
+    }
+
+    public static float getCompletion(ItemStack stack) {
+        Book book = getBook(stack);
+        float progression = 0F; // default incomplete
+
+        if (book != null) {
+            int totalEntries = 0;
+            int unlockedEntries = 0;
+
+            for (BookEntry entry : book.getContents().entries.values()) {
+                if (!entry.isSecret()) {
+                    totalEntries++;
+                    if (!entry.isLocked()) {
+                        unlockedEntries++;
+                    }
+                }
+            }
+
+            progression = ((float) unlockedEntries) / Math.max(1f, (float) totalEntries);
+        }
+
+        return progression;
+    }
+
+    public static ItemStack forBook(Book book) {
+        return forBook(book.id);
+    }
+
+    public static ItemStack forBook(ResourceLocation book) {
+        ItemStack stack = new ItemStack(HandbookItems.BOOK);
+
+        stack.set(HandbookDataComponents.BOOK, book);
+
+        return stack;
+    }
+
+    public static Book getBook(ItemStack stack) {
+        ResourceLocation res = getBookId(stack);
+
+        if (res == null) {
+            return null;
+        }
+
+        return BookRegistry.INSTANCE.books.get(res);
+    }
+
+    /*
+     * Gets the book ID from the stack, either from Component or by looking up the item
+     */
+    private static ResourceLocation getBookId(ItemStack stack) {
+        if (stack.has(HandbookDataComponents.BOOK)) {
+            return stack.get(HandbookDataComponents.BOOK);
+        }
+        else {
+            Book book = BookRegistry.INSTANCE.books.getOrDefault(ResourceLocationHelper.getItemStackId(stack), null);
+
+            if (book != null) {
+                return book.id;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public Component getName(ItemStack stack) {
+        Book book = getBook(stack);
+
+        if (book != null) {
+            return Component.translatable(book.name);
+        }
+
+        return super.getName(stack);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip, flagIn);
+
+        ResourceLocation rl = getBookId(stack);
+
+        if (flagIn.isAdvanced()) {
+            tooltip.add(Component.literal("Book ID: " + rl).withStyle(ChatFormatting.GRAY));
+        }
+
+        Book book = getBook(stack);
+
+        if (book != null && !book.getContents().isErrored()) {
+            tooltip.add(book.getSubtitle().withStyle(ChatFormatting.GRAY));
+        }
+        else if (book == null) {
+            if (rl == null) {
+                tooltip.add(Component.translatable(INTRO_BOOK_TRANSLATION_KEY + ".undefined")
+                    .withStyle(ChatFormatting.DARK_GRAY));
+            }
+            else {
+                tooltip.add(Component.translatable(INTRO_BOOK_TRANSLATION_KEY + ".invalid", rl)
+                    .withStyle(ChatFormatting.DARK_GRAY));
+            }
+        }
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+        ItemStack stack = playerIn.getItemInHand(handIn);
+        Book book = getBook(stack);
+
+        if (book == null) {
+            return new InteractionResultHolder<>(InteractionResult.FAIL, stack);
+        }
+
+        if (playerIn instanceof ServerPlayer) {
+            HandbookAPI.get().openBookGUI((ServerPlayer) playerIn, book.id);
+
+            // This plays the sound to others nearby, playing to the actual opening player handled from the packet
+            SoundEvent sfx = HandbookSounds.getSound(book.openSound, HandbookSounds.BOOK_OPEN);
+            playerIn.playSound(sfx, 1F, (float) (0.7 + Math.random() * 0.4));
+        }
+
+        return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+    }
+
+}

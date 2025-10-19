@@ -1,0 +1,40 @@
+{
+  "category": "handbooktest:page_types",
+  "icon": "minecraft:dead_brain_coral",
+  "name": "Spotlight",
+  "pages": [
+    {
+      "type": "handbook:spotlight",
+      "item": "minecraft:oak_sapling",
+      "link_recipe": true
+    },
+    {
+      "type": "handbook:spotlight",
+      "item": "minecraft:dead_bush,minecraft:spruce_sapling",
+      "text": "Custom text $(l)with formatting$().",
+      "title": "Custom title"
+    },
+    {
+      "type": "handbook:spotlight",
+      "item": "tag:minecraft:piglin_loved",
+      "text": "This spotlight shows all items in the piglin loved tag.",
+      "title": "Tag Spotlight"
+    },
+    {
+      "type": "handbook:spotlight",
+      "item": "tag:minecraft:piglin_repellents"
+    },
+    {
+      "type": "handbook:spotlight",
+      "item": "tag:minecraft:wool,minecraft:bone",
+      "text": "But also bone...?",
+      "title": "Wool"
+    },
+    {
+      "type": "handbook:spotlight",
+      "item": "minecraft:name_tag,tag:minecraft:beds",
+      "text": "But also beds...?",
+      "title": "Name Tag"
+    }
+  ]
+}
