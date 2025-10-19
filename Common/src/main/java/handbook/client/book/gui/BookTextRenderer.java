@@ -66,6 +66,10 @@ public class BookTextRenderer implements Renderable {
         this.words = this.layouter.getWords();
     }
 
+    /*
+     * Simulates inverse scaling to get mouse coordinates relative to unscaled text.
+     * TODO: Figure out if I can use existing matrix stack methods for this.
+     */
     private double rescale(double in, double origin) {
         return origin + (in - origin) / scale;
     }
@@ -90,12 +94,8 @@ public class BookTextRenderer implements Renderable {
 
     public boolean click(MouseButtonEvent mouseButtonEvent) {
         if (!words.isEmpty()) {
-            Word first = words.getFirst();
-            double scaledX = rescale(mouseButtonEvent.x(), first.x);
-            double scaledY = rescale(mouseButtonEvent.y(), first.y);
-
             for (Word word : words) {
-                if (word.click(scaledX, scaledY, mouseButtonEvent.button())) {
+                if (word.click()) {
                     return true;
                 }
             }

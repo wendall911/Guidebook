@@ -80,6 +80,8 @@ public abstract class GuiBook extends Screen {
     public int ticksInBook;
     public int maxScale;
 
+    public int currentBookMouseX = 0, currentBookMouseY = 0;
+
     protected boolean needsBookmarkUpdate = false;
 
     public GuiBook(Book book, Component title) {
@@ -146,6 +148,8 @@ public abstract class GuiBook extends Screen {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         guiGraphics.pose().pushMatrix();
+        currentBookMouseX = mouseX;
+        currentBookMouseY = mouseY;
 
         if (scaleFactor != 1) {
             guiGraphics.pose().scale(scaleFactor, scaleFactor);
