@@ -1,0 +1,11 @@
+{
+  "category": "handbooktest:language",
+  "icon": "minecraft:globe_banner_pattern",
+  "name": "Language Test",
+  "pages": [
+    {
+      "type": "handbook:text",
+      "text": "book.handbooktest.comprehensive_test_book.language_test.contents"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "category": "handbooktest:page_types",
+  "icon": "minecraft:heart_of_the_sea",
+  "name": "Relations",
+  "pages": [
+    {
+      "type": "handbook:relations",
+      "entries": [
+        "handbooktest:page_types/link"
+      ],
+      "text": "This is a relations page. It shows the relationships between entries in this book.",
+      "title": "Check out these relations!"
+    }
+  ]
+}

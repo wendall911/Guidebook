@@ -1,0 +1,8 @@
+{
+  "book.handbooktest.comprehensive_test_book.landing": "Test book with all the features.",
+  "book.handbooktest.comprehensive_test_book.language_test.contents": "This page should be replaced with something else when you switch to zh_cn",
+  "book.handbooktest.comprehensive_test_book.name": "Comprehensive Test Book",
+  "book.handbooktest.handbook_book": "Handbook Book",
+  "book.handbooktest.pamphlet.landing": "A test pamphlet, which is a book with only one category.",
+  "book.handbooktest.pamphlet.name": "Test Pamphlet"
+}

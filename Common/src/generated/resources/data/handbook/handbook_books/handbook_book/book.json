@@ -1,0 +1,10 @@
+{
+  "creative_tab": "minecraft:tools_and_utilities",
+  "custom_book_item": "handbook:handbook_book",
+  "i18n": true,
+  "landing_text": "book.handbook.intro_book.landing",
+  "model": "handbook:handbook_book",
+  "name": "book.handbook.intro_book",
+  "show_progress": true,
+  "subtitle": "book.handbook.intro_book.subtitle"
+}

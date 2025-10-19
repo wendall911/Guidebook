@@ -1,0 +1,13 @@
+{
+  "category": "handbooktest:templates",
+  "icon": "minecraft:written_book",
+  "name": "Derive Functions in Templates",
+  "pages": [
+    {
+      "type": "handbooktest:derive_ingr_to_stack",
+      "input": {
+        "tag": "minecraft:creeper_drop_music_discs"
+      }
+    }
+  ]
+}

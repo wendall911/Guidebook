@@ -1,0 +1,12 @@
+{
+  "category": "handbooktest:templates",
+  "icon": "minecraft:written_book",
+  "name": "Custom Template Components",
+  "pages": [
+    {
+      "type": "handbooktest:custom_component",
+      "pop": "beer",
+      "spaget": "pasta"
+    }
+  ]
+}

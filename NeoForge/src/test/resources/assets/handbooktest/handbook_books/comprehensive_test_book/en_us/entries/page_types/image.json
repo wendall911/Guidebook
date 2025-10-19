@@ -1,0 +1,15 @@
+{
+  "category": "handbooktest:page_types",
+  "icon": "minecraft:painting",
+  "name": "Image Page",
+  "pages": [
+    {
+      "type": "handbook:image",
+      "images": [
+        "handbooktest:textures/gui/book/cat.png"
+      ],
+      "text": "This is an example image. It is 256x256 pixels with a transparent background.",
+      "title": "Example Image"
+    }
+  ]
+}

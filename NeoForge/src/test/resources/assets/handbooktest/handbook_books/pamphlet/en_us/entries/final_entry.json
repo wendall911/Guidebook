@@ -1,0 +1,17 @@
+{
+  "category": "handbooktest:root",
+  "icon": "minecraft:wooden_sword",
+  "name": "Final Entry",
+  "pages": [
+    {
+      "type": "handbook:crafting",
+      "recipe": "minecraft:diamond_sword",
+      "text": "All normal page types, including custom pages work in a pamphlet."
+    },
+    {
+      "type": "handbook:text",
+      "text": "This is the final entry in the pamphlet. Thanks for reading!"
+    }
+  ],
+  "sortnum": 2
+}

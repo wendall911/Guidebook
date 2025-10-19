@@ -1,0 +1,13 @@
+{
+  "category": "handbooktest:page_types",
+  "icon": "minecraft:iron_chain",
+  "name": "Link",
+  "pages": [
+    {
+      "type": "handbook:link",
+      "link_text": "Link to example.com",
+      "text": "Button below opens example.com",
+      "url": "https://example.com"
+    }
+  ]
+}

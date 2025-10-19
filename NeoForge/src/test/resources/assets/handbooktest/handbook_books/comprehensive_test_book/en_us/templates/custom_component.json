@@ -1,0 +1,10 @@
+{
+  "components": [
+    {
+      "type": "handbook:custom",
+      "class": "handbook.client.book.template.test.ComponentCustomTest",
+      "x": 10,
+      "y": 40
+    }
+  ]
+}

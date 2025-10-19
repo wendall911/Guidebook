@@ -1,0 +1,12 @@
+{
+  "category": "handbook:introduction",
+  "icon": "minecraft:writable_book",
+  "name": "book.handbook.intro_book.introduction.welcome.name",
+  "pages": [
+    {
+      "type": "handbook:text",
+      "text": "book.handbook.intro_book.introduction.welcome.intro"
+    }
+  ],
+  "sortnum": -1
+}

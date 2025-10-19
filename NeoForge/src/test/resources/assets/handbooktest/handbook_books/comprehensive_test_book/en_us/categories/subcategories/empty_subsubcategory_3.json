@@ -1,0 +1,6 @@
+{
+  "parent": "handbooktest:subcategories/normal_subcategory",
+  "description": "Empty sub-sub-category with no entries",
+  "icon": "minecraft:iron_axe",
+  "name": "Empty Sub-sub-category 4"
+}

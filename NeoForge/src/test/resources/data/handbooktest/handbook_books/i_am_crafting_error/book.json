@@ -1,0 +1,9 @@
+{
+  "book_texture": "handbook:textures/gui/book_red.png",
+  "creative_tab": "minecraft:tools_and_utilities",
+  "landing_text": "DO NOT OPEN",
+  "model": "minecraft:barrier",
+  "name": "handbooktest.crafting.error",
+  "subtitle": "DO NOT OPEN",
+  "version": "GRADLE:VERSION"
+}
