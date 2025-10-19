@@ -100,7 +100,7 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
     private BookBuilder createSmeltingErrorBook(HandbookTestingBooksProvider builder, Provider provider) {
         BookBuilder smeltingErrorBook = builder.createBookBuilder(
                 "i_am_smelting_error",
-                "handbooktest.smelting.error",
+                "Smelting Error Book",
                 "DO NOT OPEN",
                 provider
             )
@@ -133,7 +133,7 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
     private BookBuilder createCraftingErrorBook(HandbookTestingBooksProvider builder, Provider provider) {
         BookBuilder craftingErrorBook = builder.createBookBuilder(
             "i_am_crafting_error",
-            "handbooktest.crafting.error",
+            "Crafting Error Book",
             "DO NOT OPEN",
             provider
         )
