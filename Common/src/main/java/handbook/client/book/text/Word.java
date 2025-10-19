@@ -36,8 +36,8 @@ public class Word {
         this.gui = gui;
         this.x = x;
         this.y = y;
-        this.width = strWidth + 2;
-        this.height = lineHeight + 2;
+        this.width = strWidth;
+        this.height = lineHeight;
         this.onClick = span.onClick;
         this.linkCluster = cluster;
         if (!span.tooltip.getString().isEmpty()) {
