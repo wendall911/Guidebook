@@ -52,6 +52,10 @@ public class BookCrashHandler implements Supplier<String> {
 
         GuiBook gui = (GuiBook) mc.screen;
 
+        if (gui == null || gui.book == null) {
+            return "Book GUI or book is null. Book not registered properly.";
+        }
+
         Book book = gui.book;
         StringBuilder builder = new StringBuilder(INDENT);
 
