@@ -16,7 +16,7 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -57,7 +57,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
         super.onFirstOpened();
 
         boolean dirty = false;
-        ResourceLocation key = entry.getId();
+        Identifier key = entry.getId();
 
         BookData data = PersistentData.data.getBookData(book);
 
@@ -186,7 +186,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
             return false;
         }
 
-        ResourceLocation entryKey = entry.getId();
+        Identifier entryKey = entry.getId();
         BookData data = PersistentData.data.getBookData(book);
 
         for (Bookmark bookmark : data.bookmarks) {
@@ -200,7 +200,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
     @Override
     public void bookmarkThis() {
-        ResourceLocation entryKey = entry.getId();
+        Identifier entryKey = entry.getId();
         BookData data = PersistentData.data.getBookData(book);
         data.bookmarks.add(new Bookmark(entryKey, spread));
         PersistentData.save();
@@ -216,7 +216,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
             BookData data = PersistentData.data.getBookData(book);
 
             if (gui.isBookmarkedAlready()) {
-                ResourceLocation key = entry.getId();
+                Identifier key = entry.getId();
                 data.bookmarks.removeIf((bm) -> bm.entry.equals(key) && bm.spread == 0);
                 PersistentData.save();
                 currGui.needsBookmarkUpdate = true;
@@ -281,7 +281,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
     }
 
     @Override
-    public boolean navigateToEntry(ResourceLocation entry, int page, boolean push) {
+    public boolean navigateToEntry(Identifier entry, int page, boolean push) {
         BookEntry bookEntry = book.getContents().entries.get(entry);
 
         if (bookEntry != null && !bookEntry.isLocked()) {
@@ -322,12 +322,12 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
     }
 
     @Override
-    public ResourceLocation getBookTexture() {
+    public Identifier getBookTexture() {
         return book.bookTexture;
     }
 
     @Override
-    public ResourceLocation getCraftingTexture() {
+    public Identifier getCraftingTexture() {
         return book.craftingTexture;
     }
 

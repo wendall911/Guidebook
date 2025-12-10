@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import handbook.client.base.PersistentData;
 import handbook.client.book.BookCategory;
@@ -28,7 +28,7 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 	}
 
 	@Override
-	public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+	public void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
 		int px = getX() + 1;
 		int py = (int) (getY() + 0.5);
         Minecraft mc = parent.getMinecraft();
@@ -75,7 +75,7 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 
 	private void markEntry(BookEntry entry) {
 		boolean dirty = false;
-        ResourceLocation key = entry.getId();
+        Identifier key = entry.getId();
 
 		if (!entry.isLocked() && entry.getReadState().equals(EntryDisplayState.UNREAD)) {
 			PersistentData.BookData data = PersistentData.data.getBookData(book);

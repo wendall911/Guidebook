@@ -13,7 +13,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -68,28 +68,28 @@ public abstract class HandbookBookProvider implements DataProvider {
 
     protected abstract void addBooks(Consumer<BookBuilder> consumer, HolderLookup.Provider provider);
 
-    private CompletableFuture<?> saveEntry(CachedOutput cache, JsonObject json, ResourceLocation bookId, ResourceLocation id) {
+    private CompletableFuture<?> saveEntry(CachedOutput cache, JsonObject json, Identifier bookId, Identifier id) {
         String pathSuffix = bookId.getPath() + "/" + locale + "/entries/" + id.getPath();
 
-        return DataProvider.saveStable(cache, json, assetsProvider.json(ResourceLocation.fromNamespaceAndPath(bookId.getNamespace(), pathSuffix)));
+        return DataProvider.saveStable(cache, json, assetsProvider.json(Identifier.fromNamespaceAndPath(bookId.getNamespace(), pathSuffix)));
     }
 
-    private CompletableFuture<?> saveCategory(CachedOutput cache, JsonObject json, ResourceLocation bookId, ResourceLocation id) {
+    private CompletableFuture<?> saveCategory(CachedOutput cache, JsonObject json, Identifier bookId, Identifier id) {
         String pathSuffix = bookId.getPath() + "/" + locale + "/categories/" + id.getPath();
 
-        return DataProvider.saveStable(cache, json, assetsProvider.json(ResourceLocation.fromNamespaceAndPath(bookId.getNamespace(), pathSuffix)));
+        return DataProvider.saveStable(cache, json, assetsProvider.json(Identifier.fromNamespaceAndPath(bookId.getNamespace(), pathSuffix)));
     }
 
-    private CompletableFuture<?> saveTemplate(CachedOutput cache, JsonObject json, ResourceLocation bookId, ResourceLocation id) {
+    private CompletableFuture<?> saveTemplate(CachedOutput cache, JsonObject json, Identifier bookId, Identifier id) {
         String pathSuffix = bookId.getPath() + "/" + locale + "/templates/" + id.getPath();
 
-        return DataProvider.saveStable(cache, json, assetsProvider.json(ResourceLocation.fromNamespaceAndPath(bookId.getNamespace(), pathSuffix)));
+        return DataProvider.saveStable(cache, json, assetsProvider.json(Identifier.fromNamespaceAndPath(bookId.getNamespace(), pathSuffix)));
     }
 
-    private CompletableFuture<?> saveBook(CachedOutput cache, JsonObject json, ResourceLocation bookId) {
+    private CompletableFuture<?> saveBook(CachedOutput cache, JsonObject json, Identifier bookId) {
         String pathSuffix = bookId.getPath() + "/book";
 
-        return DataProvider.saveStable(cache, json, datapackProvider.json(ResourceLocation.fromNamespaceAndPath(bookId.getNamespace(), pathSuffix)));
+        return DataProvider.saveStable(cache, json, datapackProvider.json(Identifier.fromNamespaceAndPath(bookId.getNamespace(), pathSuffix)));
     }
 
     public BookBuilder createBookBuilder(String id, String name, String landingText, HolderLookup.Provider provider) {
@@ -102,7 +102,7 @@ public abstract class HandbookBookProvider implements DataProvider {
      */
     public BookBuilder createBookBuilder(Item item, String name, String landingText, HolderLookup.Provider provider) {
         ItemStack bookItem = new ItemStack(item);
-        ResourceLocation itemId = ResourceLocationHelper.getItemStackId(bookItem);
+        Identifier itemId = ResourceLocationHelper.getItemStackId(bookItem);
 
         return new BookBuilder(itemId, name, landingText, provider)
             .setModel(itemId)

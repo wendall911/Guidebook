@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
@@ -38,7 +38,7 @@ public class HandbookBook extends Item {
         return forBook(book.id);
     }
 
-    public static ItemStack forBook(ResourceLocation book) {
+    public static ItemStack forBook(Identifier book) {
         ItemStack stack = new ItemStack(HandbookItems.BOOK);
 
         stack.set(HandbookDataComponents.BOOK, book);
@@ -47,7 +47,7 @@ public class HandbookBook extends Item {
     }
 
     public static Book getBook(ItemStack stack) {
-        ResourceLocation res = getBookId(stack);
+        Identifier res = getBookId(stack);
 
         if (res == null) {
             return null;
@@ -59,7 +59,7 @@ public class HandbookBook extends Item {
     /*
      * Gets the book ID from the stack, either from Component or by looking up the item
      */
-    private static ResourceLocation getBookId(ItemStack stack) {
+    private static Identifier getBookId(ItemStack stack) {
         if (stack.has(HandbookDataComponents.BOOK)) {
             return stack.get(HandbookDataComponents.BOOK);
         }
@@ -94,7 +94,7 @@ public class HandbookBook extends Item {
             return;
         }
 
-        ResourceLocation rl = getBookId(stack);
+        Identifier rl = getBookId(stack);
 
         if (flagIn.isAdvanced()) {
             tooltip.accept(Component.literal("Book ID: " + rl).withStyle(ChatFormatting.GRAY));

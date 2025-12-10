@@ -1,15 +1,9 @@
 package handbook.common;
 
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import net.neoforged.fml.ModContainer;
-import net.neoforged.neoforgespi.language.IModInfo;
-import net.neoforged.neoforgespi.locating.IModFile;
-
-import handbook.api.HandbookAPI;
 
 public class NeoForgeModContainer implements CommonModContainer {
     private final ModContainer container;

@@ -19,7 +19,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.util.GsonHelper;
 
@@ -48,8 +48,8 @@ import handbook.common.util.SerializationUtil;
 
 public class ClientBookRegistry implements PreparableReloadListener {
 
-    public static final ResourceLocation ID = HandbookAPI.prefix("reload_hook");
-    public final Map<ResourceLocation, Class<? extends BookPage>> pageTypes = new HashMap<>();
+    public static final Identifier ID = HandbookAPI.prefix("reload_hook");
+    public final Map<Identifier, Class<? extends BookPage>> pageTypes = new HashMap<>();
 
     public final Gson gson = new GsonBuilder()
             .registerTypeHierarchyAdapter(BookPage.class, new LexiconPageAdapter())
@@ -114,7 +114,7 @@ public class ClientBookRegistry implements PreparableReloadListener {
      * @param entryId Entry to force to the top of the stack
      * @param page    Zero-indexed page in the entry to force. Ignored if {@code entryId} is null.
      */
-    public void displayBookGui(ResourceLocation bookStr, @Nullable ResourceLocation entryId, int page) {
+    public void displayBookGui(Identifier bookStr, @Nullable Identifier entryId, int page) {
         Minecraft mc = Minecraft.getInstance();
         currentLang = mc.getLanguageManager().getSelected();
 
@@ -151,7 +151,7 @@ public class ClientBookRegistry implements PreparableReloadListener {
                 string = HandbookAPI.MODID + ":" + string;
             }
 
-            ResourceLocation type = ResourceLocation.tryParse(string);
+            Identifier type = Identifier.tryParse(string);
             Class<? extends BookPage> clazz = ClientBookRegistry.INSTANCE.pageTypes.get(type);
 
             if (clazz == null) {
@@ -172,7 +172,7 @@ public class ClientBookRegistry implements PreparableReloadListener {
         public TemplateComponent deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject obj = json.getAsJsonObject();
             JsonPrimitive prim = (JsonPrimitive) obj.get("type");
-            ResourceLocation type = ResourceLocation.tryParse(prim.getAsString());
+            Identifier type = Identifier.tryParse(prim.getAsString());
             Class<? extends TemplateComponent> clazz = BookTemplate.componentTypes.get(type);
 
             if (clazz == null) {

@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -14,8 +14,8 @@ import handbook.client.book.gui.GuiBook;
 
 public abstract class PageDoubleRecipe<T> extends PageWithText {
 
-    @SerializedName("recipe") ResourceLocation recipeId;
-    @SerializedName("recipe2") ResourceLocation recipe2Id;
+    @SerializedName("recipe") Identifier recipeId;
+    @SerializedName("recipe2") Identifier recipe2Id;
     @SerializedName("link_recipe") boolean linkRecipe = true;
     @SerializedName("link_recipe2") boolean linkRecipe2 = true;
     String title;
@@ -83,7 +83,7 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
                                        int mouseX, int mouseY, boolean second);
 
     protected abstract T loadRecipe(Level level, BookContentsBuilder builder, BookEntry entry,
-                                    ResourceLocation loc, boolean linkRecipe);
+                                    Identifier loc, boolean linkRecipe);
 
     protected abstract ItemStack getRecipeOutput(Level level, T recipe);
 

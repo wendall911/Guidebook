@@ -15,7 +15,6 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -31,6 +30,7 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.Util;
 import net.minecraft.world.item.ItemStack;
 
 import org.lwjgl.glfw.GLFW;
@@ -45,7 +45,8 @@ import handbook.client.book.gui.button.GuiButtonBook;
 import handbook.client.book.gui.button.GuiButtonBookArrow;
 import handbook.client.book.gui.button.GuiButtonBookBookmark;
 import handbook.client.book.gui.button.GuiButtonBookMarkRead;
-import handbook.client.jei.HandbookJeiPlugin;
+// TODO: JEI Integration
+//import handbook.client.jei.HandbookJeiPlugin;
 import handbook.common.base.HandbookSounds;
 import handbook.common.book.Book;
 import handbook.common.util.ColorHelper.HandbookColors;
@@ -386,10 +387,12 @@ public abstract class GuiBook extends Screen {
         else if (tooltipStack != null && Services.BOOK_HELPER.handleRecipeKeybind(keyEvent, tooltipStack)) {
             return true;
         }
+        /*
         else if (tooltipStack != null && PLATFORM.isModLoaded("jei")
                 && HandbookJeiPlugin.handleRecipeKeybind(keyEvent, tooltipStack)) {
             return true;
         }
+         */
 
         return super.keyPressed(keyEvent);
     }

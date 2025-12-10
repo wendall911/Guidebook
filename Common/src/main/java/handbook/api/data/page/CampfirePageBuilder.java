@@ -1,12 +1,12 @@
 package handbook.api.data.page;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import handbook.api.data.EntryBuilder;
 
 public class CampfirePageBuilder extends RecipePageBuilder<CampfirePageBuilder> {
 
-    public CampfirePageBuilder(ResourceLocation recipe, EntryBuilder entryBuilder) {
+    public CampfirePageBuilder(Identifier recipe, EntryBuilder entryBuilder) {
         super("handbook:campfire", recipe, entryBuilder);
     }
 

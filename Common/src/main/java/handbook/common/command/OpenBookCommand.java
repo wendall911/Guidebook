@@ -12,8 +12,8 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.commands.arguments.ResourceLocationArgument;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.commands.arguments.IdentifierArgument;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 
 import handbook.api.HandbookAPI;
@@ -26,22 +26,22 @@ public class OpenBookCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> disp) {
         disp.register(Commands.literal("open-handbook-book")
-            .requires(cs -> cs.hasPermission(2))
+            .requires(Commands.hasPermission(Commands.LEVEL_ALL))
             .then(Commands.argument("targets", EntityArgument.players())
-                .then(Commands.argument("book", ResourceLocationArgument.id())
+                .then(Commands.argument("book", IdentifierArgument.id())
                     .suggests(BOOK_ID_SUGGESTER)
                     .executes(ctx -> open(EntityArgument.getPlayers(ctx, "targets"),
-                        ResourceLocationArgument.getId(ctx, "book"),
+                        IdentifierArgument.getId(ctx, "book"),
                         null, 0))
-                    .then(Commands.argument("entry", ResourceLocationArgument.id())
+                    .then(Commands.argument("entry", IdentifierArgument.id())
                         .then(Commands.argument("page", IntegerArgumentType.integer(0))
                             .executes(ctx -> open(EntityArgument.getPlayers(ctx, "targets"),
-                                ResourceLocationArgument.getId(ctx, "book"),
-                                ResourceLocationArgument.getId(ctx, "entry"),
+                                IdentifierArgument.getId(ctx, "book"),
+                                IdentifierArgument.getId(ctx, "entry"),
                                 IntegerArgumentType.getInteger(ctx, "page"))))))));
     }
 
-    private static int open(Collection<ServerPlayer> players, ResourceLocation book, @Nullable ResourceLocation entry,
+    private static int open(Collection<ServerPlayer> players, Identifier book, @Nullable Identifier entry,
             int page) {
         for (ServerPlayer player : players) {
             if (entry != null) {

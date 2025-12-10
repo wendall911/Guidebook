@@ -4,18 +4,18 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class TemplateBuilder {
 
     private final BookBuilder bookBuilder;
-    private final ResourceLocation id;
+    private final Identifier id;
     private final JsonArray components = new JsonArray();
     private final JsonArray includes = new JsonArray();
 
     protected TemplateBuilder(String id, BookBuilder bookBuilder) {
         this.bookBuilder = bookBuilder;
-        this.id = ResourceLocation.fromNamespaceAndPath(bookBuilder.getId().getNamespace(), id);
+        this.id = Identifier.fromNamespaceAndPath(bookBuilder.getId().getNamespace(), id);
     }
 
     JsonObject toJson() {
@@ -34,7 +34,7 @@ public class TemplateBuilder {
         return bookBuilder;
     }
 
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return id;
     }
 

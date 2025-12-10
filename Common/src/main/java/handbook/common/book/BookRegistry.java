@@ -23,7 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -31,7 +31,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import handbook.api.HandbookAPI;
 import handbook.client.book.ClientBookRegistry;
 import handbook.common.CommonModContainer;
-import handbook.common.util.SerializationUtil.ResourceLocationSerializer;
+import handbook.common.util.SerializationUtil.IdentifierSerializer;
 import handbook.config.HandbookConfig;
 import handbook.platform.Services;
 
@@ -40,15 +40,15 @@ public class BookRegistry {
     public static final BookRegistry INSTANCE = new BookRegistry();
     public static final String BOOKS_LOCATION = HandbookAPI.MODID + "_books";
 
-    public final Map<ResourceLocation, Book> books = new HashMap<>();
+    public final Map<Identifier, Book> books = new HashMap<>();
     public static final Gson GSON = new GsonBuilder()
-        .registerTypeAdapter(ResourceLocation.class, new ResourceLocationSerializer()).create();
+        .registerTypeAdapter(Identifier.class, new IdentifierSerializer()).create();
 
     private BookRegistry() {}
 
     public void init() {
         Collection<CommonModContainer> mods = Services.BOOK_HELPER.getAllMods();
-        Map<Pair<CommonModContainer, ResourceLocation>, String> foundBooks = new HashMap<>();
+        Map<Pair<CommonModContainer, Identifier>, String> foundBooks = new HashMap<>();
 
         mods.forEach(mod -> {
             String id = mod.getId();
@@ -67,7 +67,7 @@ public class BookRegistry {
                             }
 
                             String assetPath = fileStr.substring(fileStr.indexOf("data/"));
-                            ResourceLocation bookId = ResourceLocation.fromNamespaceAndPath(id, bookName);
+                            Identifier bookId = Identifier.fromNamespaceAndPath(id, bookName);
                             foundBooks.put(Pair.of(mod, bookId), assetPath);
                         }
 
@@ -77,7 +77,7 @@ public class BookRegistry {
 
         foundBooks.forEach((pair, file) -> {
             CommonModContainer mod = pair.getLeft();
-            ResourceLocation res = pair.getRight();
+            Identifier res = pair.getRight();
 
             try (InputStream stream = Files.newInputStream(mod.getPath(file))) {
                 loadBook(mod, res, stream);
@@ -89,7 +89,7 @@ public class BookRegistry {
         });
     }
 
-    public void loadBook(CommonModContainer mod, ResourceLocation res, InputStream stream) {
+    public void loadBook(CommonModContainer mod, Identifier res, InputStream stream) {
         Reader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
         JsonObject tree = GSON.fromJson(reader, JsonObject.class);
 

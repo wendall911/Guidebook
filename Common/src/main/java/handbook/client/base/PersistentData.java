@@ -17,7 +17,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 
 import handbook.api.HandbookAPI;
@@ -67,7 +67,7 @@ public final class PersistentData {
 		public int bookGuiScale;
 		public boolean clickedVisualize;
 
-		private final Map<ResourceLocation, PersistentData.BookData> bookData = new HashMap<>();
+		private final Map<Identifier, PersistentData.BookData> bookData = new HashMap<>();
 
 		public DataHolder(JsonObject root) {
 			this.bookGuiScale = GsonHelper.getAsInt(root, "bookGuiScale", 0);
@@ -76,7 +76,7 @@ public final class PersistentData {
 
 			for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
 				this.bookData.put(
-                    ResourceLocation.tryParse(entry.getKey()),
+                    Identifier.tryParse(entry.getKey()),
                     new BookData(entry.getValue().getAsJsonObject())
                 );
 			}
@@ -93,7 +93,7 @@ public final class PersistentData {
 			jsonObject.addProperty("bookGuiScale", this.bookGuiScale);
 			jsonObject.addProperty("clickedVisualize", this.clickedVisualize);
 
-			for (Map.Entry<ResourceLocation, PersistentData.BookData> bookDataEntry : bookData.entrySet()) {
+			for (Map.Entry<Identifier, PersistentData.BookData> bookDataEntry : bookData.entrySet()) {
 				books.add(bookDataEntry.getKey().toString(), bookDataEntry.getValue().serialize());
 			}
 
@@ -104,16 +104,16 @@ public final class PersistentData {
 	}
 
 	public static final class Bookmark {
-		public final ResourceLocation entry;
+		public final Identifier entry;
 		public final int spread;
 
-		public Bookmark(ResourceLocation entry, int spread) {
+		public Bookmark(Identifier entry, int spread) {
 			this.entry = entry;
 			this.spread = spread;
 		}
 
 		public Bookmark(JsonObject root) {
-			this.entry = ResourceLocation.tryParse(GsonHelper.getAsString(root, "entry"));
+			this.entry = Identifier.tryParse(GsonHelper.getAsString(root, "entry"));
 			this.spread = GsonHelper.getAsInt(root, "page"); // Serialized as page for legacy reasons
 		}
 
@@ -132,25 +132,25 @@ public final class PersistentData {
 	}
 
 	public static final class BookData {
-		public final List<ResourceLocation> viewedEntries = new ArrayList<>();
+		public final List<Identifier> viewedEntries = new ArrayList<>();
 		public final List<Bookmark> bookmarks = new ArrayList<>();
-		public final List<ResourceLocation> history = new ArrayList<>();
-		public final List<ResourceLocation> completedManualQuests = new ArrayList<>();
+		public final List<Identifier> history = new ArrayList<>();
+		public final List<Identifier> completedManualQuests = new ArrayList<>();
 
 		public BookData(JsonObject root) {
             JsonArray emptyArray = new JsonArray();
 
 			for (JsonElement element: GsonHelper.getAsJsonArray(root, "viewedEntries", emptyArray)) {
-				viewedEntries.add(ResourceLocation.tryParse(element.getAsString()));
+				viewedEntries.add(Identifier.tryParse(element.getAsString()));
 			}
 			for (JsonElement element: GsonHelper.getAsJsonArray(root, "bookmarks", emptyArray)) {
 				bookmarks.add(new Bookmark(element.getAsJsonObject()));
 			}
 			for (JsonElement element : GsonHelper.getAsJsonArray(root, "history", emptyArray)) {
-				history.add(ResourceLocation.tryParse(element.getAsString()));
+				history.add(Identifier.tryParse(element.getAsString()));
 			}
 			for (JsonElement element : GsonHelper.getAsJsonArray(root, "completedManualQuests", emptyArray)) {
-				completedManualQuests.add(ResourceLocation.tryParse(element.getAsString()));
+				completedManualQuests.add(Identifier.tryParse(element.getAsString()));
 			}
 		}
 

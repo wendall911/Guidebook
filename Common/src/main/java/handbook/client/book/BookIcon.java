@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 import handbook.api.HandbookAPI;
@@ -22,7 +22,7 @@ public sealed interface BookIcon permits BookIcon.StackIcon, BookIcon.TextureIco
         }
     }
 
-    record TextureIcon(ResourceLocation texture) implements BookIcon {
+    record TextureIcon(Identifier texture) implements BookIcon {
         @Override
         public void render(GuiGraphics guiGraphics, int x, int y) {
             guiGraphics.blit(texture(), x, y, 0, 0, 16, 16, 16, 16);
@@ -31,7 +31,7 @@ public sealed interface BookIcon permits BookIcon.StackIcon, BookIcon.TextureIco
 
     static BookIcon from(String str) {
         if (str.endsWith(".png")) {
-            return new TextureIcon(ResourceLocation.tryParse(str));
+            return new TextureIcon(Identifier.tryParse(str));
         }
         else {
             try {

@@ -4,7 +4,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 
 import handbook.client.base.ClientAdvancements;
@@ -20,7 +20,7 @@ import handbook.common.util.ColorHelper.HandbookColors;
 
 public class PageQuest extends PageWithText {
 
-    ResourceLocation trigger;
+    Identifier trigger;
     String title;
 
     transient boolean isManual;
@@ -67,7 +67,7 @@ public class PageQuest extends PageWithText {
     }
 
     protected void questButtonClicked(Button button) {
-        ResourceLocation entryId = entry.getId();
+        Identifier entryId = entry.getId();
         BookData data = PersistentData.data.getBookData(parent.book);
 
         if (data.completedManualQuests.contains(entryId)) {

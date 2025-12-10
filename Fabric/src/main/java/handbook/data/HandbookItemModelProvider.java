@@ -9,13 +9,13 @@ import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import handbook.common.item.HandbookItems;
 
 public class HandbookItemModelProvider extends FabricModelProvider {
 
-    public static final List<ResourceLocation> ALL_MODELS = List.of(
+    public static final List<Identifier> ALL_MODELS = List.of(
         getModelId(HandbookItems.BOOK_BROWN_ID),
         getModelId(HandbookItems.BOOK_BLUE_ID),
         getModelId(HandbookItems.BOOK_CYAN_ID),
@@ -32,8 +32,8 @@ public class HandbookItemModelProvider extends FabricModelProvider {
     @Override
     public void generateItemModels(ItemModelGenerators itemModelGenerator) {
         // Default book model (brown)
-        ResourceLocation defaultModel = getModelId(HandbookItems.BOOK_ID);
-        ResourceLocation bookTemplate = ModelTemplates.FLAT_ITEM.create(
+        Identifier defaultModel = getModelId(HandbookItems.BOOK_ID);
+        Identifier bookTemplate = ModelTemplates.FLAT_ITEM.create(
             defaultModel,
             TextureMapping.layer0(HandbookItems.BOOK_BROWN_ID.withPrefix("item/")),
             itemModelGenerator.modelOutput
@@ -61,7 +61,7 @@ public class HandbookItemModelProvider extends FabricModelProvider {
         // NO-OP
     }
 
-    public static ResourceLocation getModelId(ResourceLocation variant) {
+    public static Identifier getModelId(Identifier variant) {
         return variant.withPrefix("item/");
     }
 

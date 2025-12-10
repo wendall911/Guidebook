@@ -6,10 +6,6 @@ plugins {
 neoForge {
     version = neoforge_version
     addModdingDependenciesTo sourceSets.test
-    parchment {
-        minecraftVersion = mappings_minecraft_version
-        mappingsVersion = mappings_version
-    }
     runs {
         configureEach {
             systemProperty('neoforge.enabledGameTestNamespaces', mod_id)
@@ -37,7 +33,7 @@ dependencies {
     implementation group: 'technology.roughness.whitenoise', name: "whitenoise-${minecraft_version}-neoforge", version: "${whitenoise_version}"
 
     compileOnly "mezz.jei:jei-${jei_minecraft_version}-common-api:${jei_version}"
-    implementation "mezz.jei:jei-${jei_minecraft_version}-neoforge:${jei_version}"
+    compileOnly "mezz.jei:jei-${jei_minecraft_version}-neoforge:${jei_version}"
 
     compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:${rei_version}"
 
@@ -53,7 +49,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             groupId project.group
-            artifactId project.archivesBaseName
+            artifactId "whitenoise-${minecraft_version}-neoforge"
             version project.version
             // This gives us the built version NeoForge requires
             artifact jar

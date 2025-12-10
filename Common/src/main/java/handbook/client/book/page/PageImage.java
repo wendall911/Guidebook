@@ -3,7 +3,7 @@ package handbook.client.book.page;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import handbook.client.book.gui.GuiBook;
 import handbook.client.book.gui.GuiBookEntry;
@@ -13,7 +13,7 @@ import handbook.common.util.ColorHelper;
 
 public class PageImage extends PageWithText {
 
-    ResourceLocation[] images;
+    Identifier[] images;
     String title;
     boolean border;
 

@@ -2,7 +2,7 @@ package handbook.network;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -22,7 +22,7 @@ public class NeoForgeNetworkHandler {
         registrar.playToClient(MessageReloadBookContents.TYPE, MessageReloadBookContents.CODEC, NeoForgeClientPayloadHandler.getInstance()::handleData);
     }
 
-    public static void sendOpenBook(ServerPlayer player, ResourceLocation book, @Nullable ResourceLocation entry, int page) {
+    public static void sendOpenBook(ServerPlayer player, Identifier book, @Nullable Identifier entry, int page) {
         player.connection.send(new MessageOpenBookGui(book, entry, page));
     }
 

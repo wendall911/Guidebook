@@ -11,7 +11,7 @@ import com.google.gson.JsonObject;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 
 import handbook.common.book.Book;
@@ -19,7 +19,7 @@ import handbook.config.HandbookConfig;
 
 public final class BookCategory extends AbstractReadStateHolder implements Comparable<BookCategory> {
 
-    private final ResourceLocation id;
+    private final Identifier id;
     private final String name;
     private final String description;
     private final BookIcon icon;
@@ -39,7 +39,7 @@ public final class BookCategory extends AbstractReadStateHolder implements Compa
     private boolean built;
     // End mutable state
 
-    public BookCategory(JsonObject root, ResourceLocation id, Book book) {
+    public BookCategory(JsonObject root, Identifier id, Book book) {
         this.book = book;
         this.id = id;
         this.name = GsonHelper.getAsString(root, "name");
@@ -127,7 +127,7 @@ public final class BookCategory extends AbstractReadStateHolder implements Compa
         return parent == null || parent.isEmpty();
     }
 
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return id;
     }
 
@@ -155,7 +155,7 @@ public final class BookCategory extends AbstractReadStateHolder implements Compa
 
         if (!isRootCategory()) {
             if (parent != null && parent.contains(":")) {
-                @Nullable BookCategory parentCat = builder.getCategory(ResourceLocation.tryParse(parent));
+                @Nullable BookCategory parentCat = builder.getCategory(Identifier.tryParse(parent));
 
                 if (parentCat == null) {
                     String msg = String.format("Category %s specifies parent %s, but it could not be found", id, parent);

@@ -1,17 +1,17 @@
 package handbook.api.data.page;
 
 import com.google.gson.JsonObject;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import handbook.api.data.AbstractPageBuilder;
 import handbook.api.data.EntryBuilder;
 
 public class QuestPageBuilder extends AbstractPageBuilder<QuestPageBuilder> {
 
-    private final ResourceLocation trigger;
+    private final Identifier trigger;
     private String title;
     private String text;
 
-    public QuestPageBuilder(EntryBuilder entryBuilder, ResourceLocation trigger) {
+    public QuestPageBuilder(EntryBuilder entryBuilder, Identifier trigger) {
         super("handbook:quest", entryBuilder);
         this.trigger = trigger;
     }

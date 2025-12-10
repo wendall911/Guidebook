@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 import handbook.api.HandbookAPI;
@@ -26,13 +26,13 @@ public class GuiButtonInventoryBook extends Button {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float pticks) {
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float pticks) {
         boolean hovered = mouseX >= getX() && mouseY >= getY() && mouseX < getX() + width && mouseY < getY() + height;
         ItemStack stack = book.getBookItem();
         EntryDisplayState readState = book.getContents().getReadState();
 
         guiGraphics.blit(
-            ResourceLocation.fromNamespaceAndPath(HandbookAPI.MODID, "textures/gui/inventory_button.png"),
+            Identifier.fromNamespaceAndPath(HandbookAPI.MODID, "textures/gui/inventory_button.png"),
             getX(),
             getY(),
             (hovered ? 20 : 0),

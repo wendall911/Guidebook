@@ -12,7 +12,7 @@ import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 
 import handbook.api.IComponentProcessor;
@@ -35,7 +35,7 @@ import handbook.common.book.Book;
 
 public class BookTemplate {
 
-	public static final HashMap<ResourceLocation, Class<? extends TemplateComponent>> componentTypes = new HashMap<>();
+	public static final HashMap<Identifier, Class<? extends TemplateComponent>> componentTypes = new HashMap<>();
 
 	static {
 		registerComponent(HandbookAPI.prefix("text"), ComponentText.class);
@@ -68,11 +68,11 @@ public class BookTemplate {
 
 	public static BookTemplate createTemplate(Book book, BookContentsBuilder builder, String type,
                                               @Nullable TemplateInclusion inclusion) {
-		ResourceLocation key;
+		Identifier key;
 		if (type.contains(":")) {
-			key = ResourceLocation.tryParse(type);
+			key = Identifier.tryParse(type);
 		} else {
-			key = ResourceLocation.fromNamespaceAndPath(book.id.getNamespace(), type);
+			key = Identifier.fromNamespaceAndPath(book.id.getNamespace(), type);
 		}
 
 		Supplier<BookTemplate> supplier = builder.getTemplate(key);
@@ -168,7 +168,7 @@ public class BookTemplate {
 		return false;
 	}
 
-	public static void registerComponent(ResourceLocation name, Class<? extends TemplateComponent> clazz) {
+	public static void registerComponent(Identifier name, Class<? extends TemplateComponent> clazz) {
 		componentTypes.put(name, clazz);
 	}
 

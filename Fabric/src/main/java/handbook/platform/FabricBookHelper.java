@@ -11,7 +11,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -27,7 +27,7 @@ import handbook.platform.services.IBookHelper;
 public class FabricBookHelper implements IBookHelper {
 
     @Override
-    public void fireDrawBookScreen(ResourceLocation book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics) {
+    public void fireDrawBookScreen(Identifier book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics) {
         BookDrawScreenCallback.EVENT.invoker().trigger(book, gui, mouseX, mouseY, partialTicks, graphics);
     }
 
@@ -37,7 +37,7 @@ public class FabricBookHelper implements IBookHelper {
     }
 
     @Override
-    public void sendOpenBookGui(ServerPlayer player, ResourceLocation book, @Nullable ResourceLocation entry, int page) {
+    public void sendOpenBookGui(ServerPlayer player, Identifier book, @Nullable Identifier entry, int page) {
         FabricMessageOpenBookGui.send(player, book, entry, page);
     }
 

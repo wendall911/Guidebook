@@ -10,15 +10,15 @@ import com.google.common.base.Suppliers;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.util.Util;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -40,9 +40,9 @@ import handbook.config.HandbookConfig;
 public class Book {
 
     private static final String[] ORDINAL_SUFFIXES = new String[] { "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
-    private static final ResourceLocation DEFAULT_MODEL = HandbookAPI.prefix("book_brown");
-    private static final ResourceLocation DEFAULT_FILLER_TEXTURE = HandbookAPI.prefix("textures/gui/page_filler.png");
-    private static final ResourceLocation DEFAULT_CRAFTING_TEXTURE = HandbookAPI.prefix("textures/gui/crafting.png");
+    private static final Identifier DEFAULT_MODEL = HandbookAPI.prefix("book_brown");
+    private static final Identifier DEFAULT_FILLER_TEXTURE = HandbookAPI.prefix("textures/gui/page_filler.png");
+    private static final Identifier DEFAULT_CRAFTING_TEXTURE = HandbookAPI.prefix("textures/gui/crafting.png");
 
     private static final Map<String, String> DEFAULT_MACROS = Util.make(() -> {
         Map<String, String> ret = new HashMap<>();
@@ -60,7 +60,7 @@ public class Book {
     private boolean wasUpdated = false;
 
     public final CommonModContainer owner;
-    public final ResourceLocation id;
+    public final Identifier id;
     private Supplier<ItemStack> bookItem;
 
     public final int textColor, headerColor, nameplateColor, linkColor, linkHoverColor, progressBarColor, progressBarBackground;
@@ -70,13 +70,13 @@ public class Book {
     public final String name;
     public final String landingText;
 
-    public final ResourceLocation bookTexture, fillerTexture, craftingTexture;
+    public final Identifier bookTexture, fillerTexture, craftingTexture;
 
-    public final ResourceLocation model;
+    public final Identifier model;
 
     public final boolean useBlockyFont;
 
-    public final ResourceLocation openSound, flipSound;
+    public final Identifier openSound, flipSound;
 
     public final boolean showProgress;
 
@@ -85,9 +85,9 @@ public class Book {
     public final String version;
     public final String subtitle;
 
-    @Nullable public final ResourceLocation creativeTab;
+    @Nullable public final Identifier creativeTab;
 
-    @Nullable public final ResourceLocation advancementsTab;
+    @Nullable public final Identifier advancementsTab;
 
     public final boolean noBook;
 
@@ -106,13 +106,13 @@ public class Book {
         return ColorHelper.getHandbookColor(GsonHelper.getAsString(root, key, defaultColor));
     }
 
-    public Book(JsonObject root, CommonModContainer owner, ResourceLocation id) {
+    public Book(JsonObject root, CommonModContainer owner, Identifier id) {
         this.name = GsonHelper.getAsString(root, "name");
         this.landingText = GsonHelper.getAsString(root, "landing_text", "handbook.gui.lexicon.landing_info");
-        this.bookTexture = SerializationUtil.getAsResourceLocation(root, "book_texture", BookLayoutTexture.DEFAULT.texture());
-        this.fillerTexture = SerializationUtil.getAsResourceLocation(root, "filler_texture", DEFAULT_FILLER_TEXTURE);
-        this.craftingTexture = SerializationUtil.getAsResourceLocation(root, "crafting_texture", DEFAULT_CRAFTING_TEXTURE);
-        this.model = SerializationUtil.getAsResourceLocation(root, "model", DEFAULT_MODEL).withPrefix("item/");
+        this.bookTexture = SerializationUtil.getAsIdentifier(root, "book_texture", BookLayoutTexture.DEFAULT.texture());
+        this.fillerTexture = SerializationUtil.getAsIdentifier(root, "filler_texture", DEFAULT_FILLER_TEXTURE);
+        this.craftingTexture = SerializationUtil.getAsIdentifier(root, "crafting_texture", DEFAULT_CRAFTING_TEXTURE);
+        this.model = SerializationUtil.getAsIdentifier(root, "model", DEFAULT_MODEL).withPrefix("item/");
         this.useBlockyFont = GsonHelper.getAsBoolean(root, "use_blocky_font", false);
 
         this.owner = owner;
@@ -124,14 +124,14 @@ public class Book {
         this.linkHoverColor = parseColor(root, "link_hover_color", HandbookColors.LINK_HOVER.getHex());
         this.progressBarColor = parseColor(root, "progress_bar_color", HandbookColors.PROGRESS_BAR.getHex());
         this.progressBarBackground = parseColor(root, "progress_bar_background", HandbookColors.PROGRESS_BAR_BACKGROUND.getHex());
-        this.openSound = SerializationUtil.getAsResourceLocation(root, "open_sound", HandbookSounds.BOOK_OPEN.location());
-        this.flipSound = SerializationUtil.getAsResourceLocation(root, "flip_sound", HandbookSounds.BOOK_FLIP.location());
+        this.openSound = SerializationUtil.getAsIdentifier(root, "open_sound", HandbookSounds.BOOK_OPEN.location());
+        this.flipSound = SerializationUtil.getAsIdentifier(root, "flip_sound", HandbookSounds.BOOK_FLIP.location());
         this.showProgress = GsonHelper.getAsBoolean(root, "show_progress", true);
         this.indexIconRaw = GsonHelper.getAsString(root, "index_icon", "");
         this.version = GsonHelper.getAsString(root, "version", "0");
         this.subtitle = GsonHelper.getAsString(root, "subtitle", "");
-        this.creativeTab = SerializationUtil.getAsResourceLocation(root, "creative_tab", null);
-        this.advancementsTab = SerializationUtil.getAsResourceLocation(root, "advancements_tab", null);
+        this.creativeTab = SerializationUtil.getAsIdentifier(root, "creative_tab", null);
+        this.advancementsTab = SerializationUtil.getAsIdentifier(root, "advancements_tab", null);
         this.noBook = GsonHelper.getAsBoolean(root, "dont_generate_book", false);
         this.showToasts = GsonHelper.getAsBoolean(root, "show_toasts", true);
         this.pauseGame = GsonHelper.getAsBoolean(root, "pause_game", false);
@@ -284,7 +284,7 @@ public class Book {
             };
         }
 
-        public ResourceLocation texture() {
+        public Identifier texture() {
             return HandbookAPI.prefix("textures/gui/" + this + ".png");
         }
     }

@@ -2,7 +2,7 @@ package handbook.client.book.page;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import handbook.api.IVariable;
 import handbook.client.book.gui.GuiBook;
@@ -38,7 +38,7 @@ public class PageText extends PageWithText {
             String smolText = "";
 
             if (mc.options.advancedItemTooltips) {
-                ResourceLocation res = parent.getEntry().getId();
+                Identifier res = parent.getEntry().getId();
                 smolText = res.toString();
             }
             else if (entry.getAddedBy() != null) {

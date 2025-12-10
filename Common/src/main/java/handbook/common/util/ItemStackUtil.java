@@ -20,7 +20,7 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
@@ -64,7 +64,7 @@ public final class ItemStackUtil {
         Integer count = parsed.getRight();
 
         if (!holder.isBound() && holder.unwrapKey().isPresent()) {
-            throw new RuntimeException("Unknown item ID: " + holder.unwrapKey().get().location());
+            throw new RuntimeException("Unknown item ID: " + holder.unwrapKey().get().identifier());
         }
 
         Item item = holder.value();
@@ -102,7 +102,7 @@ public final class ItemStackUtil {
             if (s.isEmpty())
                 continue;
             if (s.startsWith("tag:")) {
-                ResourceLocation location = ResourceLocation.tryParse(s.substring(4));
+                Identifier location = Identifier.tryParse(s.substring(4));
 
                 if (location == null) {
                     HandbookAPI.LOGGER.error("Invalid tag ID: " + s.substring(4));
@@ -143,9 +143,9 @@ public final class ItemStackUtil {
             return HandbookBook.getBook(stack);
         }
 
-        ResourceLocation stackId = ResourceLocationHelper.getItemStackId(stack);
+        Identifier stackId = ResourceLocationHelper.getItemStackId(stack);
 
-        for (Map.Entry<ResourceLocation, Book> entry : BookRegistry.INSTANCE.books.entrySet()) {
+        for (Map.Entry<Identifier, Book> entry : BookRegistry.INSTANCE.books.entrySet()) {
             if (ItemStack.isSameItem(entry.getValue().getBookItem(), stack)) {
                 return entry.getValue();
             }
@@ -237,7 +237,7 @@ public final class ItemStackUtil {
         String itemName = json.get("item").getAsString();
 
         Item item = BuiltInRegistries.ITEM.getOptional(
-            ResourceLocation.tryParse(itemName)).orElseThrow(() -> new IllegalArgumentException("Unknown item '" + itemName + "'")
+            Identifier.tryParse(itemName)).orElseThrow(() -> new IllegalArgumentException("Unknown item '" + itemName + "'")
         );
 
         ItemStack stack = new ItemStack(item, GsonHelper.getAsInt(json, "count", 1));

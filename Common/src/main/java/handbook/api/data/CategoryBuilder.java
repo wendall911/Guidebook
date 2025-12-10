@@ -7,14 +7,14 @@ import java.util.List;
 import com.google.gson.JsonObject;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import handbook.api.data.util.ItemStackHelper;
 
 public class CategoryBuilder {
 
     private final BookBuilder bookBuilder;
-    private final ResourceLocation id;
+    private final Identifier id;
     private final String name;
     private final String description;
     private final String icon;
@@ -38,7 +38,7 @@ public class CategoryBuilder {
     protected CategoryBuilder(String id, String name, String description,
             String icon, BookBuilder bookBuilder) {
         this.bookBuilder = bookBuilder;
-        this.id = ResourceLocation.fromNamespaceAndPath(bookBuilder.getId().getNamespace(), id);
+        this.id = Identifier.fromNamespaceAndPath(bookBuilder.getId().getNamespace(), id);
         this.name = name;
         this.description = description;
         this.icon = icon;
@@ -122,7 +122,7 @@ public class CategoryBuilder {
         return this;
     }
 
-    protected ResourceLocation getId() {
+    protected Identifier getId() {
         return id;
     }
 

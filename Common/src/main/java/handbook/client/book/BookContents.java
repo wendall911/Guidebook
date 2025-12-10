@@ -15,7 +15,7 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 import handbook.client.book.gui.GuiBook;
@@ -28,12 +28,12 @@ import handbook.common.util.ItemStackUtil.StackWrapper;
 
 public class BookContents extends AbstractReadStateHolder {
 
-    public static final Map<ResourceLocation, Supplier<BookTemplate>> addonTemplates = new ConcurrentHashMap<>();
+    public static final Map<Identifier, Supplier<BookTemplate>> addonTemplates = new ConcurrentHashMap<>();
 
     private final Book book;
 
-    public final Map<ResourceLocation, BookCategory> categories;
-    public final Map<ResourceLocation, BookEntry> entries;
+    public final Map<Identifier, BookCategory> categories;
+    public final Map<Identifier, BookEntry> entries;
     @Nullable public final BookCategory pamphletCategory;
     private final Map<StackWrapper, Pair<BookEntry, Integer>> recipeMappings;
     private final boolean errored;
@@ -57,8 +57,8 @@ public class BookContents extends AbstractReadStateHolder {
     }
 
     public BookContents(Book book,
-            ImmutableMap<ResourceLocation, BookCategory> categories,
-            ImmutableMap<ResourceLocation, BookEntry> entries,
+            ImmutableMap<Identifier, BookCategory> categories,
+            ImmutableMap<Identifier, BookEntry> entries,
             ImmutableMap<StackWrapper, Pair<BookEntry, Integer>> recipeMappings,
             @Nullable BookCategory pamphletCategory) {
         this.book = book;
@@ -120,7 +120,7 @@ public class BookContents extends AbstractReadStateHolder {
     /**
      * Set the given entry to be one on top of the stack, i.e. will be shown next time the book is opened
      */
-    public final void setTopEntry(ResourceLocation entryId, int page) {
+    public final void setTopEntry(Identifier entryId, int page) {
         BookEntry entry = entries.get(entryId);
         if (!entry.isLocked()) {
             GuiBook prevGui = getCurrentGui();

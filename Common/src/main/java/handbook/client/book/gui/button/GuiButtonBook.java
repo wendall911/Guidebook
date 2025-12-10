@@ -36,7 +36,7 @@ public class GuiButtonBook extends Button {
 	}
 
 	@Override
-	public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+	public void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
 		active = displayCondition.get();
 		if (!active) {
 			return;

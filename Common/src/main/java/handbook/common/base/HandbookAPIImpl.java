@@ -13,7 +13,7 @@ import com.google.common.base.Preconditions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
@@ -55,31 +55,31 @@ public class HandbookAPIImpl implements IHandbookAPI {
     }
 
     @Override
-    public void openBookGUI(ServerPlayer player, ResourceLocation book) {
+    public void openBookGUI(ServerPlayer player, Identifier book) {
         BookOpenTrigger.INSTANCE.trigger(player, book);
         Services.BOOK_HELPER.sendOpenBookGui(player, book, null, 0);
     }
 
     @Override
-    public void openBookEntry(ServerPlayer player, ResourceLocation book, ResourceLocation entry, int page) {
+    public void openBookEntry(ServerPlayer player, Identifier book, Identifier entry, int page) {
         BookOpenTrigger.INSTANCE.trigger(player, book, entry, page);
         Services.BOOK_HELPER.sendOpenBookGui(player, book, entry, page);
     }
 
     @Override
-    public void openBookGUI(ResourceLocation book) {
+    public void openBookGUI(Identifier book) {
         assertPhysicalClient();
         ClientBookRegistry.INSTANCE.displayBookGui(book, null, 0);
     }
 
     @Override
-    public void openBookEntry(ResourceLocation book, ResourceLocation entry, int page) {
+    public void openBookEntry(Identifier book, Identifier entry, int page) {
         assertPhysicalClient();
         ClientBookRegistry.INSTANCE.displayBookGui(book, entry, page);
     }
 
     @Override
-    public ResourceLocation getOpenBookGui() {
+    public Identifier getOpenBookGui() {
         assertPhysicalClient();
         Screen gui = Minecraft.getInstance().screen;
         if (gui instanceof GuiBook) {
@@ -90,7 +90,7 @@ public class HandbookAPIImpl implements IHandbookAPI {
 
     @NotNull
     @Override
-    public Component getSubtitle(@NotNull ResourceLocation bookId) {
+    public Component getSubtitle(@NotNull Identifier bookId) {
         Book book = BookRegistry.INSTANCE.books.get(bookId);
         if (book == null) {
             throw new IllegalArgumentException("Book not found: " + bookId);
@@ -111,12 +111,12 @@ public class HandbookAPIImpl implements IHandbookAPI {
     }
 
     @Override
-    public ItemStack getBookStack(ResourceLocation book) {
+    public ItemStack getBookStack(Identifier book) {
         return HandbookBook.forBook(book);
     }
 
     @Override
-    public void registerTemplateAsBuiltin(ResourceLocation res, Supplier<InputStream> streamProvider) {
+    public void registerTemplateAsBuiltin(Identifier res, Supplier<InputStream> streamProvider) {
         assertPhysicalClient();
         InputStream testStream = streamProvider.get();
         if (testStream == null) {

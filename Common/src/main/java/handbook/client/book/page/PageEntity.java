@@ -114,7 +114,8 @@ public class PageEntity extends PageWithText {
         guiGraphics.enableScissor((int) x, (int) y, (int) x + 106, (int) y + 106);
 
         renderState.lightCoords = 0xF000F0; // Full brightness
-        renderState.hitboxesRenderState = null; // Disable hitboxes
+        //TODO is this needed?
+        //renderState.hitboxesRenderState = null; // Disable hitboxes
         renderState.shadowPieces.clear();
         renderState.outlineColor = 0;
 

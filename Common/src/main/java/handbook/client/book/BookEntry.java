@@ -19,7 +19,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -44,18 +44,18 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
     private final boolean secret;
     private final boolean readByDefault;
     private final BookPage[] pages;
-    @Nullable private final ResourceLocation advancement;
-    @Nullable private final ResourceLocation turnin;
+    @Nullable private final Identifier advancement;
+    @Nullable private final Identifier turnin;
     private final int sortnum;
     private final int entryColor;
 
     private final Map<String, Integer> extraRecipeMappings;
 
-    private final ResourceLocation id;
+    private final Identifier id;
     // Logical book we belong to
     private final Book book;
     @Nullable private final String addedBy;
-    private final ResourceLocation categoryId;
+    private final Identifier categoryId;
     private BookCategory category;
     private final BookIcon icon;
 
@@ -66,7 +66,7 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
     private boolean built;
     // End mutable state
 
-    public BookEntry(JsonObject root, ResourceLocation id, Book book, @Nullable String addedBy) {
+    public BookEntry(JsonObject root, Identifier id, Book book, @Nullable String addedBy) {
         this.id = id;
         this.book = book;
         this.addedBy = addedBy;
@@ -74,7 +74,7 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
         String categoryId = GsonHelper.getAsString(root, "category");
 
         if (categoryId.contains(":")) { // full category ID
-            this.categoryId = ResourceLocation.tryParse(categoryId);
+            this.categoryId = Identifier.tryParse(categoryId);
         }
         else {
             String hint = String.format("`%s:%s`", book.id.getNamespace(), categoryId);
@@ -87,8 +87,8 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
         this.priority = GsonHelper.getAsBoolean(root, "priority", false);
         this.secret = GsonHelper.getAsBoolean(root, "secret", false);
         this.readByDefault = GsonHelper.getAsBoolean(root, "read_by_default", false);
-        this.advancement = SerializationUtil.getAsResourceLocation(root, "advancement", null);
-        this.turnin = SerializationUtil.getAsResourceLocation(root, "turnin", null);
+        this.advancement = SerializationUtil.getAsIdentifier(root, "advancement", null);
+        this.turnin = SerializationUtil.getAsIdentifier(root, "turnin", null);
         this.sortnum = GsonHelper.getAsInt(root, "sortnum", 0);
 
         String entryColor = GsonHelper.getAsString(root, "entry_color", null);
@@ -145,7 +145,7 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
         return icon;
     }
 
-    public void initCategory(ResourceLocation file, Function<ResourceLocation, BookCategory> categories) {
+    public void initCategory(Identifier file, Function<Identifier, BookCategory> categories) {
         this.category = categories.apply(this.categoryId);
 
         if (this.category == null) {
@@ -201,7 +201,7 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
         return entryColor;
     }
 
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return id;
     }
 

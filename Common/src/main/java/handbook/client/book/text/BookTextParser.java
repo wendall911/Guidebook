@@ -19,7 +19,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import handbook.api.HandbookAPI;
 import handbook.client.book.BookCategory;
@@ -147,7 +147,7 @@ public class BookTextParser {
             else {
                 int hash = parameter.indexOf('#');
                 String anchor = null;
-                ResourceLocation href;
+                Identifier href;
 
                 if (hash >= 0) {
                     anchor = parameter.substring(hash + 1);
@@ -155,8 +155,8 @@ public class BookTextParser {
                 }
 
                 href = parameter.contains(":") ?
-                    ResourceLocation.tryParse(parameter)
-                        : ResourceLocation.fromNamespaceAndPath(state.book.id.getNamespace(), parameter);
+                    Identifier.tryParse(parameter)
+                        : Identifier.fromNamespaceAndPath(state.book.id.getNamespace(), parameter);
 
                 GuiBook gui = state.gui;
                 Book book = state.book;

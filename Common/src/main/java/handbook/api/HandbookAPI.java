@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import com.google.common.base.Suppliers;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
@@ -48,7 +48,7 @@ public class HandbookAPI {
     public static final String MOD_NAME = "Handbook";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 
-    public static ResourceLocation prefix(String path) {
+    public static Identifier prefix(String path) {
         return loc(MODID, path);
     }
 
@@ -71,7 +71,7 @@ public class HandbookAPI {
          * Sends a network message to the given player
          * to open the given book to the last page that was open, or the landing page otherwise.
          */
-        void openBookGUI(ServerPlayer player, ResourceLocation book);
+        void openBookGUI(ServerPlayer player, Identifier book);
 
         /**
          * Sends a network message to the given player
@@ -79,23 +79,23 @@ public class HandbookAPI {
          *
          * @param page Zero-indexed page number
          */
-        void openBookEntry(ServerPlayer player, ResourceLocation book, ResourceLocation entry, int page);
+        void openBookEntry(ServerPlayer player, Identifier book, Identifier entry, int page);
 
         /**
-         * Client version of {@link #openBookGUI(ServerPlayer, ResourceLocation)}.
+         * Client version of {@link #openBookGUI(ServerPlayer, Identifier)}.
          */
-        void openBookGUI(ResourceLocation book);
+        void openBookGUI(Identifier book);
 
         /**
-         * Client version of {@link #openBookEntry(ServerPlayer, ResourceLocation, ResourceLocation, int)}
+         * Client version of {@link #openBookEntry(ServerPlayer, Identifier, Identifier, int)}
          */
-        void openBookEntry(ResourceLocation book, ResourceLocation entry, int page);
+        void openBookEntry(Identifier book, Identifier entry, int page);
 
         /**
          * Returns the book ID of the currently open book, if any. Only works clientside.
          */
         @Nullable
-        ResourceLocation getOpenBookGui();
+        Identifier getOpenBookGui();
 
         /**
          * Works on both sides.
@@ -104,12 +104,12 @@ public class HandbookAPI {
          *                                  page) of the book.
          * @throws IllegalArgumentException if the book id given cannot be found
          */
-        Component getSubtitle(ResourceLocation bookId);
+        Component getSubtitle(Identifier bookId);
 
         /**
          * Returns a book item with its NBT set to the book passed in. Works on both sides.
          */
-        ItemStack getBookStack(ResourceLocation book);
+        ItemStack getBookStack(Identifier book);
 
         /**
          * Register a template you made as a built in template to be used with all books
@@ -117,7 +117,7 @@ public class HandbookAPI {
          * reads a full json file, containing a template.
          * Only works on client.
          */
-        void registerTemplateAsBuiltin(ResourceLocation res, Supplier<InputStream> streamProvider);
+        void registerTemplateAsBuiltin(Identifier res, Supplier<InputStream> streamProvider);
 
         /**
          * Register a Handbook command, of the type $(cmdname).

@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
@@ -41,7 +41,7 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
 
     @SuppressWarnings("unchecked")
     @Nullable
-    private T getRecipe(ResourceLocation id) {
+    private T getRecipe(Identifier id) {
         IntegratedServer server = Minecraft.getInstance().getSingleplayerServer();
 
         if (server == null) {
@@ -52,7 +52,7 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
 
         AccessorRecipeManager manager = (AccessorRecipeManager) server.getRecipeManager();
         RecipeHolder<?> recipeHolder = manager.getRecipes().values().stream().filter(
-            holder -> holder.id().location().equals(id) && holder.value().getType() == recipeType
+            holder -> holder.id().identifier().equals(id) && holder.value().getType() == recipeType
         ).findFirst().orElse(null);
 
         return recipeHolder != null ? (T) recipeHolder.value() : null;
@@ -60,7 +60,7 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
 
     @Override
     protected T loadRecipe(Level level, BookContentsBuilder builder, BookEntry entry,
-                           ResourceLocation res, boolean linkRecipe) {
+                           Identifier res, boolean linkRecipe) {
         if (res == null || level == null) {
             return null;
         }
@@ -68,7 +68,7 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
 
         // this is hacky but it works around Forge requiring custom recipes to have the prefix of the adding mod
         if (tempRecipe == null) {
-            tempRecipe = getRecipe(ResourceLocation.fromNamespaceAndPath("crafttweaker", res.getPath()));
+            tempRecipe = getRecipe(Identifier.fromNamespaceAndPath("crafttweaker", res.getPath()));
         }
 
         if (tempRecipe != null) {

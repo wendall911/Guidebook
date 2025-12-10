@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import com.google.gson.JsonObject;
 
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 import handbook.api.data.util.ItemStackHelper;
@@ -20,7 +20,7 @@ import handbook.config.HandbookConfig.TextOverflowMode;
 
 public class BookBuilder {
 
-    private final ResourceLocation id;
+    private final Identifier id;
     private final String displayName;
     private final String landingText;
     private final List<CategoryBuilder> categories = new ArrayList<>();
@@ -56,10 +56,10 @@ public class BookBuilder {
     private HolderLookup.Provider provider;
 
     protected BookBuilder(String modid, String id, String displayName, String landingText, HolderLookup.Provider provider) {
-        this(ResourceLocation.fromNamespaceAndPath(modid, id), displayName, landingText, provider);
+        this(Identifier.fromNamespaceAndPath(modid, id), displayName, landingText, provider);
     }
 
-    protected BookBuilder(ResourceLocation id, String displayName, String landingText, HolderLookup.Provider provider) {
+    protected BookBuilder(Identifier id, String displayName, String landingText, HolderLookup.Provider provider) {
         this.id = id;
         this.displayName = displayName;
         this.landingText = landingText;
@@ -209,7 +209,7 @@ public class BookBuilder {
         return this;
     }
 
-    public BookBuilder setBookTexture(ResourceLocation bookTexture) {
+    public BookBuilder setBookTexture(Identifier bookTexture) {
         return this.setBookTexture(bookTexture.toString());
     }
 
@@ -229,7 +229,7 @@ public class BookBuilder {
         return this;
     }
 
-    public BookBuilder setModel(ResourceLocation model) {
+    public BookBuilder setModel(Identifier model) {
         return this.setModel(model.toString());
     }
 
@@ -396,7 +396,7 @@ public class BookBuilder {
         return provider;
     }
 
-    protected ResourceLocation getId() {
+    protected Identifier getId() {
         return id;
     }
 

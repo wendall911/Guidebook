@@ -3,7 +3,7 @@ package handbook.client.book.template.test;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -28,7 +28,7 @@ public class RecipeTestProcessor implements IComponentProcessor {
     @Override
     public void setup(Level level, IVariableProvider variables) {
         // TODO probably add a recipe serializer?
-        ResourceLocation recipeId = ResourceLocationHelper.tryParse(
+        Identifier recipeId = ResourceLocationHelper.tryParse(
             variables.get("recipe", level.registryAccess()).asString());
 
         MinecraftServer server = level.getServer();
@@ -40,7 +40,7 @@ public class RecipeTestProcessor implements IComponentProcessor {
 
         AccessorRecipeManager manager = (AccessorRecipeManager) level.getServer().getRecipeManager();
         RecipeHolder<?> recipeHolder = manager.getRecipes().values().stream().filter(
-            holder -> holder.id().location().equals(recipeId)
+            holder -> holder.id().identifier().equals(recipeId)
         ).findFirst().orElse(null);
 
         recipe = recipeHolder != null ? recipeHolder.value() : null;

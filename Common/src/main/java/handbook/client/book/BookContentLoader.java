@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.google.gson.JsonElement;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 
 import handbook.common.book.Book;
@@ -20,10 +20,10 @@ import handbook.common.book.BookRegistry;
 
 public interface BookContentLoader {
 
-    void findFiles(Book book, String dir, List<ResourceLocation> list);
+    void findFiles(Book book, String dir, List<Identifier> list);
 
     @Nullable
-    LoadResult loadJson(Book book, ResourceLocation file);
+    LoadResult loadJson(Book book, Identifier file);
 
     /**
      * @param addedBy Opaque string to be shown to user in the book,

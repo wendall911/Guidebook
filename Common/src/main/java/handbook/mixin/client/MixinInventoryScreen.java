@@ -10,7 +10,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.recipebook.CraftingRecipeBookComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 
@@ -34,7 +34,7 @@ public abstract class MixinInventoryScreen extends AbstractRecipeBookScreen<Inve
     @SuppressWarnings("unchecked")
     @Inject(at = @At("RETURN"), method = "init()V")
     public void onGuiInitPost(CallbackInfo info) {
-        ResourceLocation bookID = ResourceLocation.tryParse(HandbookConfig.Client.inventoryButtonBook());
+        Identifier bookID = Identifier.tryParse(HandbookConfig.Client.inventoryButtonBook());
         Book book = BookRegistry.INSTANCE.books.get(bookID);
         Renderable replaced = null;
         Button replacement = null;

@@ -6,19 +6,19 @@ import java.util.List;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import handbook.api.data.AbstractPageBuilder;
 import handbook.api.data.EntryBuilder;
 
 public class ImagePageBuilder extends AbstractPageBuilder<ImagePageBuilder> {
 
-    private final List<ResourceLocation> images = new ArrayList<>();
+    private final List<Identifier> images = new ArrayList<>();
     private String title;
     private Boolean border;
     private String text;
 
-    public ImagePageBuilder(ResourceLocation image, EntryBuilder parent) {
+    public ImagePageBuilder(Identifier image, EntryBuilder parent) {
         super("handbook:image", parent);
         this.images.add(image);
     }
@@ -27,7 +27,7 @@ public class ImagePageBuilder extends AbstractPageBuilder<ImagePageBuilder> {
     protected void serialize(JsonObject json) {
         JsonArray images = new JsonArray();
 
-        for (ResourceLocation image : this.images) {
+        for (Identifier image : this.images) {
             images.add(image.toString());
         }
         json.add("images", images);
@@ -42,7 +42,7 @@ public class ImagePageBuilder extends AbstractPageBuilder<ImagePageBuilder> {
         }
     }
 
-    public ImagePageBuilder addImage(ResourceLocation image) {
+    public ImagePageBuilder addImage(Identifier image) {
         images.add(image);
 
         return this;

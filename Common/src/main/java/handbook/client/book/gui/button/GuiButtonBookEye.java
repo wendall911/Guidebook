@@ -22,8 +22,8 @@ public class GuiButtonBookEye extends GuiButtonBook {
 	}
 
 	@Override
-	public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		super.renderWidget(guiGraphics, mouseX, mouseY, partialTicks);
+	public void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+		super.renderContents(guiGraphics, mouseX, mouseY, partialTicks);
 
 		if (!PersistentData.data.clickedVisualize && (ClientTicker.ticksInGame) % 20 < 10) {
             Minecraft mc = parent.getMinecraft();

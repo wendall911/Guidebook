@@ -9,7 +9,7 @@ import com.google.gson.JsonObject;
 
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -90,7 +90,7 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
             new ItemStack(Items.WOODEN_SWORD)
         ).setSortnum(2);
         finalEntry
-            .addCraftingPage(ResourceLocation.fromNamespaceAndPath("minecraft", "diamond_sword"))
+            .addCraftingPage(Identifier.fromNamespaceAndPath("minecraft", "diamond_sword"))
                 .setText("All normal page types, including custom pages work in a pamphlet.").build()
             .addTextPage("This is the final entry in the pamphlet. Thanks for reading!");
 
@@ -123,9 +123,9 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
             "Smelting page with an invalid recipe",
             new ItemStack(Items.FURNACE)
         );
-        entry.addSmeltingPage(ResourceLocation.fromNamespaceAndPath("minecraft", "charcoal"))
+        entry.addSmeltingPage(Identifier.fromNamespaceAndPath("minecraft", "charcoal"))
             .setText("This is supposed to have a second recipe that does not exist.")
-            .setRecipe2(ResourceLocation.fromNamespaceAndPath("minecraft", "carrot"));
+            .setRecipe2(Identifier.fromNamespaceAndPath("minecraft", "carrot"));
 
         return smeltingErrorBook;
     }
@@ -156,9 +156,9 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
             "Crafting page with an invalid recipe",
             new ItemStack(Items.CRAFTING_TABLE)
         );
-        entry.addCraftingPage(ResourceLocation.fromNamespaceAndPath("minecraft", "furnace"))
+        entry.addCraftingPage(Identifier.fromNamespaceAndPath("minecraft", "furnace"))
             .setText("This is supposed to have a second recipe that does not exist.")
-            .setRecipe2(ResourceLocation.fromNamespaceAndPath("minecraft", "does_not_exist"));
+            .setRecipe2(Identifier.fromNamespaceAndPath("minecraft", "does_not_exist"));
 
         return craftingErrorBook;
     }
@@ -457,7 +457,7 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
             "Advancement Quest",
             new ItemStack(Items.VINDICATOR_SPAWN_EGG)
         );
-        advancementQuest.addQuestPage(ResourceLocation.fromNamespaceAndPath("minecraft", "nether/create_beacon"))
+        advancementQuest.addQuestPage(Identifier.fromNamespaceAndPath("minecraft", "nether/create_beacon"))
             .setText(
                 "This quest is completed when the vanilla beacon advancement is completed. " +
                 "Click $(c:/advancement grant @s only minecraft:nether/create_beacon)here$(/c) to grant it. " +
@@ -514,7 +514,7 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
         relations.addRelationsPage()
             .setTitle("Check out these relations!")
             .setText("This is a relations page. It shows the relationships between entries in this book.")
-            .addEntry(ResourceLocation.fromNamespaceAndPath("handbooktest", "page_types/link"));
+            .addEntry(Identifier.fromNamespaceAndPath("handbooktest", "page_types/link"));
 
         EntryBuilder spotlight = category.addEntry(
             "page_types/spotlight",
@@ -568,24 +568,24 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
             new ItemStack(Items.COOKED_SALMON)
         );
 
-        recipe.addCraftingPage(ResourceLocation.fromNamespaceAndPath("minecraft", "diamond_sword"))
-            .setRecipe2(ResourceLocation.fromNamespaceAndPath("minecraft", "flint_and_steel"));
+        recipe.addCraftingPage(Identifier.fromNamespaceAndPath("minecraft", "diamond_sword"))
+            .setRecipe2(Identifier.fromNamespaceAndPath("minecraft", "flint_and_steel"));
 
-        recipe.addCraftingPage(ResourceLocation.fromNamespaceAndPath("minecraft", "fletching_table"))
-            .setRecipe2(ResourceLocation.fromNamespaceAndPath("minecraft", "snow"))
+        recipe.addCraftingPage(Identifier.fromNamespaceAndPath("minecraft", "fletching_table"))
+            .setRecipe2(Identifier.fromNamespaceAndPath("minecraft", "snow"))
             .setLinkRecipe(false);
-        recipe.addSmeltingPage(ResourceLocation.fromNamespaceAndPath("minecraft", "cooked_salmon"));
+        recipe.addSmeltingPage(Identifier.fromNamespaceAndPath("minecraft", "cooked_salmon"));
         recipe.addBlastingPage(
-            ResourceLocation.fromNamespaceAndPath("minecraft", "iron_ingot_from_blasting_iron_ore"));
+            Identifier.fromNamespaceAndPath("minecraft", "iron_ingot_from_blasting_iron_ore"));
         recipe.addSmokingPage(
-            ResourceLocation.fromNamespaceAndPath("minecraft", "cooked_cod_from_smoking"));
+            Identifier.fromNamespaceAndPath("minecraft", "cooked_cod_from_smoking"));
         recipe.addCampfirePage(
-            ResourceLocation.fromNamespaceAndPath("minecraft", "cooked_cod_from_campfire_cooking"));
+            Identifier.fromNamespaceAndPath("minecraft", "cooked_cod_from_campfire_cooking"));
         recipe.addStonecuttingPage(
-            ResourceLocation.fromNamespaceAndPath("minecraft", "andesite_slab_from_andesite_stonecutting"));
-        recipe.addSmithingPage(ResourceLocation.fromNamespaceAndPath("minecraft", "netherite_axe_smithing"))
+            Identifier.fromNamespaceAndPath("minecraft", "andesite_slab_from_andesite_stonecutting"));
+        recipe.addSmithingPage(Identifier.fromNamespaceAndPath("minecraft", "netherite_axe_smithing"))
             .setText("Smithing table recipes.")
-            .setRecipe2(ResourceLocation.fromNamespaceAndPath("minecraft", "netherite_pickaxe_smithing"));
+            .setRecipe2(Identifier.fromNamespaceAndPath("minecraft", "netherite_pickaxe_smithing"));
 
         return category.build();
     }
@@ -731,8 +731,8 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
         return category.build();
     }
 
-    private static ResourceLocation bookImage(String id) {
-        return ResourceLocation.fromNamespaceAndPath(HandbookAPI.MODID + "test", "textures/gui/book/" + id + ".png");
+    private static Identifier bookImage(String id) {
+        return Identifier.fromNamespaceAndPath(HandbookAPI.MODID + "test", "textures/gui/book/" + id + ".png");
     }
 
 }

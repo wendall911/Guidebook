@@ -1,5 +1,7 @@
 package handbook.client.jei;
 
+// TODO: Enable this when JEI is available on 1.21.11+
+/*
 import java.util.Map;
 import java.util.Objects;
 
@@ -18,7 +20,7 @@ import mezz.jei.api.runtime.IJeiRuntime;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.input.KeyEvent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 import handbook.api.HandbookAPI;
@@ -29,7 +31,7 @@ import handbook.mixin.client.AccessorKeyMapping;
 @JeiPlugin
 public class HandbookJeiPlugin implements IModPlugin {
 
-    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(HandbookAPI.MODID, HandbookAPI.MODID);
+    private static final Identifier UID = Identifier.fromNamespaceAndPath(HandbookAPI.MODID, HandbookAPI.MODID);
 
     private static KeyMapping showRecipe, showUses;
 
@@ -40,7 +42,7 @@ public class HandbookJeiPlugin implements IModPlugin {
 
     @NotNull
     @Override
-    public ResourceLocation getPluginUid() {
+    public Identifier getPluginUid() {
         return UID;
     }
 
@@ -87,3 +89,5 @@ public class HandbookJeiPlugin implements IModPlugin {
     }
 
 }
+
+ */
