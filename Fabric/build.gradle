@@ -92,7 +92,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             groupId project.group
-            artifactId "whitenoise-${minecraft_version}-fabric"
+            artifactId "${mod_id}-${minecraft_version}-fabric"
             version project.version
             from components.java
         }
