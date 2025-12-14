@@ -61,6 +61,8 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
 
             ResourceLocation bookId = ResourceLocation.fromNamespaceAndPath(key.getNamespace(), matcher.group("bookId"));
 
+            HandbookAPI.LOGGER.info("Preloaded entry {} for book {}", key, bookId);
+
             data.computeIfAbsent(bookId, id -> new HashMap<>()).put(entry.getKey(), entry.getValue());
         }
 

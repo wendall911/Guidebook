@@ -6,10 +6,6 @@ plugins {
 neoForge {
     version = neoforge_version
     addModdingDependenciesTo sourceSets.test
-    parchment {
-        minecraftVersion = mappings_minecraft_version
-        mappingsVersion = mappings_version
-    }
     runs {
         configureEach {
             systemProperty('neoforge.enabledGameTestNamespaces', mod_id)
