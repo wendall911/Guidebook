@@ -23,7 +23,7 @@ dependencies {
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:${rei_version}"
     /*
      * TODO Re-enable REI when it is released
-    modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}"
+    modLocalRuntime "me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}"
     */
 
     modCompileOnly "mezz.jei:jei-${jei_minecraft_version}-common-api:${jei_version}"
