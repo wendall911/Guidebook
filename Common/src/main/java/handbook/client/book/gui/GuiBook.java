@@ -16,7 +16,7 @@ import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -147,7 +147,7 @@ public abstract class GuiBook extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         guiGraphics.pose().pushMatrix();
         currentBookMouseX = mouseX;
         currentBookMouseY = mouseY;
@@ -163,7 +163,7 @@ public abstract class GuiBook extends Screen {
         guiGraphics.pose().popMatrix();
     }
 
-    private void drawScreenAfterScale(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    private void drawScreenAfterScale(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         resetTooltip();
 
         graphics.pose().pushMatrix();
@@ -172,7 +172,7 @@ public abstract class GuiBook extends Screen {
         drawForegroundElements(graphics, mouseX, mouseY, partialTicks);
         graphics.pose().popMatrix();
 
-        super.render(graphics, mouseX, mouseY, partialTicks);
+        super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
 
         Services.BOOK_HELPER.fireDrawBookScreen(this.book.id, this, mouseX, mouseY, partialTicks, graphics);
 
@@ -180,7 +180,7 @@ public abstract class GuiBook extends Screen {
     }
 
     @Override
-    public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {}
+    public void extractBackground(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {}
 
     public void addBookmarkButtons() {
         removeDrawablesIf((b) -> b instanceof GuiButtonBookBookmark);
@@ -252,13 +252,13 @@ public abstract class GuiBook extends Screen {
         }
     }
 
-    final void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    final void drawBackgroundElements(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         drawFromTexture(graphics, book, 0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT);
     }
 
-    void drawForegroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {}
+    void drawForegroundElements(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {}
 
-    final void drawTooltip(GuiGraphics guiGraphics, int x, int y) {
+    final void drawTooltip(GuiGraphicsExtractor guiGraphics, int x, int y) {
         int mouseX = (int) ((float) x * scaleFactor);
         int mouseY = (int) ((float) y * scaleFactor);
 
@@ -287,11 +287,11 @@ public abstract class GuiBook extends Screen {
         targetPage = null;
     }
 
-    public static void drawFromTexture(GuiGraphics guiGraphics, Book book, int x, int y, int u, int v, int w, int h) {
+    public static void drawFromTexture(GuiGraphicsExtractor guiGraphics, Book book, int x, int y, int u, int v, int w, int h) {
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, book.bookTexture, x, y, u, v, w, h, 512, 256);
     }
 
-    public static void drawFromTexture(GuiGraphics guiGraphics, Book book, int x, int y, int u, int v, int w, int h, float alpha) {
+    public static void drawFromTexture(GuiGraphicsExtractor guiGraphics, Book book, int x, int y, int u, int v, int w, int h, float alpha) {
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, book.bookTexture, x, y, u, v, w, h, 512, 256, HandbookColors.WHITE.toAlphaColor(alpha));
     }
 
@@ -499,7 +499,7 @@ public abstract class GuiBook extends Screen {
         return (int) ((float) mouseY / scaleFactor);
     }
 
-    public void drawProgressBar(GuiGraphics graphics, Book book, int mouseX, int mouseY, Predicate<BookEntry> filter) {
+    public void drawProgressBar(GuiGraphicsExtractor graphics, Book book, int mouseX, int mouseY, Predicate<BookEntry> filter) {
         if (!book.showProgress || !book.advancementsEnabled()) {
             return;
         }
@@ -543,7 +543,7 @@ public abstract class GuiBook extends Screen {
         drawGradient(graphics, barLeft + 1, barTop + 1, barLeft + barWidth - 1, barTop + barHeight - 1, book.progressBarBackground);
         drawGradient(graphics, barLeft + 1, barTop + 1, barLeft + progressWidth, barTop + barHeight - 1, book.progressBarColor);
 
-        graphics.drawString(this.font, Component.translatable("handbook.gui.lexicon.progress_meter"), barLeft, barTop - 9, book.headerColor, false);
+        graphics.text(this.font, Component.translatable("handbook.gui.lexicon.progress_meter"), barLeft, barTop - 9, book.headerColor, false);
 
         if (isMouseInRelativeRange(mouseX, mouseY, barLeft, barTop, barWidth, barHeight)) {
             List<Component> tooltip = new ArrayList<>();
@@ -567,18 +567,18 @@ public abstract class GuiBook extends Screen {
         }
     }
 
-    private void drawGradient(GuiGraphics graphics, int x, int y, int w, int h, int color) {
+    private void drawGradient(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int color) {
         int darkerColor = new Color(color).darker().getRGB();
 
         graphics.fillGradient(x, y, w, h, color, darkerColor);
     }
 
-    public void drawCenteredStringNoShadow(GuiGraphics graphics, FormattedCharSequence s, int x, int y, int color) {
-        graphics.drawString(font, s, x - font.width(s) / 2, y, color, false);
+    public void drawCenteredStringNoShadow(GuiGraphicsExtractor graphics, FormattedCharSequence s, int x, int y, int color) {
+        graphics.text(font, s, x - font.width(s) / 2, y, color, false);
     }
 
-    public void drawCenteredStringNoShadow(GuiGraphics graphics, String s, int x, int y, int color) {
-        graphics.drawString(font, s, x - font.width(s) / 2, y, color, false);
+    public void drawCenteredStringNoShadow(GuiGraphicsExtractor graphics, String s, int x, int y, int color) {
+        graphics.text(font, s, x - font.width(s) / 2, y, color, false);
     }
 
     private int getMaxAllowedScale() {
@@ -593,7 +593,7 @@ public abstract class GuiBook extends Screen {
         return spread;
     }
 
-    public static void drawSeparator(GuiGraphics guiGraphics, Book book, int x, int y) {
+    public static void drawSeparator(GuiGraphicsExtractor guiGraphics, Book book, int x, int y) {
         int w = 110;
         int h = 3;
         int rx = x + PAGE_WIDTH / 2 - w / 2;
@@ -601,11 +601,11 @@ public abstract class GuiBook extends Screen {
         drawFromTexture(guiGraphics, book, rx, y, 140, 180, w, h, 0.8F);
     }
 
-    public static void drawLock(GuiGraphics guiGraphics, Book book, int x, int y) {
+    public static void drawLock(GuiGraphicsExtractor guiGraphics, Book book, int x, int y) {
         drawFromTexture(guiGraphics, book, x, y, 250, 180, 16, 16, 0.7F);
     }
 
-    public static void drawMarking(GuiGraphics guiGraphics, Book book, int x, int y, int rand, EntryDisplayState state) {
+    public static void drawMarking(GuiGraphicsExtractor guiGraphics, Book book, int x, int y, int rand, EntryDisplayState state) {
         if (!state.hasIcon) {
             return;
         }
@@ -615,11 +615,11 @@ public abstract class GuiBook extends Screen {
         drawFromTexture(guiGraphics, book, x, y, state.u, 197, 8, 8, alpha);
     }
 
-    public static void drawPageFiller(GuiGraphics guiGraphics, Book book) {
+    public static void drawPageFiller(GuiGraphicsExtractor guiGraphics, Book book) {
         drawPageFiller(guiGraphics, book, RIGHT_PAGE_X, TOP_PADDING);
     }
 
-    public static void drawPageFiller(GuiGraphics guiGraphics, Book book, int x, int y) {
+    public static void drawPageFiller(GuiGraphicsExtractor guiGraphics, Book book, int x, int y) {
         guiGraphics.blit(
             RenderPipelines.GUI_TEXTURED,
             book.fillerTexture,

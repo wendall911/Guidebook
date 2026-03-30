@@ -6,7 +6,7 @@ import java.util.function.UnaryOperator;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 
@@ -41,7 +41,7 @@ public class ComponentTooltip extends TemplateComponent {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, BookPage page, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphicsExtractor guiGraphics, BookPage page, int mouseX, int mouseY, float partialTicks) {
         if (page.parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)) {
             page.parent.setTooltip(tooltip);
         }

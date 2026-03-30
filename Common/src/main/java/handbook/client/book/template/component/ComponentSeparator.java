@@ -1,6 +1,6 @@
 package handbook.client.book.template.component;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import handbook.client.book.BookContentsBuilder;
 import handbook.client.book.BookEntry;
@@ -21,7 +21,7 @@ public class ComponentSeparator extends TemplateComponent {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, BookPage page, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphicsExtractor guiGraphics, BookPage page, int mouseX, int mouseY, float partialTicks) {
         GuiBook.drawSeparator(guiGraphics, page.book, x, y);
     }
 

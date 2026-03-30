@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -28,7 +28,7 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 	}
 
 	@Override
-	public void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+	public void extractContents(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
 		int px = getX() + 1;
 		int py = (int) (getY() + 0.5);
         Minecraft mc = parent.getMinecraft();
@@ -45,7 +45,7 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 			parent.setTooltip(getTooltipLines());
 		}
 
-		guiGraphics.drawString(parent.getMinecraft().font, "+", px, py, HandbookColors.BOOKMARK_READ.toColor(), true);
+		guiGraphics.text(parent.getMinecraft().font, "+", px, py, HandbookColors.BOOKMARK_READ.toColor(), true);
 	}
 
 	@Override

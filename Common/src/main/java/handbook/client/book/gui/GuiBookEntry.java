@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -87,7 +87,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
     }
 
     @Override
-    void drawForegroundElements(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    void drawForegroundElements(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         drawPage(guiGraphics, leftPage, mouseX, mouseY, partialTicks);
         drawPage(guiGraphics, rightPage, mouseX, mouseY, partialTicks);
 
@@ -103,7 +103,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
                 || super.mouseClickedScaled(mouseButtonEvent, isDoubleClick);
     }
 
-    void drawPage(GuiGraphics guiGraphics, @Nullable BookPage page, int mouseX, int mouseY, float pticks) {
+    void drawPage(GuiGraphicsExtractor guiGraphics, @Nullable BookPage page, int mouseX, int mouseY, float pticks) {
         if (page == null) {
             return;
         }
@@ -242,13 +242,13 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
     }
 
     @Override
-    public void renderItemStack(GuiGraphics guiGraphics, int x, int y, int mouseX, int mouseY, ItemStack stack) {
+    public void renderItemStack(GuiGraphicsExtractor guiGraphics, int x, int y, int mouseX, int mouseY, ItemStack stack) {
         if (stack.isEmpty()) {
             return;
         }
 
-        guiGraphics.renderItem(stack, x, y);
-        guiGraphics.renderItemDecorations(font, stack, x, y);
+        guiGraphics.item(stack, x, y);
+        guiGraphics.itemDecorations(font, stack, x, y);
 
         if (isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)) {
             setTooltipStack(stack);
@@ -257,7 +257,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
     @SuppressWarnings("deprecation")
     @Override
-    public void renderIngredient(GuiGraphics guiGraphics, int x, int y, int mouseX, int mouseY, Ingredient ingredient) {
+    public void renderIngredient(GuiGraphicsExtractor guiGraphics, int x, int y, int mouseX, int mouseY, Ingredient ingredient) {
         ItemStack[] stacks = ingredient.items().map(itemHolder -> new ItemStack(itemHolder.value())).toArray(ItemStack[]::new);
 
         if (stacks.length > 0) {

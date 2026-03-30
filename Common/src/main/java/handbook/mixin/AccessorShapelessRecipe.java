@@ -2,7 +2,7 @@ package handbook.mixin;
 
 import java.util.List;
 
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 
@@ -16,6 +16,6 @@ public interface AccessorShapelessRecipe {
     List<Ingredient> getIngredients();
 
     @Accessor
-    ItemStack getResult();
+    ItemStackTemplate getResult();
 
 }

@@ -2,7 +2,7 @@ package handbook.client.book.page.abstr;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
@@ -47,7 +47,7 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         if (recipe1 != null) {
             int recipeX = getX();
             int recipeY = getY();
@@ -79,7 +79,7 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
         return getTextHeight() + 10 < GuiBook.PAGE_HEIGHT;
     }
 
-    protected abstract void drawRecipe(GuiGraphics graphics, T recipe, int recipeX, int recipeY,
+    protected abstract void drawRecipe(GuiGraphicsExtractor graphics, T recipe, int recipeX, int recipeY,
                                        int mouseX, int mouseY, boolean second);
 
     protected abstract T loadRecipe(Level level, BookContentsBuilder builder, BookEntry entry,

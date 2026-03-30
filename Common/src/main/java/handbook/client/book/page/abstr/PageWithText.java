@@ -1,6 +1,6 @@
 package handbook.client.book.page.abstr;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
@@ -29,9 +29,9 @@ public abstract class PageWithText extends BookPage {
     public abstract int getTextHeight();
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         if (shouldRenderText()) {
-            textRender.render(guiGraphics, mouseX, mouseY, partialTicks);
+            textRender.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
         }
     }
 

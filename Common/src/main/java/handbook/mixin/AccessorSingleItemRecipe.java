@@ -1,6 +1,6 @@
 package handbook.mixin;
 
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.SingleItemRecipe;
 
@@ -14,6 +14,6 @@ public interface AccessorSingleItemRecipe {
     Ingredient getInput();
 
     @Accessor
-    ItemStack getResult();
+    ItemStackTemplate getResult();
 
 }

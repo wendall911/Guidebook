@@ -8,7 +8,7 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -28,7 +28,7 @@ import handbook.common.util.ItemStackUtil;
 
 public class BookRightClickHandler {
 
-    public static void onRenderHUD(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+    public static void onRenderHUD(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker) {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
 
@@ -53,16 +53,16 @@ public class BookRightClickHandler {
                         guiGraphics.pose().pushMatrix();
                         guiGraphics.pose().translate(0, 0);
                         guiGraphics.pose().scale(0.5F, 0.5F);
-                        guiGraphics.renderItem(bookStack, (x + 8) * 2, (y + 8) * 2);
-                        guiGraphics.renderItemDecorations(mc.font, bookStack, (x + 8) * 2, (y + 8) * 2);
+                        guiGraphics.item(bookStack, (x + 8) * 2, (y + 8) * 2);
+                        guiGraphics.itemDecorations(mc.font, bookStack, (x + 8) * 2, (y + 8) * 2);
                         guiGraphics.pose().popMatrix();
 
-                        guiGraphics.drawString(mc.font, entry.getName(), x + 18, y + 3, HandbookColors.WHITE.toColor(), false);
+                        guiGraphics.text(mc.font, entry.getName(), x + 18, y + 3, HandbookColors.WHITE.toColor(), false);
 
                         guiGraphics.pose().pushMatrix();
                         guiGraphics.pose().scale(0.75F, 0.75F);
 
-                        guiGraphics.drawString(mc.font, s, (int) ((x + 18) / 0.75F), (int) ((y + 14) / 0.75F), HandbookColors.GRAY.toColor(), false);
+                        guiGraphics.text(mc.font, s, (int) ((x + 18) / 0.75F), (int) ((y + 14) / 0.75F), HandbookColors.GRAY.toColor(), false);
                         guiGraphics.pose().popMatrix();
                     }
                 }

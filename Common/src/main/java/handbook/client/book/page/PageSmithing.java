@@ -3,7 +3,7 @@ package handbook.client.book.page;
 import java.util.Optional;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -26,7 +26,7 @@ public class PageSmithing extends PageDoubleRecipeRegistry<SmithingRecipe> {
     }
 
     @Override
-    protected void drawRecipe(GuiGraphics guiGraphics, SmithingRecipe recipe, int recipeX, int recipeY,
+    protected void drawRecipe(GuiGraphicsExtractor guiGraphics, SmithingRecipe recipe, int recipeX, int recipeY,
                               int mouseX, int mouseY, boolean second) {
         Level level = Minecraft.getInstance().level;
         if (level == null) {

@@ -1,6 +1,6 @@
 package handbook.client.book.page;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.world.level.Level;
 
@@ -39,7 +39,7 @@ public class PageTemplate extends BookPage {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         template.render(guiGraphics, this, mouseX, mouseY, partialTicks);
     }
 

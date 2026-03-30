@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
@@ -30,7 +30,7 @@ public class GuiButtonEntry extends Button {
     }
 
     @Override
-    protected void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    protected void extractContents(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         if (!active) {
             return;
         }
@@ -74,7 +74,7 @@ public class GuiButtonEntry extends Button {
         }
 
         name = name.withStyle(entry.getBook().getFontStyle());
-        guiGraphics.drawString(Minecraft.getInstance().font, name, getX() + 12, getY(), getColor(), false);
+        guiGraphics.text(Minecraft.getInstance().font, name, getX() + 12, getY(), getColor(), false);
 
         if (!entry.isLocked()) {
             GuiBook.drawMarking(guiGraphics, parent.book, getX() + width - 5, getY() + 1, entry.hashCode(), entry.getReadState());

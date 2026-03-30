@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
@@ -64,17 +64,17 @@ public class Word {
         this.linkClusterWidth = clusterWidth;
     }
 
-    public void render(GuiGraphics guiGraphics, Font font, Style styleOverride, int scaledX, int scaledY) {
+    public void render(GuiGraphicsExtractor guiGraphics, Font font, Style styleOverride, int scaledX, int scaledY) {
         MutableComponent toRender = text.copy().withStyle(styleOverride);
 
-        guiGraphics.drawString(font, toRender, this.x, this.y, -1, false);
+        guiGraphics.text(font, toRender, this.x, this.y, -1, false);
 
         if (isClusterHovered(scaledX, scaledY)) {
             if (onClick != null) {
 
                 hovered = true;
 
-                guiGraphics.renderComponentHoverEffect(
+                guiGraphics.componentHoverEffect(
                     font,
                     text.getStyle(),
                     gui.currentBookMouseX,

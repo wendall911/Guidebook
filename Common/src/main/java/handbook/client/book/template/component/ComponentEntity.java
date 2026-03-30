@@ -5,7 +5,7 @@ import java.util.function.UnaryOperator;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -48,9 +48,9 @@ public class ComponentEntity extends TemplateComponent {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, BookPage page, int mouseX, int mouseY, float pticks) {
+    public void render(GuiGraphicsExtractor guiGraphics, BookPage page, int mouseX, int mouseY, float pticks) {
         if (errored) {
-            guiGraphics.drawString(BookPage.fontRenderer,
+            guiGraphics.text(BookPage.fontRenderer,
                 Component.translatable("handbook.gui.lexicon.loading_error"),
                 x, y, HandbookColors.ERROR_RED.toColor(), false);
         }

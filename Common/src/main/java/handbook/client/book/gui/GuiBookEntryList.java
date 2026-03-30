@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.input.CharacterEvent;
@@ -86,7 +86,7 @@ public abstract class GuiBookEntryList extends GuiBook {
     }
 
     @Override
-    void drawForegroundElements(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    void drawForegroundElements(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         super.drawForegroundElements(guiGraphics, mouseX, mouseY, partialTicks);
 
         if (spread == 0) {
@@ -96,7 +96,7 @@ public abstract class GuiBookEntryList extends GuiBook {
             drawSeparator(guiGraphics, book, LEFT_PAGE_X, TOP_PADDING + 12);
             drawSeparator(guiGraphics, book, RIGHT_PAGE_X, TOP_PADDING + 12);
 
-            text.render(guiGraphics, mouseX, mouseY, partialTicks);
+            text.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
             if (shouldDrawProgressBar()) {
                 drawProgressBar(guiGraphics, book, mouseX, mouseY, this::doesEntryCountForProgress);
             }
@@ -108,7 +108,7 @@ public abstract class GuiBookEntryList extends GuiBook {
         if (!searchField.getValue().isEmpty()) {
             drawFromTexture(guiGraphics, book, searchField.getX() - 8, searchField.getY(), 140, 183, 99, 14);
             Component toDraw = Component.literal(searchField.getValue()).setStyle(book.getFontStyle());
-            guiGraphics.drawString(font, toDraw, searchField.getX() + 7, searchField.getY() + 1, book.textColor, false);
+            guiGraphics.text(font, toDraw, searchField.getX() + 7, searchField.getY() + 1, book.textColor, false);
         }
 
         if (visibleEntries.isEmpty()) {

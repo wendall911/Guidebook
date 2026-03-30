@@ -1,7 +1,7 @@
 package handbook.client.book.page.abstr;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -20,13 +20,13 @@ public abstract class PageSimpleProcessingRecipe<T extends Recipe<?>> extends Pa
     }
 
     @Override
-    protected void drawRecipe(GuiGraphics guiGraphics, T recipe, int recipeX, int recipeY, int mouseX,
+    protected void drawRecipe(GuiGraphicsExtractor guiGraphics, T recipe, int recipeX, int recipeY, int mouseX,
                               int mouseY, boolean second) {
         Level level = Minecraft.getInstance().level;
         ItemStack toastSymbol = ItemStack.EMPTY;
         AccessorSingleItemRecipe recipeAccessor = (AccessorSingleItemRecipe) recipe;
         Ingredient input = recipeAccessor.getInput();
-        ItemStack result = recipeAccessor.getResult();
+        ItemStack result = recipeAccessor.getResult().create();
 
         if (level == null) {
             return;
@@ -64,7 +64,7 @@ public abstract class PageSimpleProcessingRecipe<T extends Recipe<?>> extends Pa
             return ItemStack.EMPTY;
         }
 
-        return ((AccessorSingleItemRecipe) recipe).getResult();
+        return ((AccessorSingleItemRecipe) recipe).getResult().create();
     }
 
     @Override

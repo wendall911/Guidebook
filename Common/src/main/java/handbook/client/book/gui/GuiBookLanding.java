@@ -7,7 +7,7 @@ import java.util.List;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
@@ -114,9 +114,9 @@ public class GuiBookLanding extends GuiBook {
     }
 
     @Override
-    void drawForegroundElements(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    void drawForegroundElements(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         if (text != null) {
-            text.render(guiGraphics, mouseX, mouseY, partialTicks);
+            text.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
         }
 
         int topSeparator = TOP_PADDING + 12;
@@ -177,13 +177,13 @@ public class GuiBookLanding extends GuiBook {
         }
     }
 
-    private void drawHeader(GuiGraphics guiGraphics) {
+    private void drawHeader(GuiGraphicsExtractor guiGraphics) {
         drawFromTexture(guiGraphics, book, -8, 12, 0, 180, 140, 31);
 
         int color = book.nameplateColor;
-        guiGraphics.drawString(font, book.getBookItem().getHoverName(), 13, 16, color, false);
+        guiGraphics.text(font, book.getBookItem().getHoverName(), 13, 16, color, false);
         Component toDraw = book.getSubtitle().withStyle(book.getFontStyle());
-        guiGraphics.drawString(font, toDraw, 24, 24, color, false);
+        guiGraphics.text(font, toDraw, 24, 24, color, false);
     }
 
     private void makeErrorTooltip() {
@@ -244,9 +244,8 @@ public class GuiBookLanding extends GuiBook {
             book.reloadContents(minecraft.level, true);
             book.reloadLocks(false);
             displayLexiconGui(new GuiBookLanding(book), false);
-            minecraft.player.displayClientMessage(
-                Component.translatable("handbook.gui.lexicon.reloaded", (System.currentTimeMillis() - time)),
-                false
+            minecraft.player.sendOverlayMessage(
+                Component.translatable("handbook.gui.lexicon.reloaded", (System.currentTimeMillis() - time))
             );
         }
         else {

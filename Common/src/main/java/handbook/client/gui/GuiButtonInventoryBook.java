@@ -1,7 +1,7 @@
 package handbook.client.gui;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -26,7 +26,7 @@ public class GuiButtonInventoryBook extends Button {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float pticks) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float pticks) {
         boolean hovered = mouseX >= getX() && mouseY >= getY() && mouseX < getX() + width && mouseY < getY() + height;
         ItemStack stack = book.getBookItem();
         EntryDisplayState readState = book.getContents().getReadState();
@@ -42,8 +42,8 @@ public class GuiButtonInventoryBook extends Button {
             64,
             64
         );
-        guiGraphics.renderItem(stack, getX() + 2, getY() + 2);
-        guiGraphics.renderItemDecorations(Minecraft.getInstance().font, stack, getX() + 2, getY() + 2);
+        guiGraphics.item(stack, getX() + 2, getY() + 2);
+        guiGraphics.itemDecorations(Minecraft.getInstance().font, stack, getX() + 2, getY() + 2);
 
         if (readState.hasIcon && readState.showInInventory) {
             GuiBook.drawMarking(guiGraphics, book, getX(), getY(), 0, readState);

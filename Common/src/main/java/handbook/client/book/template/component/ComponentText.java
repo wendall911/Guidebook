@@ -4,7 +4,7 @@ import java.util.function.UnaryOperator;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
@@ -54,8 +54,8 @@ public class ComponentText extends TemplateComponent {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, BookPage page, int mouseX, int mouseY, float partialTicks) {
-        textRenderer.render(guiGraphics, mouseX, mouseY, partialTicks);
+    public void render(GuiGraphicsExtractor guiGraphics, BookPage page, int mouseX, int mouseY, float partialTicks) {
+        textRenderer.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
     }
 
     @Override

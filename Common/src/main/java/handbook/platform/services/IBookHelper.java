@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.resources.Identifier;
@@ -20,7 +20,7 @@ import handbook.common.CommonModContainer;
 public interface IBookHelper {
 
     // Events
-    void fireDrawBookScreen(Identifier book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics);
+    void fireDrawBookScreen(Identifier book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphicsExtractor graphics);
 
     // Networking
     void sendReloadContentsMessage(MinecraftServer server);

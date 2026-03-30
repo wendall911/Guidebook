@@ -24,9 +24,51 @@ public class HandbookItems {
             .stacksTo(1)
             .setId(ResourceKey.create(Registries.ITEM, BOOK_ID))
     );
+    public static final Item BOOK_BLUE = new HandbookBook(
+        new Item.Properties()
+            .stacksTo(1)
+            .setId(ResourceKey.create(Registries.ITEM, BOOK_BLUE_ID))
+    );
+    public static final Item BOOK_BROWN = new HandbookBook(
+        new Item.Properties()
+            .stacksTo(1)
+            .setId(ResourceKey.create(Registries.ITEM, BOOK_BROWN_ID))
+    );
+    public static final Item BOOK_CYAN = new HandbookBook(
+        new Item.Properties()
+            .stacksTo(1)
+            .setId(ResourceKey.create(Registries.ITEM, BOOK_CYAN_ID))
+    );
+    public static final Item BOOK_GRAY = new HandbookBook(
+        new Item.Properties()
+            .stacksTo(1)
+            .setId(ResourceKey.create(Registries.ITEM, BOOK_GRAY_ID))
+    );
+    public static final Item BOOK_GREEN = new HandbookBook(
+        new Item.Properties()
+            .stacksTo(1)
+            .setId(ResourceKey.create(Registries.ITEM, BOOK_GREEN_ID))
+    );
+    public static final Item BOOK_PURPLE = new HandbookBook(
+        new Item.Properties()
+            .stacksTo(1)
+            .setId(ResourceKey.create(Registries.ITEM, BOOK_PURPLE_ID))
+    );
+    public static final Item BOOK_RED = new HandbookBook(
+        new Item.Properties()
+            .stacksTo(1)
+            .setId(ResourceKey.create(Registries.ITEM, BOOK_RED_ID))
+    );
 
     public static void submitItemRegistrations(BiConsumer<Identifier, Item> consumer) {
         consumer.accept(BOOK_ID, BOOK);
+        consumer.accept(BOOK_BLUE_ID, BOOK_BLUE);
+        consumer.accept(BOOK_BROWN_ID, BOOK_BROWN);
+        consumer.accept(BOOK_CYAN_ID, BOOK_CYAN);
+        consumer.accept(BOOK_GRAY_ID, BOOK_GRAY);
+        consumer.accept(BOOK_GREEN_ID, BOOK_GREEN);
+        consumer.accept(BOOK_PURPLE_ID, BOOK_PURPLE);
+        consumer.accept(BOOK_RED_ID, BOOK_RED);
     }
 
 }

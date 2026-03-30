@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.level.Level;
@@ -84,7 +84,7 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
         // NO-OP
     }
 
-    public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
+    public void render(GuiGraphicsExtractor graphics, BookPage page, int mouseX, int mouseY, float pticks) {
         // NO-OP
     }
 

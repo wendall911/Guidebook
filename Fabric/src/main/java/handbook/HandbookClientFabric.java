@@ -5,8 +5,8 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
+
 import net.minecraft.server.packs.PackType;
 
 import handbook.api.HandbookAPI;
@@ -34,11 +34,11 @@ public class HandbookClientFabric implements ClientModInitializer {
             MessageReloadBookContents.TYPE,
             FabricMessageReloadBookContents::handle
         );
-        ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(
+        ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(
             BookContentResourceListenerLoader.ID,
             BookContentResourceListenerLoader.INSTANCE
         );
-        ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(
+        ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(
             ClientBookRegistry.ID,
             ClientBookRegistry.INSTANCE
         );

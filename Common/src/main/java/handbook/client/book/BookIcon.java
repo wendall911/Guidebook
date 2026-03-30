@@ -1,7 +1,7 @@
 package handbook.client.book;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -12,19 +12,19 @@ import handbook.common.util.ItemStackUtil;
 
 public sealed interface BookIcon permits BookIcon.StackIcon, BookIcon.TextureIcon {
 
-    void render(GuiGraphics graphics, int x, int y);
+    void render(GuiGraphicsExtractor graphics, int x, int y);
 
     record StackIcon(ItemStack stack) implements BookIcon {
         @Override
-        public void render(GuiGraphics graphics, int x, int y) {
-            graphics.renderItem(stack(), x, y);
-            graphics.renderItemDecorations(Minecraft.getInstance().font, stack(), x, y);
+        public void render(GuiGraphicsExtractor graphics, int x, int y) {
+            graphics.item(stack(), x, y);
+            graphics.itemDecorations(Minecraft.getInstance().font, stack(), x, y);
         }
     }
 
     record TextureIcon(Identifier texture) implements BookIcon {
         @Override
-        public void render(GuiGraphics guiGraphics, int x, int y) {
+        public void render(GuiGraphicsExtractor guiGraphics, int x, int y) {
             guiGraphics.blit(texture(), x, y, 0, 0, 16, 16, 16, 16);
         }
     }

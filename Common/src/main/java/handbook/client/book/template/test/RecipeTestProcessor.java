@@ -95,10 +95,10 @@ public class RecipeTestProcessor implements IComponentProcessor {
         boolean shaped = recipe instanceof ShapedRecipe;
 
         if (!shaped) {
-            return ((AccessorShapelessRecipe) recipe).getResult();
+            return ((AccessorShapelessRecipe) recipe).getResult().create();
         }
         else {
-            return ((AccessorShapedRecipe) recipe).getResult();
+            return ((AccessorShapedRecipe) recipe).getResult().create();
         }
     }
 

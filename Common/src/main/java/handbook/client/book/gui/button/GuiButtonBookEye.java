@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 
@@ -22,14 +22,14 @@ public class GuiButtonBookEye extends GuiButtonBook {
 	}
 
 	@Override
-	public void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		super.renderContents(guiGraphics, mouseX, mouseY, partialTicks);
+	public void extractContents(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+		super.extractContents(guiGraphics, mouseX, mouseY, partialTicks);
 
 		if (!PersistentData.data.clickedVisualize && (ClientTicker.ticksInGame) % 20 < 10) {
             Minecraft mc = parent.getMinecraft();
 
             if (mc != null) {
-                guiGraphics.drawString(mc.font, "!", getX(), getY(), HandbookColors.BOOK_EYE.toColor(), true);
+                guiGraphics.text(mc.font, "!", getX(), getY(), HandbookColors.BOOK_EYE.toColor(), true);
             }
 		}
 	}

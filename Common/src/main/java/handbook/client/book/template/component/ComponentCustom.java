@@ -4,7 +4,7 @@ import java.util.function.UnaryOperator;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.HolderLookup;
 
@@ -42,7 +42,7 @@ public class ComponentCustom extends TemplateComponent {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, BookPage page, int mouseX, int mouseY, float pticks) {
+    public void render(GuiGraphicsExtractor guiGraphics, BookPage page, int mouseX, int mouseY, float pticks) {
         callbacks.render(guiGraphics, page.parent, pticks, mouseX, mouseY);
     }
 

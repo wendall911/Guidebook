@@ -2,9 +2,9 @@ package handbook;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 
 import net.minecraft.core.Registry;
@@ -37,8 +37,8 @@ public class HandbookFabric implements ModInitializer {
         CommandRegistrationCallback.EVENT.register((disp, buildCtx, selection) -> OpenBookCommand.register(disp));
         UseBlockCallback.EVENT.register(LecternEventHandler::rightClick);
 
-        PayloadTypeRegistry.playS2C().register(MessageOpenBookGui.TYPE, MessageOpenBookGui.CODEC);
-        PayloadTypeRegistry.playS2C().register(MessageReloadBookContents.TYPE, MessageReloadBookContents.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(MessageOpenBookGui.TYPE, MessageOpenBookGui.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(MessageReloadBookContents.TYPE, MessageReloadBookContents.CODEC);
 
         BookRegistry.INSTANCE.init();
 
@@ -52,10 +52,10 @@ public class HandbookFabric implements ModInitializer {
             if (!b.noBook) {
                 if (b.creativeTab != null) {
                     ResourceKey<CreativeModeTab> key = ResourceKey.create(Registries.CREATIVE_MODE_TAB, b.creativeTab);
-                    ItemGroupEvents.modifyEntriesEvent(key)
-                            .register(entries -> entries.accept(HandbookBook.forBook(b)));
+                    CreativeModeTabEvents.modifyOutputEvent(key)
+                        .register(entries -> entries.accept(HandbookBook.forBook(b)));
                 }
-                ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.SEARCH).register(entries -> {
+                CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.SEARCH).register(entries -> {
                     entries.accept(HandbookBook.forBook(b));
                 });
             }

@@ -12,8 +12,7 @@ public class ItemStackHelper {
 	private static final Gson GSON = new GsonBuilder().create();
 
 	public static String serializeStack(ItemStack stack, HolderLookup.Provider registries) {
-		return new ItemInput(stack.getItemHolder(), stack.getComponentsPatch())
-            .serialize(registries) + (stack.getCount() == 1 ? "" :("#" + stack.getCount()));
+		return new ItemInput(stack.typeHolder(), stack.getComponentsPatch()) + (stack.getCount() == 1 ? "" :("#" + stack.getCount()));
 	}
 
 }

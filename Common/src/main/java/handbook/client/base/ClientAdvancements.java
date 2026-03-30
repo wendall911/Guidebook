@@ -8,7 +8,7 @@ import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -96,10 +96,10 @@ public class ClientAdvancements {
         }
 
         @Override
-		public void render(GuiGraphics graphics, @NotNull Font font, long delta) {
+		public void extractRenderState(GuiGraphicsExtractor graphics, @NotNull Font font, long delta) {
 			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND_SPRITE, 0, 0, width(), height());
 
-			graphics.drawString(
+			graphics.text(
                 font,
                 Component.translatable(book.name),
                 30,
@@ -107,7 +107,7 @@ public class ClientAdvancements {
                 HandbookColors.ADVANCEMENT.toColor(),
                 false
             );
-			graphics.drawString(
+			graphics.text(
                 font,
                 Component.translatable("handbook.gui.lexicon.toast.info"),
                 30,
@@ -116,8 +116,8 @@ public class ClientAdvancements {
                 false
             );
 
-			graphics.renderItem(book.getBookItem(), 8, 8);
-			graphics.renderItemDecorations(font, book.getBookItem(), 8, 8);
+			graphics.item(book.getBookItem(), 8, 8);
+			graphics.itemDecorations(font, book.getBookItem(), 8, 8);
 
 		}
 

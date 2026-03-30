@@ -5,7 +5,7 @@ import java.util.function.Function;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
@@ -66,7 +66,7 @@ public class PageEntity extends PageWithText {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         int x = GuiBook.PAGE_WIDTH / 2 - 53;
         int y = 7;
 
@@ -82,7 +82,7 @@ public class PageEntity extends PageWithText {
         }
 
         if (errored) {
-            guiGraphics.drawString(fontRenderer, I18n.get("handbook.gui.lexicon.loading_error"),
+            guiGraphics.text(fontRenderer, I18n.get("handbook.gui.lexicon.loading_error"),
                 18, 60, HandbookColors.ERROR_RED.toColor(), true);
         }
 
@@ -99,7 +99,7 @@ public class PageEntity extends PageWithText {
      * Render an entity at the given position with the given scale and rotation.
      * TODO: Figure out why this isn't working
      */
-    public static void renderEntity(GuiGraphics guiGraphics, Entity entity, float x, float y, float rotation,
+    public static void renderEntity(GuiGraphicsExtractor guiGraphics, Entity entity, float x, float y, float rotation,
                                     float renderScale, float offset, int mouseX, int mouseY) {
         Matrix3x2fStack poseStack = guiGraphics.pose();
         EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
@@ -109,7 +109,7 @@ public class PageEntity extends PageWithText {
         Quaternionf rotationQuat = new Quaternionf().rotateYXZ((float) Math.toRadians(180 + rotation), 0F, 0F);
 
         //TODO remove this when entity rendering is implemented
-        guiGraphics.drawString(fontRenderer, "Not Implemented!", 18, 60, HandbookColors.ERROR_RED.toColor(), true);
+        guiGraphics.text(fontRenderer, "Not Implemented!", 18, 60, HandbookColors.ERROR_RED.toColor(), true);
 
         guiGraphics.enableScissor((int) x, (int) y, (int) x + 106, (int) y + 106);
 
@@ -124,7 +124,7 @@ public class PageEntity extends PageWithText {
         poseStack.scale(renderScale, renderScale);
         poseStack.translate(0, offset);
 
-        guiGraphics.submitEntityRenderState(renderState, renderScale, translation, rotationQuat,
+        guiGraphics.entity(renderState, renderScale, translation, rotationQuat,
             null, 0, 0, 0, 1);
 
         poseStack.popMatrix();

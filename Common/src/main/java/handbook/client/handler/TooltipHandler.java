@@ -8,7 +8,7 @@ import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -28,7 +28,7 @@ public class TooltipHandler {
 
     private static float lexiconLookupTime = 0;
 
-    public static void onTooltip(GuiGraphics guiGraphics, ItemStack stack, int mouseX, int mouseY) {
+    public static void onTooltip(GuiGraphicsExtractor guiGraphics, ItemStack stack, int mouseX, int mouseY) {
         Minecraft mc = Minecraft.getInstance();
         int tooltipX = mouseX;
         int tooltipY = mouseY - 4;
@@ -102,13 +102,13 @@ public class TooltipHandler {
 
                 guiGraphics.pose().pushMatrix();
                 guiGraphics.pose().translate(0, 0);
-                guiGraphics.renderItem(lexiconStack, x, tooltipY);
-                guiGraphics.renderItemDecorations(mc.font, lexiconStack, x, tooltipY);
+                guiGraphics.item(lexiconStack, x, tooltipY);
+                guiGraphics.itemDecorations(mc.font, lexiconStack, x, tooltipY);
                 guiGraphics.pose().popMatrix();
 
                 guiGraphics.pose().pushMatrix();
                 guiGraphics.pose().translate(0, 0);
-                guiGraphics.drawString(mc.font, "?", x + 10, tooltipY + 8, HandbookColors.WHITE.toColor(), true);
+                guiGraphics.text(mc.font, "?", x + 10, tooltipY + 8, HandbookColors.WHITE.toColor(), true);
 
                 guiGraphics.pose().scale(0.5F, 0.5F);
 
@@ -116,7 +116,7 @@ public class TooltipHandler {
                 Component key = Component.literal(HandbookConfig.Client.useShiftForQuickLookup() ? "Shift" : mac ? "Cmd" : "Ctrl")
                     .withStyle(ChatFormatting.BOLD);
 
-                guiGraphics.drawString(mc.font, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, HandbookColors.WHITE.toColor(), true);
+                guiGraphics.text(mc.font, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, HandbookColors.WHITE.toColor(), true);
                 guiGraphics.pose().popMatrix();
             }
             else {

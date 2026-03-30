@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -27,7 +27,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
     }
 
     @Override
-    protected void drawRecipe(GuiGraphics guiGraphics, Recipe<?> recipe, int recipeX, int recipeY,
+    protected void drawRecipe(GuiGraphicsExtractor guiGraphics, Recipe<?> recipe, int recipeX, int recipeY,
                               int mouseX, int mouseY, boolean second) {
         Level level = Minecraft.getInstance().level;
         if (level == null) {
@@ -56,7 +56,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
             AccessorShapelessRecipe shapelessRecipe = (AccessorShapelessRecipe) recipe;
 
             ingredients = shapelessRecipe.getIngredients();
-            result = shapelessRecipe.getResult();
+            result = shapelessRecipe.getResult().create();
         }
         else {
             List<Ingredient> shapedIngredients = new ArrayList<>();
@@ -65,7 +65,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
                 optionalIngredient.ifPresent(shapedIngredients::add);
             });
             ingredients = shapedIngredients;
-            result = ((AccessorShapedRecipe) recipe).getResult();
+            result = ((AccessorShapedRecipe) recipe).getResult().create();
         }
 
         parent.drawCenteredStringNoShadow(guiGraphics, getTitle(second).getVisualOrderText(),

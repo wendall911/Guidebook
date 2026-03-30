@@ -4,7 +4,7 @@ import java.util.function.UnaryOperator;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 
@@ -44,7 +44,7 @@ public class ComponentHeader extends TemplateComponent {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, BookPage page, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphicsExtractor guiGraphics, BookPage page, int mouseX, int mouseY, float partialTicks) {
         guiGraphics.pose().pushMatrix();
         guiGraphics.pose().translate(x, y);
         guiGraphics.pose().scale(scale, scale);
@@ -53,7 +53,7 @@ public class ComponentHeader extends TemplateComponent {
             page.parent.drawCenteredStringNoShadow(guiGraphics, page.i18n(actualText.getString()), 0, 0, color);
         }
         else {
-            guiGraphics.drawString(BookPage.fontRenderer,
+            guiGraphics.text(BookPage.fontRenderer,
                 page.i18n(actualText.getString()), 0, 0, color, false);
         }
         guiGraphics.pose().popMatrix();

@@ -2,7 +2,7 @@ package handbook.client.book.gui;
 
 import org.jetbrains.annotations.NotNull;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.input.CharacterEvent;
@@ -44,7 +44,7 @@ public class GuiBookWriter extends GuiBook {
     }
 
     @Override
-    void drawForegroundElements(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    void drawForegroundElements(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         super.drawForegroundElements(guiGraphics, mouseX, mouseY, partialTicks);
 
         drawCenteredStringNoShadow(guiGraphics, I18n.get("handbook.gui.lexicon.editor"), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
@@ -55,9 +55,9 @@ public class GuiBookWriter extends GuiBook {
             drawSeparator(guiGraphics, book, RIGHT_PAGE_X, TOP_PADDING + 12);
         }
 
-        textfield.render(guiGraphics, mouseX, mouseY, partialTicks);
-        text.render(guiGraphics, mouseX, mouseY, partialTicks);
-        editableText.render(guiGraphics, mouseX, mouseY, partialTicks);
+        textfield.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
+        text.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
+        editableText.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
     }
 
     @Override

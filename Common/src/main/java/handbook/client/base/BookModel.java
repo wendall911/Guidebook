@@ -1,12 +1,13 @@
 package handbook.client.base;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.item.BlockModelWrapper;
+import net.minecraft.client.renderer.item.CuboidItemModelWrapper;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
@@ -39,7 +40,8 @@ public class BookModel implements ItemModel {
         Book book = HandbookBook.getBook(stack);
 
         if (book != null) {
-            itemModel = new BlockModelWrapper.Unbaked(book.model, List.of()).bake(bakingContext);
+            // TODO See if this is needed at all
+            //itemModel = new CuboidItemModelWrapper.Unbaked(book.model, Optional.empty(), List.of()).bake(bakingContext, level.);
         }
 
         itemModel.update(renderState, stack, itemModelResolver, displayContext, level, owner, seed);

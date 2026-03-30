@@ -100,16 +100,16 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
                 return ItemStack.EMPTY;
             }
             case SingleItemRecipe ignored -> {
-                return ((AccessorSingleItemRecipe) recipe).getResult();
+                return ((AccessorSingleItemRecipe) recipe).getResult().create();
             }
             case CraftingRecipe ignored -> {
                 boolean shaped = recipe instanceof ShapedRecipe;
 
                 if (!shaped) {
-                    return ((AccessorShapelessRecipe) recipe).getResult();
+                    return ((AccessorShapelessRecipe) recipe).getResult().create();
                 }
                 else {
-                    return ((AccessorShapedRecipe) recipe).getResult();
+                    return ((AccessorShapedRecipe) recipe).getResult().create();
                 }
             }
             case SmithingRecipe smithingRecipe -> {
@@ -131,7 +131,7 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
 
                 SmithingRecipeInput recipeInput = new SmithingRecipeInput(templateStack, baseStack, additionStack);
 
-                return smithingRecipe.assemble(recipeInput, level.registryAccess());
+                return smithingRecipe.assemble(recipeInput);
             }
             default -> throw new IllegalStateException("Unexpected value: " + recipe);
         }

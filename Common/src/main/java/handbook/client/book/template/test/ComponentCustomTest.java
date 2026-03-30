@@ -3,7 +3,7 @@ package handbook.client.book.template.test;
 import java.util.function.UnaryOperator;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
@@ -25,10 +25,10 @@ public class ComponentCustomTest implements ICustomComponent {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, IComponentRenderContext context, float pticks, int mouseX, int mouseY) {
+    public void render(GuiGraphicsExtractor guiGraphics, IComponentRenderContext context, float pticks, int mouseX, int mouseY) {
         Component toRender = Component.literal(text).setStyle(context.getFontStyle());
 
-        guiGraphics.drawString(Minecraft.getInstance().font, toRender, x, y, -1, true);
+        guiGraphics.text(Minecraft.getInstance().font, toRender, x, y, -1, true);
     }
 
     @Override

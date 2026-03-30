@@ -19,12 +19,13 @@ public class ReiCompat {
         ConfigObject instance = ConfigObject.getInstance();
         int keyCode = keyEvent.key();
         int scanCode = keyEvent.scancode();
-        
+
+        // TODO FIXME When REI updates to 26.1
         if (instance.getRecipeKeybind().matchesKey(keyCode, scanCode)) {
-            return ViewSearchBuilder.builder().addRecipesFor(EntryStack.of(VanillaEntryTypes.ITEM, stack)).open();
+            //return ViewSearchBuilder.builder().addRecipesFor(EntryStack.of(VanillaEntryTypes.ITEM, stack)).open();
         }
         else if (instance.getUsageKeybind().matchesKey(keyCode, scanCode)) {
-            return ViewSearchBuilder.builder().addUsagesFor(EntryStack.of(VanillaEntryTypes.ITEM, stack)).open();
+            //return ViewSearchBuilder.builder().addUsagesFor(EntryStack.of(VanillaEntryTypes.ITEM, stack)).open();
         }
         else if (instance.getFavoriteKeyCode().matchesKey(keyCode, scanCode)) {
             try { // In case the unstable API changes
@@ -48,11 +49,14 @@ public class ReiCompat {
 
     @SuppressWarnings("UnstableApiUsage")
     private static void addFavorite(ItemStack stack) {
+        // TODO FIXME When REI updates to 26.1
         ConfigObject instance = ConfigObject.getInstance();
+        /*
         FavoriteEntry entry = FavoriteEntry.fromEntryStack(EntryStack.of(VanillaEntryTypes.ITEM, stack));
         
         instance.getFavoriteEntries().remove(entry);
         instance.getFavoriteEntries().add(entry);
+         */
     }
 
 }

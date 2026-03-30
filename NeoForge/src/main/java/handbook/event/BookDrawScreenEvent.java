@@ -1,6 +1,6 @@
 package handbook.event;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.Identifier;
 
@@ -20,9 +20,9 @@ public class BookDrawScreenEvent extends Event {
     private final int mouseX;
     private final int mouseY;
     private final float partialTicks;
-    private final GuiGraphics graphics;
+    private final GuiGraphicsExtractor graphics;
 
-    public BookDrawScreenEvent(Identifier book, Screen screen, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics) {
+    public BookDrawScreenEvent(Identifier book, Screen screen, int mouseX, int mouseY, float partialTicks, GuiGraphicsExtractor graphics) {
         this.book = book;
         this.screen = screen;
         this.mouseX = mouseX;
@@ -51,7 +51,7 @@ public class BookDrawScreenEvent extends Event {
         return partialTicks;
     }
 
-    public GuiGraphics getGraphics() {
+    public GuiGraphicsExtractor getGraphics() {
         return graphics;
     }
 
