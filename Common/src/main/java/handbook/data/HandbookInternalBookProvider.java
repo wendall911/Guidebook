@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 
 import handbook.api.HandbookAPI;
@@ -24,10 +24,10 @@ public class HandbookInternalBookProvider extends handbook.api.data.HandbookBook
 
     @Override
     protected void addBooks(Consumer<BookBuilder> consumer, Provider provider) {
-        ItemStack book = new ItemStack(HandbookItems.BOOK);
-        ItemStack writeableBook = new ItemStack(Items.WRITABLE_BOOK);
+        ItemStackTemplate book = new ItemStackTemplate(HandbookItems.BOOK);
+        ItemStackTemplate writeableBook = new ItemStackTemplate(Items.WRITABLE_BOOK);
 
-        BookBuilder bookBuilder = createBookBuilder(HandbookItems.BOOK, INTRO_BOOK_TRANSLATION_KEY, prefix("landing"), provider)
+        BookBuilder bookBuilder = createBookBuilder(HandbookItems.BOOK, INTRO_BOOK_TRANSLATION_KEY, prefix("landing"))
             .setSubtitle(prefix("subtitle"))
             .setCreativeTab("minecraft:tools_and_utilities")
             .setShowProgress(true)

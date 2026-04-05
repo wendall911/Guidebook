@@ -8,11 +8,10 @@ import java.util.Map;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStackTemplate;
 
 import handbook.api.data.page.BlastingPageBuilder;
 import handbook.api.data.page.CampfirePageBuilder;
@@ -49,23 +48,19 @@ public class EntryBuilder {
     private Boolean readByDefault;
     private Integer sortnum;
     private String turnin;
-    private Map<ItemStack, Integer> extraRecipeMappings;
+    private Map<ItemStackTemplate, Integer> extraRecipeMappings;
     private Map<TagKey<Item>, Integer> extraRecipeMappingTags;
-    private HolderLookup.Provider provider;
 
-    protected EntryBuilder(String id, String name, String icon, CategoryBuilder parent,
-            HolderLookup.Provider provider) {
+    protected EntryBuilder(String id, String name, String icon, CategoryBuilder parent) {
         this.id = Identifier.fromNamespaceAndPath(parent.getId().getNamespace(), id);
         this.name = name;
         this.category = parent.getId().toString();
         this.icon = icon;
         this.parent = parent;
-        this.provider = provider;
     }
 
-    protected EntryBuilder(String id, String name, ItemStack icon, CategoryBuilder parent,
-            HolderLookup.Provider provider) {
-        this(id, name, ItemStackHelper.serializeStack(icon, provider), parent, provider);
+    protected EntryBuilder(String id, String name, ItemStackTemplate icon, CategoryBuilder parent) {
+        this(id, name, ItemStackHelper.serializeStack(icon), parent);
     }
 
     JsonObject toJson() {
@@ -111,8 +106,8 @@ public class EntryBuilder {
                 }
             }
             if (extraRecipeMappings != null) {
-                for (Map.Entry<ItemStack, Integer> entry : extraRecipeMappings.entrySet()) {
-                    mappings.addProperty(ItemStackHelper.serializeStack(entry.getKey(), provider), entry.getValue());
+                for (Map.Entry<ItemStackTemplate, Integer> entry : extraRecipeMappings.entrySet()) {
+                    mappings.addProperty(ItemStackHelper.serializeStack(entry.getKey()), entry.getValue());
                 }
             }
 
@@ -202,13 +197,13 @@ public class EntryBuilder {
         return addEntityPage(entity.toString());
     }
 
-    public SpotlightPageBuilder addSpotlightPage(ItemStack... stacks) {
-        return addPage(new SpotlightPageBuilder(this, provider, stacks));
+    public SpotlightPageBuilder addSpotlightPage(ItemStackTemplate... stacks) {
+        return addPage(new SpotlightPageBuilder(this, stacks));
     }
 
     @SafeVarargs
     public final SpotlightPageBuilder addSpotlightPage(TagKey<Item>... tags) {
-        return addPage(new SpotlightPageBuilder(this, provider, tags));
+        return addPage(new SpotlightPageBuilder(this, tags));
     }
 
     public LinkPageBuilder addLinkPage(String url, String linkText) {
@@ -271,7 +266,7 @@ public class EntryBuilder {
         return this;
     }
 
-    public EntryBuilder addExtraRecipeMapping(ItemStack stack, int index) {
+    public EntryBuilder addExtraRecipeMapping(ItemStackTemplate stack, int index) {
         if (this.extraRecipeMappings == null) {
             this.extraRecipeMappings = new HashMap<>();
         }

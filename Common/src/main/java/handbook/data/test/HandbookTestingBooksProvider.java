@@ -11,7 +11,7 @@ import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 
 import handbook.api.HandbookAPI;
@@ -34,18 +34,17 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
 
     @Override
     protected void addBooks(Consumer<BookBuilder> consumer, Provider provider) {
-        createPamphlet(this, provider).build(consumer);
-        createSmeltingErrorBook(this, provider).build(consumer);
-        createCraftingErrorBook(this, provider).build(consumer);
-        createComprehensiveTestBook(this, provider).build(consumer);
+        createPamphlet(this).build(consumer);
+        createSmeltingErrorBook(this).build(consumer);
+        createCraftingErrorBook(this).build(consumer);
+        createComprehensiveTestBook(this).build(consumer);
     }
 
-    private BookBuilder createPamphlet(HandbookTestingBooksProvider builder, Provider provider) {
+    private BookBuilder createPamphlet(HandbookTestingBooksProvider builder) {
         BookBuilder pamphlet = builder.createBookBuilder(
                 "pamphlet",
                 PAMPHLET_TRANSLATION_KEY + ".name",
-                PAMPHLET_TRANSLATION_KEY + ".landing",
-                provider
+                PAMPHLET_TRANSLATION_KEY + ".landing"
             )
             .setBookTexture(BookLayoutTexture.CYAN)
             .setPamphlet(true)
@@ -57,13 +56,13 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
                 "root",
                 "Root Category",
                 "None of this is displayed.",
-                new ItemStack(Items.BARRIER)
+                new ItemStackTemplate(Items.BARRIER)
             );
 
         EntryBuilder pamphletEntry = category.addEntry(
             "pamphlet",
             "What is a Pamphlet?",
-            new ItemStack(Items.CRAFTING_TABLE)
+            new ItemStackTemplate(Items.CRAFTING_TABLE)
         ).setPriority(true);
         pamphletEntry
             .addTextPage(
@@ -80,14 +79,14 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
         EntryBuilder anotherEntry = category.addEntry(
             "another_entry",
             "Another Entry",
-            new ItemStack(Items.STICK)
+            new ItemStackTemplate(Items.STICK)
         ).setSortnum(1);
         anotherEntry.addTextPage("Just another entry to show that entries still work fine in a pamphlet.");
 
         EntryBuilder finalEntry = category.addEntry(
             "final_entry",
             "Final Entry",
-            new ItemStack(Items.WOODEN_SWORD)
+            new ItemStackTemplate(Items.WOODEN_SWORD)
         ).setSortnum(2);
         finalEntry
             .addCraftingPage(Identifier.fromNamespaceAndPath("minecraft", "diamond_sword"))
@@ -97,12 +96,11 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
         return pamphlet;
     }
 
-    private BookBuilder createSmeltingErrorBook(HandbookTestingBooksProvider builder, Provider provider) {
+    private BookBuilder createSmeltingErrorBook(HandbookTestingBooksProvider builder) {
         BookBuilder smeltingErrorBook = builder.createBookBuilder(
                 "i_am_smelting_error",
                 "Smelting Error Book",
-                "DO NOT OPEN",
-                provider
+                "DO NOT OPEN"
             )
             .setBookTexture(BookLayoutTexture.RED)
             .setCreativeTab("minecraft:tools_and_utilities")
@@ -115,13 +113,13 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
                 "burning_dab",
                 "Invalid smelting recipe test",
                 "What'll happen if I add an invalid smelting recipe?",
-                new ItemStack(Items.END_CRYSTAL)
+                new ItemStackTemplate(Items.END_CRYSTAL)
             );
 
         EntryBuilder entry = category.addEntry(
             "kraft_dab/burning_dab_entry",
             "Smelting page with an invalid recipe",
-            new ItemStack(Items.FURNACE)
+            new ItemStackTemplate(Items.FURNACE)
         );
         entry.addSmeltingPage(Identifier.fromNamespaceAndPath("minecraft", "charcoal"))
             .setText("This is supposed to have a second recipe that does not exist.")
@@ -130,12 +128,11 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
         return smeltingErrorBook;
     }
 
-    private BookBuilder createCraftingErrorBook(HandbookTestingBooksProvider builder, Provider provider) {
+    private BookBuilder createCraftingErrorBook(HandbookTestingBooksProvider builder) {
         BookBuilder craftingErrorBook = builder.createBookBuilder(
             "i_am_crafting_error",
             "Crafting Error Book",
-            "DO NOT OPEN",
-            provider
+            "DO NOT OPEN"
         )
         .setBookTexture(BookLayoutTexture.RED)
         .setCreativeTab("minecraft:tools_and_utilities")
@@ -148,13 +145,13 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
                 "kraft_dab",
                 "Invalid crafting recipe test",
                 "What'll happen if I add an invalid crafting recipe?",
-                new ItemStack(Items.END_CRYSTAL)
+                new ItemStackTemplate(Items.END_CRYSTAL)
             );
 
         EntryBuilder entry = category.addEntry(
             "kraft_dab/kraft_dab_entry",
             "Crafting page with an invalid recipe",
-            new ItemStack(Items.CRAFTING_TABLE)
+            new ItemStackTemplate(Items.CRAFTING_TABLE)
         );
         entry.addCraftingPage(Identifier.fromNamespaceAndPath("minecraft", "furnace"))
             .setText("This is supposed to have a second recipe that does not exist.")
@@ -163,12 +160,11 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
         return craftingErrorBook;
     }
 
-    public static BookBuilder createComprehensiveTestBook(HandbookTestingBooksProvider builder, Provider provider) {
+    public static BookBuilder createComprehensiveTestBook(HandbookTestingBooksProvider builder) {
         BookBuilder comprehensiveTestBook = builder.createBookBuilder(
             "comprehensive_test_book",
             COMPREHENSIVE_BOOK_TRANSLATION_KEY + ".name",
-            COMPREHENSIVE_BOOK_TRANSLATION_KEY + ".landing",
-            provider
+            COMPREHENSIVE_BOOK_TRANSLATION_KEY + ".landing"
         )
         .setBookTexture(BookLayoutTexture.GREEN)
         .setVersion("50")
@@ -321,13 +317,13 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
                 "config_flags",
                 "Config Flag Test",
                 "Test pages for config flags and their usage",
-                new ItemStack(Items.COMPARATOR)
+                new ItemStackTemplate(Items.COMPARATOR)
             );
 
         EntryBuilder gogMissing = category.addEntry(
             "config_flags/appears_gog_missing",
             "Appears if GOG is missing",
-            new ItemStack(Items.OAK_SAPLING)
+            new ItemStackTemplate(Items.OAK_SAPLING)
         ).setFlag("!mod:gardenofglass");
 
         gogMissing.addTextPage("This entry appears if the Garden of Glass mod is not installed.");
@@ -346,13 +342,13 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
                 "deserialization",
                 "Deserialization Test",
                 "Test pages for ~fancy~ deserialization and rendering",
-                new ItemStack(Items.HOPPER)
+                new ItemStackTemplate(Items.HOPPER)
             );
 
         EntryBuilder namesTest = category.addEntry(
             "deserialization/names_test",
             "Names Test",
-            new ItemStack(Items.NAME_TAG)
+            new ItemStackTemplate(Items.NAME_TAG)
         ).setFlag("!mod:gardenofglass");
 
         namesTest
@@ -370,7 +366,7 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
         EntryBuilder overflowRender = category.addEntry(
             "deserialization/overflow_render",
             "Overflow Render Test",
-            new ItemStack(Items.WATER_BUCKET)
+            new ItemStackTemplate(Items.WATER_BUCKET)
         ).setFlag("!mod:gardenofglass");
 
         overflowRender
@@ -401,7 +397,7 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
         EntryBuilder basicTest = category.addEntry(
             "deserialization/test",
             "Basic Test",
-            new ItemStack(Items.OAK_SAPLING)
+            new ItemStackTemplate(Items.OAK_SAPLING)
         ).setFlag("!mod:gardenofglass");
 
         basicTest
@@ -429,13 +425,13 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
                 "language",
                 "Language Test",
                 "Test pages for multi-language support",
-                new ItemStack(Items.GLOBE_BANNER_PATTERN)
+                new ItemStackTemplate(Items.GLOBE_BANNER_PATTERN)
             );
 
         EntryBuilder languageTest = category.addEntry(
                 "deserialization/language_test",
                 "Language Test",
-                new ItemStack(Items.GLOBE_BANNER_PATTERN)
+                new ItemStackTemplate(Items.GLOBE_BANNER_PATTERN)
         );
 
         languageTest.addTextPage(COMPREHENSIVE_BOOK_TRANSLATION_KEY + ".language_test.contents");
@@ -449,13 +445,13 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
                 "page_types",
                 "Built-in Page Types Test",
                 "Tests for builtin page types. Recipes, and templates have their own category.",
-                new ItemStack(Items.DIAMOND)
+                new ItemStackTemplate(Items.DIAMOND)
             );
 
         EntryBuilder advancementQuest = category.addEntry(
             "page_types/advancement_quest",
             "Advancement Quest",
-            new ItemStack(Items.VINDICATOR_SPAWN_EGG)
+            new ItemStackTemplate(Items.VINDICATOR_SPAWN_EGG)
         );
         advancementQuest.addQuestPage(Identifier.fromNamespaceAndPath("minecraft", "nether/create_beacon"))
             .setText(
@@ -468,7 +464,7 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
         EntryBuilder entity = category.addEntry(
             "page_types/entity",
             "Entity Page",
-            new ItemStack(Items.CREEPER_SPAWN_EGG)
+            new ItemStackTemplate(Items.CREEPER_SPAWN_EGG)
         );
         entity.addEntityPage("minecraft:creeper")
             .setText("This is a creeper. It explodes.");
@@ -484,7 +480,7 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
         EntryBuilder image = category.addEntry(
             "page_types/image",
             "Image Page",
-            new ItemStack(Items.PAINTING)
+            new ItemStackTemplate(Items.PAINTING)
         );
         image.addImagePage(bookImage("cat"))
             .setTitle("Example Image")
@@ -493,7 +489,7 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
         EntryBuilder link = category.addEntry(
             "page_types/link",
             "Link",
-            new ItemStack(Items.IRON_CHAIN)
+            new ItemStackTemplate(Items.IRON_CHAIN)
         );
         link.addLinkPage("https://example.com", "Link to example.com")
             .setText("Button below opens example.com");
@@ -501,7 +497,7 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
         EntryBuilder manualQuest = category.addEntry(
             "page_types/manual_quest",
             "Manual Quest",
-            new ItemStack(Items.BOOK)
+            new ItemStackTemplate(Items.BOOK)
         );
         manualQuest.addQuestPage()
             .setText("This is a manual quest. Click the button below to complete it.");
@@ -509,7 +505,7 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
         EntryBuilder relations = category.addEntry(
             "page_types/relations",
             "Relations",
-            new ItemStack(Items.HEART_OF_THE_SEA)
+            new ItemStackTemplate(Items.HEART_OF_THE_SEA)
         );
         relations.addRelationsPage()
             .setTitle("Check out these relations!")
@@ -519,10 +515,10 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
         EntryBuilder spotlight = category.addEntry(
             "page_types/spotlight",
             "Spotlight",
-            new ItemStack(Items.DEAD_BRAIN_CORAL)
+            new ItemStackTemplate(Items.DEAD_BRAIN_CORAL)
         );
-        spotlight.addSpotlightPage(new ItemStack(Items.OAK_SAPLING)).setLinkRecipe(true);
-        spotlight.addSpotlightPage(new ItemStack(Items.DEAD_BUSH), new ItemStack(Items.SPRUCE_SAPLING))
+        spotlight.addSpotlightPage(new ItemStackTemplate(Items.OAK_SAPLING)).setLinkRecipe(true);
+        spotlight.addSpotlightPage(new ItemStackTemplate(Items.DEAD_BUSH), new ItemStackTemplate(Items.SPRUCE_SAPLING))
             .setTitle("Custom title")
             .setText("Custom text $(l)with formatting$().");
         spotlight.addSpotlightPage(ItemTags.PIGLIN_LOVED)
@@ -530,10 +526,10 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
             .setText("This spotlight shows all items in the piglin loved tag.");
         spotlight.addSpotlightPage(ItemTags.PIGLIN_REPELLENTS);
         spotlight.addSpotlightPage(ItemTags.WOOL)
-            .addItem(new ItemStack(Items.BONE))
+            .addItem(new ItemStackTemplate(Items.BONE))
             .setTitle("Wool")
             .setText("But also bone...?");
-        spotlight.addSpotlightPage(new ItemStack(Items.NAME_TAG))
+        spotlight.addSpotlightPage(new ItemStackTemplate(Items.NAME_TAG))
             .setTitle("Name Tag")
             .setText("But also beds...?")
             .addTag(ItemTags.BEDS);
@@ -547,15 +543,15 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
                 "recipe_mapping",
                 "Recipe Mapping",
                 "Test pages for recipe mapping, quick lookup, and world lookup",
-                new ItemStack(Items.CRAFTING_TABLE)
+                new ItemStackTemplate(Items.CRAFTING_TABLE)
             );
 
         EntryBuilder extra = category.addEntry(
             "recipe_mapping/extra",
             "Extra Recipe Mapping",
-            new ItemStack(Items.STONE)
+            new ItemStackTemplate(Items.STONE)
         )
-        .addExtraRecipeMapping(new ItemStack(Items.GRASS_BLOCK), 0)
+        .addExtraRecipeMapping(new ItemStackTemplate(Items.GRASS_BLOCK), 0)
         .addExtraRecipeMapping(ItemTags.LOGS, 2);
 
         extra.addFormattedTextPage("handbook.gui.lexicon.reloaded").with(69);
@@ -565,7 +561,7 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
         EntryBuilder recipe = category.addEntry(
             "recipe_mapping/recipe",
             "Recipe Page",
-            new ItemStack(Items.COOKED_SALMON)
+            new ItemStackTemplate(Items.COOKED_SALMON)
         );
 
         recipe.addCraftingPage(Identifier.fromNamespaceAndPath("minecraft", "diamond_sword"))
@@ -596,7 +592,7 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
                 "subcategories",
                 "Subcategories",
                 "Tests for subcategories. No entries here, so the subcategory buttons take their place.",
-                new ItemStack(Items.FILLED_MAP)
+                new ItemStackTemplate(Items.FILLED_MAP)
             );
 
         CategoryBuilder normalSubcategory = category
@@ -605,13 +601,13 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
                 "Normal Subcategory",
                 "Normal subcategory with some entries and some empty " +
                     "subcategories to observe the behavior of category button wrapping.",
-                new ItemStack(Items.COOKED_CHICKEN)
+                new ItemStackTemplate(Items.COOKED_CHICKEN)
             ).setParent("subcategories");
 
         EntryBuilder normalSubcategoryEntry = normalSubcategory.addEntry(
             "subcategories/normal_subcategory_entry",
             "Normal Subcategory Entry",
-            new ItemStack(Items.CARROT_ON_A_STICK)
+            new ItemStackTemplate(Items.CARROT_ON_A_STICK)
         );
         normalSubcategoryEntry.addTextPage("This entry is in the main category, not in a subcategory.");
 
@@ -619,55 +615,55 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
             "subcategories/empty_subcategory",
             "Empty Subcategory",
             "Empty subcategory with no entries",
-            new ItemStack(Items.CHICKEN)
+            new ItemStackTemplate(Items.CHICKEN)
         ).setParent("subcategories").build()
         .addCategory(
             "subcategories/empty_subcategory_1",
             "Empty Subcategory 2",
             "This subcategory is empty.",
-            new ItemStack(Items.BAKED_POTATO)
+            new ItemStackTemplate(Items.BAKED_POTATO)
         ).setParent("subcategories").build()
         .addCategory(
             "subcategories/empty_subcategory_2",
             "Empty Subcategory 3",
             "This subcategory is empty.",
-            new ItemStack(Items.POTATO)
+            new ItemStackTemplate(Items.POTATO)
         ).setParent("subcategories").build()
         .addCategory(
             "subcategories/empty_subcategory_3",
             "Empty Subcategory 4",
             "This subcategory is empty.",
-            new ItemStack(Items.STONE)
+            new ItemStackTemplate(Items.STONE)
         ).setParent("subcategories").build()
         .addCategory(
             "subcategories/empty_subsubcategory",
             "Empty Sub-sub-category",
             "Empty sub-sub-category with no entries",
-            new ItemStack(Items.IRON_INGOT)
+            new ItemStackTemplate(Items.IRON_INGOT)
         ).setParent("subcategories/normal_subcategory").build()
         .addCategory(
             "subcategories/empty_subsubcategory_1",
             "Empty Sub-sub-category 2",
             "Empty sub-sub-category with no entries",
-            new ItemStack(Items.GOLD_INGOT)
+            new ItemStackTemplate(Items.GOLD_INGOT)
         ).setParent("subcategories/normal_subcategory").build()
         .addCategory(
             "subcategories/empty_subsubcategory_2",
             "Empty Sub-sub-category 3",
             "Empty sub-sub-category with no entries",
-            new ItemStack(Items.IRON_PICKAXE)
+            new ItemStackTemplate(Items.IRON_PICKAXE)
         ).setParent("subcategories/normal_subcategory").build()
         .addCategory(
             "subcategories/empty_subsubcategory_3",
             "Empty Sub-sub-category 4",
             "Empty sub-sub-category with no entries",
-            new ItemStack(Items.IRON_AXE)
+            new ItemStackTemplate(Items.IRON_AXE)
         ).setParent("subcategories/normal_subcategory").build()
         .addCategory(
             "subcategories/empty_subsubcategory_4",
             "Empty Sub-sub-category 5",
             "Empty sub-sub-category with no entries",
-            new ItemStack(Items.IRON_SWORD)
+            new ItemStackTemplate(Items.IRON_SWORD)
         ).setParent("subcategories/normal_subcategory");
 
         return category.build();
@@ -683,13 +679,13 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
                 "templates",
                 "Template Test",
                 "Test pages for templates and their usage",
-                new ItemStack(Items.WRITABLE_BOOK)
+                new ItemStackTemplate(Items.WRITABLE_BOOK)
             );
 
         EntryBuilder builtinComponents = category.addEntry(
             "templates/builtin_components",
             "Basic Template Components",
-            new ItemStack(Items.WRITTEN_BOOK)
+            new ItemStackTemplate(Items.WRITTEN_BOOK)
         );
         builtinComponents.addCustomPage("handbooktest:builtin_components_1")
             .set("headertext", "Header component")
@@ -704,7 +700,7 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
         EntryBuilder customComponents = category.addEntry(
             "templates/custom_components",
             "Custom Template Components",
-            new ItemStack(Items.WRITTEN_BOOK)
+            new ItemStackTemplate(Items.WRITTEN_BOOK)
         );
         customComponents.addCustomPage("handbooktest:custom_component")
             .set("spaget", "pasta")
@@ -713,7 +709,7 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
         EntryBuilder deriveFunctions = category.addEntry(
             "templates/derive_functions",
             "Derive Functions in Templates",
-            new ItemStack(Items.WRITTEN_BOOK)
+            new ItemStackTemplate(Items.WRITTEN_BOOK)
         );
         deriveFunctions.addCustomPage("handbooktest:derive_ingr_to_stack")
             .set("input", input);
@@ -721,7 +717,7 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
         EntryBuilder templateNesting = category.addEntry(
             "templates/template_nesting",
             "Template Nesting",
-            new ItemStack(Items.WRITTEN_BOOK)
+            new ItemStackTemplate(Items.WRITTEN_BOOK)
         );
         templateNesting.addCustomPage("handbooktest:nesting")
             .set("texttext", "Text component text defined in entry json")

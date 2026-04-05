@@ -4,15 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import net.minecraft.commands.arguments.item.ItemInput;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 
 public class ItemStackHelper {
 
 	private static final Gson GSON = new GsonBuilder().create();
 
-	public static String serializeStack(ItemStack stack, HolderLookup.Provider registries) {
-		return new ItemInput(stack.typeHolder(), stack.getComponentsPatch()) + (stack.getCount() == 1 ? "" :("#" + stack.getCount()));
+	public static String serializeStack(ItemStackTemplate stack) {
+		return new ItemInput(stack.item(), stack.components()).item().getRegisteredName() + (stack.count() == 1 ? "" :("#" + stack.count()));
 	}
 
 }

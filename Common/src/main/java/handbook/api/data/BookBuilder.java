@@ -10,9 +10,8 @@ import java.util.function.Consumer;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 
 import handbook.api.data.util.ItemStackHelper;
 import handbook.common.book.Book;
@@ -53,17 +52,15 @@ public class BookBuilder {
     private Enum<TextOverflowMode> textOverflowMode;
     private Boolean pamphlet;
     private Map<String, String> macros;
-    private HolderLookup.Provider provider;
 
-    protected BookBuilder(String modid, String id, String displayName, String landingText, HolderLookup.Provider provider) {
-        this(Identifier.fromNamespaceAndPath(modid, id), displayName, landingText, provider);
+    protected BookBuilder(String modid, String id, String displayName, String landingText) {
+        this(Identifier.fromNamespaceAndPath(modid, id), displayName, landingText);
     }
 
-    protected BookBuilder(Identifier id, String displayName, String landingText, HolderLookup.Provider provider) {
+    protected BookBuilder(Identifier id, String displayName, String landingText) {
         this.id = id;
         this.displayName = displayName;
         this.landingText = landingText;
-        this.provider = provider;
     }
 
     JsonObject toJson() {
@@ -179,7 +176,7 @@ public class BookBuilder {
         consumer.accept(this);
     }
 
-    public CategoryBuilder addCategory(String id, String name, String description, ItemStack icon) {
+    public CategoryBuilder addCategory(String id, String name, String description, ItemStackTemplate icon) {
         return this.addCategory(new CategoryBuilder(id, name, description, icon, this));
     }
 
@@ -299,8 +296,8 @@ public class BookBuilder {
         return this;
     }
 
-    public BookBuilder setIndexIcon(ItemStack indexIcon) {
-        this.indexIcon = ItemStackHelper.serializeStack(indexIcon, provider);
+    public BookBuilder setIndexIcon(ItemStackTemplate indexIcon) {
+        this.indexIcon = ItemStackHelper.serializeStack(indexIcon);
 
         return this;
     }
@@ -329,8 +326,8 @@ public class BookBuilder {
         return this;
     }
 
-    public BookBuilder setCustomBookItem(ItemStack customBookItem) {
-        this.customBookItem = ItemStackHelper.serializeStack(customBookItem, provider);
+    public BookBuilder setCustomBookItem(ItemStackTemplate customBookItem) {
+        this.customBookItem = ItemStackHelper.serializeStack(customBookItem);
 
         return this;
     }
@@ -390,10 +387,6 @@ public class BookBuilder {
         this.macros.put(key, entry);
 
         return this;
-    }
-
-    public HolderLookup.Provider getProvider() {
-        return provider;
     }
 
     protected Identifier getId() {

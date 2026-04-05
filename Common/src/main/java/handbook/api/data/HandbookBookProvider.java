@@ -10,14 +10,13 @@ import org.jetbrains.annotations.NotNull;
 import com.google.gson.JsonObject;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-
-import technology.roughness.whitenoise.util.ResourceLocationHelper;
+import net.minecraft.world.item.ItemStackTemplate;
 
 public abstract class HandbookBookProvider implements DataProvider {
 
@@ -92,19 +91,19 @@ public abstract class HandbookBookProvider implements DataProvider {
         return DataProvider.saveStable(cache, json, datapackProvider.json(Identifier.fromNamespaceAndPath(bookId.getNamespace(), pathSuffix)));
     }
 
-    public BookBuilder createBookBuilder(String id, String name, String landingText, HolderLookup.Provider provider) {
-        return new BookBuilder(modid, id, name, landingText, provider);
+    public BookBuilder createBookBuilder(String id, String name, String landingText) {
+        return new BookBuilder(modid, id, name, landingText);
     }
 
     /**
      * Creates a BookBuilder for a book with the given item.
      * The item is used both as the book item and to derive the book ID and model.
      */
-    public BookBuilder createBookBuilder(Item item, String name, String landingText, HolderLookup.Provider provider) {
-        ItemStack bookItem = new ItemStack(item);
-        Identifier itemId = ResourceLocationHelper.getItemStackId(bookItem);
+    public BookBuilder createBookBuilder(Item item, String name, String landingText) {
+        ItemStackTemplate bookItem = new ItemStackTemplate(item);
+        Identifier itemId = BuiltInRegistries.ITEM.getKey(bookItem.item().value());
 
-        return new BookBuilder(itemId, name, landingText, provider)
+        return new BookBuilder(itemId, name, landingText)
             .setModel(itemId)
             .setCustomBookItem(bookItem);
     }

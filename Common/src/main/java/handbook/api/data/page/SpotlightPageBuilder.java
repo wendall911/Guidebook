@@ -2,10 +2,9 @@ package handbook.api.data.page;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 
 import handbook.api.data.AbstractPageBuilder;
 import handbook.api.data.EntryBuilder;
@@ -18,26 +17,23 @@ public class SpotlightPageBuilder extends AbstractPageBuilder<SpotlightPageBuild
     private String title;
     private Boolean linkRecipe;
     private String text;
-    private HolderLookup.Provider provider;
 
-    public SpotlightPageBuilder(EntryBuilder parent, HolderLookup.Provider provider, ItemStack... stacks) {
+    public SpotlightPageBuilder(EntryBuilder parent, ItemStackTemplate... stacks) {
         super("handbook:spotlight", parent);
-        this.item = serializeStacks(stacks, provider);
-        this.provider = provider;
+        this.item = serializeStacks(stacks);
     }
 
     @SafeVarargs
-    public SpotlightPageBuilder(EntryBuilder parent, HolderLookup.Provider provider, TagKey<Item>... tag) {
+    public SpotlightPageBuilder(EntryBuilder parent, TagKey<Item>... tag) {
         super("handbook:spotlight", parent);
         this.item = serializeTagKeys(tag);
-        this.provider = provider;
     }
 
-    private String serializeStacks(ItemStack[] stacks, HolderLookup.Provider provider) {
+    private String serializeStacks(ItemStackTemplate[] stacks) {
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < stacks.length; i++) {
-            sb.append(ItemStackHelper.serializeStack(stacks[i], provider));
+            sb.append(ItemStackHelper.serializeStack(stacks[i]));
             if (i < stacks.length - 1) {
                 sb.append(",");
             }
@@ -98,8 +94,8 @@ public class SpotlightPageBuilder extends AbstractPageBuilder<SpotlightPageBuild
         return this;
     }
 
-    public final SpotlightPageBuilder addItem(ItemStack... stacks) {
-        this.item = this.item + "," + serializeStacks(stacks, provider);
+    public final SpotlightPageBuilder addItem(ItemStackTemplate... stacks) {
+        this.item = this.item + "," + serializeStacks(stacks);
 
         return this;
     }

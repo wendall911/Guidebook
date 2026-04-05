@@ -6,8 +6,8 @@ import java.util.List;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStackTemplate;
 
 import handbook.api.data.util.ItemStackHelper;
 
@@ -25,12 +25,12 @@ public class CategoryBuilder {
     private Boolean secret;
 
     protected CategoryBuilder(String id, String name, String description,
-            ItemStack icon, BookBuilder bookBuilder) {
+                              ItemStackTemplate icon, BookBuilder bookBuilder) {
         this(
             id,
             name,
             description,
-            ItemStackHelper.serializeStack(icon, bookBuilder.getProvider()),
+            ItemStackHelper.serializeStack(icon),
             bookBuilder
         );
     }
@@ -79,11 +79,11 @@ public class CategoryBuilder {
     }
 
     public EntryBuilder addEntry(String id, String name, String icon) {
-        return this.addEntry(new EntryBuilder(id, name, icon, this, bookBuilder.getProvider()));
+        return this.addEntry(new EntryBuilder(id, name, icon, this));
     }
 
-    public EntryBuilder addEntry(String id, String name, ItemStack icon) {
-        return this.addEntry(new EntryBuilder(id, name, icon, this, bookBuilder.getProvider()));
+    public EntryBuilder addEntry(String id, String name, ItemStackTemplate icon) {
+        return this.addEntry(new EntryBuilder(id, name, icon, this));
     }
 
     protected EntryBuilder addEntry(EntryBuilder builder) {
