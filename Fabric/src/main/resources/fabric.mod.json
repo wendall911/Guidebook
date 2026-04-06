@@ -29,7 +29,7 @@
       "${mod_id}.data.FabricDatagenInitializer"
     ],
     "jei_mod_plugin": [
-      "${mod_id}.client.integration.jei.JEIPlugin"
+      "${mod_id}.client.jei.HandbookJeiPlugin"
     ],
     "whitenoise-config": [
       "${mod_id}.FabricConfigInitializer"
