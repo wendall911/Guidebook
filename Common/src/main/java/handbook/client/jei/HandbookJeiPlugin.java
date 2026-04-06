@@ -1,18 +1,13 @@
 package handbook.client.jei;
 
-// TODO: Enable this when JEI is available on 1.21.11+
-/*
 import java.util.Map;
-import java.util.Objects;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
-import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.registration.ISubtypeRegistration;
@@ -40,21 +35,21 @@ public class HandbookJeiPlugin implements IModPlugin {
     static {
     }
 
-    @NotNull
+    @NonNull
     @Override
     public Identifier getPluginUid() {
         return UID;
     }
 
     @Override
-    public void registerItemSubtypes(@NotNull ISubtypeRegistration registration) {
+    public void registerItemSubtypes(@NonNull ISubtypeRegistration registration) {
         ISubtypeInterpreter<ItemStack> bookInterpreter = (stack, context) -> stack.get(HandbookDataComponents.BOOK);
 
         registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, HandbookItems.BOOK, bookInterpreter);
     }
 
     @Override
-    public void onRuntimeAvailable(@NotNull IJeiRuntime jeiRuntime) {
+    public void onRuntimeAvailable(@NonNull IJeiRuntime jeiRuntime) {
         HandbookJeiPlugin.jeiRuntime = jeiRuntime;
 
         Map<String, KeyMapping> allKeyMappings = AccessorKeyMapping.getAllKeyMappings();
@@ -89,5 +84,3 @@ public class HandbookJeiPlugin implements IModPlugin {
     }
 
 }
-
- */
