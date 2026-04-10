@@ -12,8 +12,8 @@ dependencies {
     implementation group: 'technology.roughness.whitenoise', name: "whitenoise-${minecraft_version}-fabric", version: "${whitenoise_version}"
 
 /*
-    runtimeOnly "dev.architectury:architectury-fabric:${architectury_version}"
-    runtimeOnly("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
+    localRuntime "dev.architectury:architectury-fabric:${architectury_version}"
+    localRuntime("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
 */
@@ -27,7 +27,7 @@ dependencies {
     compileOnly "mezz.jei:jei-${jei_minecraft_version}-common-api:${jei_version}"
     compileOnly "mezz.jei:jei-${jei_minecraft_version}-fabric:${jei_version}"
 
-    runtimeOnly group: 'com.terraformersmc', name: 'modmenu', version: "${mod_menu_version}"
+    localRuntime group: 'com.terraformersmc', name: 'modmenu', version: "${mod_menu_version}"
 }
 
 loom {

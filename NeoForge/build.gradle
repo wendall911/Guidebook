@@ -16,7 +16,6 @@ neoForge {
         }
         server {
             server()
-            programArgument '--nogui'
         }
     }
     mods {
