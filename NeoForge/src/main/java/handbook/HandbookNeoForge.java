@@ -37,7 +37,6 @@ public class HandbookNeoForge {
 
     public HandbookNeoForge(IEventBus eventBus) {
         Handbook.initConfig();
-        BookRegistry.INSTANCE.init();
         eventBus.addListener(NeoForgeNetworkHandler::setupPackets);
     }
 
@@ -86,6 +85,8 @@ public class HandbookNeoForge {
                 e.setCancellationResult(result);
             }
         });
+
+        BookRegistry.INSTANCE.init();
 
         NeoForge.EVENT_BUS.addListener((ServerStartedEvent e) -> ReloadContentsHandler.dataReloaded(e.getServer()));
     }
