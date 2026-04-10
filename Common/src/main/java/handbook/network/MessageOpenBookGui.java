@@ -1,7 +1,7 @@
 package handbook.network;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -14,7 +14,7 @@ import handbook.api.HandbookAPI;
 public record MessageOpenBookGui(Identifier book, @Nullable Identifier entry, int page) implements CustomPacketPayload {
 
     public static final Identifier ID = Identifier.fromNamespaceAndPath(HandbookAPI.MODID, "open_book");
-    public static final StreamCodec<@NotNull FriendlyByteBuf, @NotNull MessageOpenBookGui> CODEC = StreamCodec.composite(
+    public static final StreamCodec<@NonNull FriendlyByteBuf, @NonNull MessageOpenBookGui> CODEC = StreamCodec.composite(
         Identifier.STREAM_CODEC,
         MessageOpenBookGui::book,
         ByteBufCodecs.STRING_UTF8.map(
@@ -26,10 +26,10 @@ public record MessageOpenBookGui(Identifier book, @Nullable Identifier entry, in
         MessageOpenBookGui::page,
         MessageOpenBookGui::new
     );
-    public static final Type<@NotNull MessageOpenBookGui> TYPE = new Type<>(ID);
+    public static final Type<@NonNull MessageOpenBookGui> TYPE = new Type<>(ID);
 
     @Override
-    public @NotNull Type<@NotNull ? extends CustomPacketPayload> type() {
+    public @NonNull Type<@NonNull ? extends CustomPacketPayload> type() {
         return TYPE;
     }
 

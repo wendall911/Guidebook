@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
@@ -163,7 +163,7 @@ public abstract class GuiBookEntryList extends GuiBook {
     }
 
     @Override
-    public boolean charTyped(@NotNull CharacterEvent charEvent) {
+    public boolean charTyped(@NonNull CharacterEvent charEvent) {
         String currQuery = searchField.getValue();
         if (searchField.charTyped(charEvent)) {
             if (!searchField.getValue().equals(currQuery)) {
@@ -177,7 +177,7 @@ public abstract class GuiBookEntryList extends GuiBook {
     }
 
     @Override
-    public boolean keyPressed(@NotNull KeyEvent keyEvent) {
+    public boolean keyPressed(@NonNull KeyEvent keyEvent) {
         int key = keyEvent.key();
         String currQuery = searchField.getValue();
 

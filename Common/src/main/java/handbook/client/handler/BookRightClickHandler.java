@@ -1,6 +1,6 @@
 package handbook.client.handler;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.datafixers.util.Pair;

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.google.common.base.Suppliers;
 import com.google.gson.JsonElement;
@@ -98,7 +98,7 @@ public class Book {
     public final boolean isPamphlet;
 
     public final boolean i18n;
-    @Nullable public final HandbookConfig.TextOverflowMode overflowMode;
+    public final HandbookConfig.@Nullable TextOverflowMode overflowMode;
 
     public final Map<String, String> macros = new HashMap<>();
 

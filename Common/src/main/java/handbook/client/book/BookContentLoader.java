@@ -8,7 +8,7 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.google.gson.JsonElement;
 

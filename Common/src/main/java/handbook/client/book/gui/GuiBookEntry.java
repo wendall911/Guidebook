@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -271,7 +271,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
     }
 
     @Override
-    public void setHoverTooltipComponents(@NotNull List<Component> tooltip) {
+    public void setHoverTooltipComponents(@NonNull List<Component> tooltip) {
         setTooltip(tooltip);
     }
 
@@ -306,7 +306,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
     }
 
     @Override
-    public boolean keyPressed(@NotNull KeyEvent keyEvent) {
+    public boolean keyPressed(@NonNull KeyEvent keyEvent) {
         if (Minecraft.getInstance().options.keyInventory.matches(keyEvent)) {
             this.onClose();
 

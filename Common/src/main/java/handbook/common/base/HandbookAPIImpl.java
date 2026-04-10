@@ -6,7 +6,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import com.google.common.base.Preconditions;
 
@@ -33,13 +33,13 @@ import handbook.common.item.HandbookBook;
 import handbook.config.HandbookConfig;
 import handbook.platform.Services;
 
-import static technology.roughness.whitenoise.platform.Services.PLATFORM;
+import static technology.roughness.whitenoise.platform.Services.WN_PLATFORM;
 
 public class HandbookAPIImpl implements IHandbookAPI {
 
     private static void assertPhysicalClient() {
         Preconditions.checkState(
-            PLATFORM.isPhysicalClient(),
+            WN_PLATFORM.isPhysicalClient(),
             "Not on the physical client"
         );
     }
@@ -88,9 +88,9 @@ public class HandbookAPIImpl implements IHandbookAPI {
         return null;
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public Component getSubtitle(@NotNull Identifier bookId) {
+    public Component getSubtitle(@NonNull Identifier bookId) {
         Book book = BookRegistry.INSTANCE.books.get(bookId);
         if (book == null) {
             throw new IllegalArgumentException("Book not found: " + bookId);

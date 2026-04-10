@@ -1,7 +1,7 @@
 package handbook.client.book.gui.button;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -40,7 +40,7 @@ public class GuiButtonCategory extends Button {
 	}
 
 	@Override
-	public void extractContents(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+	public void extractContents(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
 		if (active) {
 			if (isHoveredOrFocused()) {
 				timeHovered = Math.min(ANIM_TIME, timeHovered + ClientTicker.delta);
@@ -77,7 +77,7 @@ public class GuiButtonCategory extends Button {
 	}
 
 	@Override
-	public void playDownSound(@NotNull SoundManager soundHandlerIn) {
+	public void playDownSound(@NonNull SoundManager soundHandlerIn) {
 		if (category != null && !category.isLocked()) {
 			GuiBook.playBookFlipSound(parent.book);
 		}

@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import com.google.common.base.Stopwatch;
 import com.google.gson.JsonElement;
@@ -46,7 +46,7 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
     }
 
     @Override
-    protected void apply(Map<Identifier, JsonElement> map, @NotNull ResourceManager manager, @NotNull ProfilerFiller profiler) {
+    protected void apply(Map<Identifier, JsonElement> map, @NonNull ResourceManager manager, @NonNull ProfilerFiller profiler) {
         Map<Identifier, Map<Identifier, JsonElement>> data = new HashMap<>();
         for (Map.Entry<Identifier, JsonElement> entry : map.entrySet()) {
             // namespace:book_name/en_us/entries/entry

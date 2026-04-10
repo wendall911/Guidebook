@@ -2,7 +2,7 @@ package handbook.client.book.template;
 
 import java.util.function.UnaryOperator;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;

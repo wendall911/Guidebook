@@ -2,7 +2,7 @@ package handbook.client.book.template.variable;
 
 import java.util.Objects;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.google.gson.JsonElement;
 

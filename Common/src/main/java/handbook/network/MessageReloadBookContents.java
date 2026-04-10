@@ -1,6 +1,6 @@
 package handbook.network;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -12,13 +12,13 @@ import handbook.api.HandbookAPI;
 public record MessageReloadBookContents() implements CustomPacketPayload {
 
     public static final Identifier ID = HandbookAPI.prefix("reload_books");
-    public static final StreamCodec<@NotNull FriendlyByteBuf, @NotNull MessageReloadBookContents> CODEC = StreamCodec.unit(
+    public static final StreamCodec<@NonNull FriendlyByteBuf, @NonNull MessageReloadBookContents> CODEC = StreamCodec.unit(
         new MessageReloadBookContents()
     );
-    public static final Type<@NotNull MessageReloadBookContents> TYPE = new Type<>(ID);
+    public static final Type<@NonNull MessageReloadBookContents> TYPE = new Type<>(ID);
 
     @Override
-    public @NotNull Type<? extends @NotNull CustomPacketPayload> type() {
+    public @NonNull Type<? extends @NonNull CustomPacketPayload> type() {
         return TYPE;
     }
 

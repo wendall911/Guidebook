@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;

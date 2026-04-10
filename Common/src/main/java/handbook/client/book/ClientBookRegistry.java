@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -84,13 +84,13 @@ public class ClientBookRegistry implements PreparableReloadListener {
     }
 
     @Override
-    public @NotNull String getName() {
+    public @NonNull String getName() {
         return "Handbook Client Book Registry";
     }
 
     @Override
-    public @NotNull CompletableFuture<Void> reload(@NotNull SharedState sharedState,
-            @NotNull Executor prepareExecutor, PreparationBarrier preparationBarrier, @NotNull Executor applyExecutor) {
+    public @NonNull CompletableFuture<Void> reload(@NonNull SharedState sharedState,
+            @NonNull Executor prepareExecutor, PreparationBarrier preparationBarrier, @NonNull Executor applyExecutor) {
         return CompletableFuture.supplyAsync(() -> null, prepareExecutor)
             .thenCompose(preparationBarrier::wait).thenAcceptAsync((v) -> {
                 // Only reload if resource packs changed after initial load

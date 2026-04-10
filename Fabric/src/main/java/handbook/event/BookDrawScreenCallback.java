@@ -1,6 +1,6 @@
 package handbook.event;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
@@ -18,7 +18,7 @@ import net.minecraft.resources.Identifier;
  */
 public interface BookDrawScreenCallback {
 
-    Event<@NotNull BookDrawScreenCallback> EVENT = EventFactory.createArrayBacked(BookDrawScreenCallback.class,
+    Event<@NonNull BookDrawScreenCallback> EVENT = EventFactory.createArrayBacked(BookDrawScreenCallback.class,
         (listeners) -> (b, g, mx, my, pt, gr) -> {
             for (BookDrawScreenCallback l : listeners) {
                 l.trigger(b, g, mx, my, pt, gr);

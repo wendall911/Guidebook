@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;

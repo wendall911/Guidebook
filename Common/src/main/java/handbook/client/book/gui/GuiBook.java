@@ -8,8 +8,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.datafixers.util.Pair;
@@ -53,7 +53,7 @@ import handbook.common.util.ColorHelper.HandbookColors;
 import handbook.mixin.client.AccessorScreen;
 import handbook.platform.Services;
 
-import static technology.roughness.whitenoise.platform.Services.PLATFORM;
+import static technology.roughness.whitenoise.platform.Services.WN_PLATFORM;
 
 public abstract class GuiBook extends Screen {
 
@@ -180,7 +180,7 @@ public abstract class GuiBook extends Screen {
     }
 
     @Override
-    public void extractBackground(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {}
+    public void extractBackground(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {}
 
     public void addBookmarkButtons() {
         removeDrawablesIf((b) -> b instanceof GuiButtonBookBookmark);
@@ -213,7 +213,7 @@ public abstract class GuiBook extends Screen {
     }
 
     @Override // make public
-    public <T extends GuiEventListener & Renderable & NarratableEntry> @NotNull T addRenderableWidget(@NotNull T drawableElement) {
+    public <T extends GuiEventListener & Renderable & NarratableEntry> @NonNull T addRenderableWidget(@NonNull T drawableElement) {
         return super.addRenderableWidget(drawableElement);
     }
 
@@ -329,7 +329,7 @@ public abstract class GuiBook extends Screen {
     }
 
     @Override
-    public final boolean mouseClicked(@NotNull MouseButtonEvent mouseButtonEvent, boolean isDoubleClick) {
+    public final boolean mouseClicked(@NonNull MouseButtonEvent mouseButtonEvent, boolean isDoubleClick) {
         return mouseClickedScaled(mouseButtonEvent, isDoubleClick);
     }
 
@@ -373,7 +373,7 @@ public abstract class GuiBook extends Screen {
     }
 
     @Override
-    public boolean keyPressed(@NotNull KeyEvent keyEvent) {
+    public boolean keyPressed(@NonNull KeyEvent keyEvent) {
         int keyCode = keyEvent.key();
 
         if (Minecraft.getInstance().options.keyInventory.matches(keyEvent) && !this.canSeeBackButton()) {
@@ -388,7 +388,7 @@ public abstract class GuiBook extends Screen {
             return true;
         }
         /*
-        else if (tooltipStack != null && PLATFORM.isModLoaded("jei")
+        else if (tooltipStack != null && WN_PLATFORM.isModLoaded("jei")
                 && HandbookJeiPlugin.handleRecipeKeybind(keyEvent, tooltipStack)) {
             return true;
         }

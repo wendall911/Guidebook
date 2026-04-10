@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
@@ -36,7 +36,7 @@ public class GuiButtonBook extends Button {
 	}
 
 	@Override
-	public void extractContents(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+	public void extractContents(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
 		active = displayCondition.get();
 		if (!active) {
 			return;

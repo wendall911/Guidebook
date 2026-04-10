@@ -1,7 +1,7 @@
 package handbook.client.book.gui.button;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -28,7 +28,7 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 	}
 
 	@Override
-	public void extractContents(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+	public void extractContents(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
 		int px = getX() + 1;
 		int py = (int) (getY() + 0.5);
         Minecraft mc = parent.getMinecraft();
@@ -49,7 +49,7 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 	}
 
 	@Override
-	public void onPress(@NotNull InputWithModifiers input) {
+	public void onPress(@NonNull InputWithModifiers input) {
 		for (BookEntry entry : this.book.getContents().entries.values()) {
 			if (isMainPage(this.book)) {
 				markEntry(entry);

@@ -2,7 +2,7 @@ package handbook.client.book.page.abstr;
 
 import java.util.Optional;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.server.IntegratedServer;

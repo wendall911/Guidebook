@@ -2,7 +2,7 @@ package handbook.common.item;
 
 import java.util.function.Consumer;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -75,7 +75,7 @@ public class HandbookBook extends Item {
     }
 
     @Override
-    public @NotNull Component getName(@NotNull ItemStack stack) {
+    public @NonNull Component getName(@NonNull ItemStack stack) {
         Book book = getBook(stack);
 
         if (book != null) {
@@ -87,10 +87,10 @@ public class HandbookBook extends Item {
 
     @SuppressWarnings("deprecation")
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context,
-            @NotNull TooltipDisplay tooltipDisplay, @NotNull Consumer<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(@NonNull ItemStack stack, @NonNull TooltipContext context,
+            @NonNull TooltipDisplay tooltipDisplay, @NonNull Consumer<Component> tooltip, @NonNull TooltipFlag flagIn) {
 
-        if (!Services.PLATFORM.isPhysicalClient()) {
+        if (!Services.WN_PLATFORM.isPhysicalClient()) {
             return;
         }
 
@@ -118,7 +118,7 @@ public class HandbookBook extends Item {
     }
 
     @Override
-    public @NotNull InteractionResult use(@NotNull Level level, Player playerIn, @NotNull InteractionHand hand) {
+    public @NonNull InteractionResult use(@NonNull Level level, Player playerIn, @NonNull InteractionHand hand) {
         ItemStack stack = playerIn.getItemInHand(hand);
         Book book = getBook(stack);
 

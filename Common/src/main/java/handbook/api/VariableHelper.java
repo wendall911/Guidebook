@@ -2,7 +2,7 @@ package handbook.api;
 
 import java.util.function.Supplier;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.google.common.base.Suppliers;
 import com.google.gson.JsonElement;

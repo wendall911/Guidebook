@@ -1,6 +1,6 @@
 package handbook.client.book.gui.button;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -22,7 +22,7 @@ public class GuiButtonBookEye extends GuiButtonBook {
 	}
 
 	@Override
-	public void extractContents(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+	public void extractContents(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
 		super.extractContents(guiGraphics, mouseX, mouseY, partialTicks);
 
 		if (!PersistentData.data.clickedVisualize && (ClientTicker.ticksInGame) % 20 < 10) {

@@ -2,7 +2,7 @@ package handbook.client.book.gui;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -75,7 +75,7 @@ public class BookTextRenderer implements Renderable {
     }
 
     @Override
-    public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    public void extractRenderState(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         if (!words.isEmpty()) {
             Font font = Minecraft.getInstance().font;
             Style style = book.getFontStyle();

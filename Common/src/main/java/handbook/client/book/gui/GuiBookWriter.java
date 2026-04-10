@@ -1,6 +1,6 @@
 package handbook.client.book.gui;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
@@ -84,7 +84,7 @@ public class GuiBookWriter extends GuiBook {
     }
 
     @Override
-    public boolean keyPressed(@NotNull KeyEvent keyEvent) {
+    public boolean keyPressed(@NonNull KeyEvent keyEvent) {
         if (textfield.keyPressed(keyEvent)) {
             refreshText();
 
@@ -95,7 +95,7 @@ public class GuiBookWriter extends GuiBook {
     }
 
     @Override
-    public boolean charTyped(@NotNull CharacterEvent charEvent) {
+    public boolean charTyped(@NonNull CharacterEvent charEvent) {
         if (textfield.charTyped(charEvent)) {
             refreshText();
 

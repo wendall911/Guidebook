@@ -3,8 +3,8 @@ package handbook.client.base;
 import java.util.List;
 import java.util.Optional;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.CuboidItemModelWrapper;
@@ -29,10 +29,10 @@ public class BookModel implements ItemModel {
     }
 
     @Override
-    public void update(@NotNull ItemStackRenderState renderState,
-            @NotNull ItemStack stack,
-            @NotNull ItemModelResolver itemModelResolver,
-            @NotNull ItemDisplayContext displayContext,
+    public void update(@NonNull ItemStackRenderState renderState,
+            @NonNull ItemStack stack,
+            @NonNull ItemModelResolver itemModelResolver,
+            @NonNull ItemDisplayContext displayContext,
             @Nullable ClientLevel level,
             @Nullable ItemOwner owner,
             int seed) {

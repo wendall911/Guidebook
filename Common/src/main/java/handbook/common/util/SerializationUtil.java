@@ -3,7 +3,7 @@ package handbook.common.util;
 import java.lang.reflect.Type;
 import java.util.Locale;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

@@ -4,7 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

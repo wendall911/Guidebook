@@ -2,8 +2,8 @@ package handbook.common.advancement;
 
 import java.util.Optional;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -26,17 +26,17 @@ public class BookOpenTrigger extends SimpleCriterionTrigger<TriggerInstance> {
     public static final Identifier ID = Identifier.fromNamespaceAndPath(HandbookAPI.MODID, "open_book");
     public static final BookOpenTrigger INSTANCE = new BookOpenTrigger();
 
-    @NotNull
+    @NonNull
     @Override
     public Codec<TriggerInstance> codec() {
         return BookOpenTrigger.TriggerInstance.CODEC;
     }
 
-    public void trigger(@NotNull ServerPlayer player, @NotNull Identifier book) {
+    public void trigger(@NonNull ServerPlayer player, @NonNull Identifier book) {
         trigger(player, instance -> instance.matches(book, null, 0));
     }
 
-    public void trigger(@NotNull ServerPlayer player, @NotNull Identifier book, @Nullable Identifier entry, int page) {
+    public void trigger(@NonNull ServerPlayer player, @NonNull Identifier book, @Nullable Identifier entry, int page) {
         trigger(player, instance -> instance.matches(book, entry, page));
     }
 
@@ -49,7 +49,7 @@ public class BookOpenTrigger extends SimpleCriterionTrigger<TriggerInstance> {
             MinMaxBounds.Ints.CODEC.optionalFieldOf("page", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::page)
         ).apply(instance, TriggerInstance::new));
 
-        public boolean matches(@NotNull Identifier book, @Nullable Identifier entry, int page) {
+        public boolean matches(@NonNull Identifier book, @Nullable Identifier entry, int page) {
             return this.book.equals(book) && (this.entry.isEmpty() || this.entry.get().equals(entry)) && this.page.matches(page);
         }
     }

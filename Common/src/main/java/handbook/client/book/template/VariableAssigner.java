@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.text.WordUtils;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.HolderLookup;

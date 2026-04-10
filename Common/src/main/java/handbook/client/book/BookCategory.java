@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.google.common.collect.Streams;
 import com.google.gson.JsonObject;

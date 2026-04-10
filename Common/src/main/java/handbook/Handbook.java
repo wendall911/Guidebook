@@ -10,7 +10,7 @@ import handbook.config.HandbookConfig;
 public class Handbook {
 
     public static void initConfig() {
-        if (Services.PLATFORM.isPhysicalClient()) {
+        if (Services.WN_PLATFORM.isPhysicalClient()) {
             WhiteNoiseConfigLoader.add(WhiteNoiseConfig.Type.CLIENT, HandbookConfig.CLIENT_SPEC, HandbookAPI.MODID);
         }
     }

@@ -2,7 +2,7 @@ package handbook.data;
 
 import java.util.concurrent.CompletableFuture;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.registries.Registries;
@@ -20,7 +20,7 @@ public class HandbookItemTagsProvider extends IntrinsicHolderTagsProvider<Item> 
     }
 
     @Override
-    protected void addTags(@NotNull Provider provider) {
+    protected void addTags(@NonNull Provider provider) {
         this.tag(ItemTags.BOOKSHELF_BOOKS).add(HandbookItems.BOOK);
         this.tag(ItemTags.LECTERN_BOOKS).add(HandbookItems.BOOK);
     }

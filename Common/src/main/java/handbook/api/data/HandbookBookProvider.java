@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import com.google.gson.JsonObject;
 
@@ -42,7 +42,7 @@ public abstract class HandbookBookProvider implements DataProvider {
      * @return the completable future
      */
     @Override
-    public @NotNull CompletableFuture<?> run(@NotNull CachedOutput cache) {
+    public @NonNull CompletableFuture<?> run(@NonNull CachedOutput cache) {
         return this.registries.thenCompose(provider -> {
             List<CompletableFuture<?>> list = new ArrayList<>();
 
@@ -111,7 +111,7 @@ public abstract class HandbookBookProvider implements DataProvider {
     /**
      * Gets a name for this provider, to use in logging.
      */
-    @NotNull
+    @NonNull
     @Override
     public String getName() {
         return "Handbook Book Provider";

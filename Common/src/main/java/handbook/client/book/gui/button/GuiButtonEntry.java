@@ -1,6 +1,6 @@
 package handbook.client.book.gui.button;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -30,7 +30,7 @@ public class GuiButtonEntry extends Button {
     }
 
     @Override
-    protected void extractContents(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    protected void extractContents(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         if (!active) {
             return;
         }
@@ -93,7 +93,7 @@ public class GuiButtonEntry extends Button {
     }
 
     @Override
-    public void playDownSound(@NotNull SoundManager soundHandlerIn) {
+    public void playDownSound(@NonNull SoundManager soundHandlerIn) {
         if (entry != null && !entry.isLocked()) {
             GuiBook.playBookFlipSound(parent.book);
         }

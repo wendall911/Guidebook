@@ -17,7 +17,7 @@ import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -132,7 +132,7 @@ public class BookRegistry {
         }
 
         if (processor != null) {
-            try (Stream<@NotNull Path> stream = Files.walk(root, maxDepth)) {
+            try (Stream<@NonNull Path> stream = Files.walk(root, maxDepth)) {
                 Iterator<Path> itr = stream.iterator();
 
                 while (itr.hasNext()) {

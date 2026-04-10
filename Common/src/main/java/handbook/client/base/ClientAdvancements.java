@@ -2,7 +2,7 @@ package handbook.client.base;
 
 import java.util.Map;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
@@ -77,26 +77,26 @@ public class ClientAdvancements {
 			this.book = book;
 		}
 
-		@NotNull
+		@NonNull
 		@Override
 		public Book getToken() {
 			return book;
 		}
 
         @Override
-        public @NotNull Visibility getWantedVisibility() {
+        public @NonNull Visibility getWantedVisibility() {
             return visibility;
         }
 
         @Override
-        public void update(@NotNull ToastManager toastManager, long delta) {
+        public void update(@NonNull ToastManager toastManager, long delta) {
             if (delta >= 5000L) {
                 visibility = Toast.Visibility.HIDE;
             }
         }
 
         @Override
-		public void extractRenderState(GuiGraphicsExtractor graphics, @NotNull Font font, long delta) {
+		public void extractRenderState(GuiGraphicsExtractor graphics, @NonNull Font font, long delta) {
 			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND_SPRITE, 0, 0, width(), height());
 
 			graphics.text(
