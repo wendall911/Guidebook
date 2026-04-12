@@ -1,6 +1,5 @@
 package handbook;
 
-import handbook.network.NeoForgeNetworkHandler;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.CreativeModeTab;
@@ -30,6 +29,7 @@ import handbook.common.handler.ReloadContentsHandler;
 import handbook.common.item.HandbookBook;
 import handbook.common.item.HandbookDataComponents;
 import handbook.common.item.HandbookItems;
+import handbook.network.NeoForgeNetworkHandler;
 
 @EventBusSubscriber(modid = HandbookAPI.MODID)
 @Mod(HandbookAPI.MODID)
@@ -37,6 +37,7 @@ public class HandbookNeoForge {
 
     public HandbookNeoForge(IEventBus eventBus) {
         Handbook.initConfig();
+        BookRegistry.INSTANCE.init();
         eventBus.addListener(NeoForgeNetworkHandler::setupPackets);
     }
 
@@ -85,8 +86,6 @@ public class HandbookNeoForge {
                 e.setCancellationResult(result);
             }
         });
-
-        BookRegistry.INSTANCE.init();
 
         NeoForge.EVENT_BUS.addListener((ServerStartedEvent e) -> ReloadContentsHandler.dataReloaded(e.getServer()));
     }
