@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -30,10 +31,13 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
     protected void drawRecipe(GuiGraphicsExtractor guiGraphics, Recipe<?> recipe, int recipeX, int recipeY,
                               int mouseX, int mouseY, boolean second) {
         Level level = Minecraft.getInstance().level;
+
         if (level == null) {
             return;
         }
+
         ItemStack toastSymbol = new ItemStack(Blocks.CRAFTING_TABLE);
+        ItemStack air = new ItemStack(Items.AIR);
         List<Ingredient> ingredients;
         ItemStack result;
 
@@ -62,7 +66,12 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
             List<Ingredient> shapedIngredients = new ArrayList<>();
 
             ((ShapedRecipe) recipe).getIngredients().forEach(optionalIngredient -> {
-                optionalIngredient.ifPresent(shapedIngredients::add);
+                if (optionalIngredient.isPresent()) {
+                    shapedIngredients.add(optionalIngredient.get());
+                }
+                else {
+                    shapedIngredients.add(null);
+                }
             });
             ingredients = shapedIngredients;
             result = ((AccessorShapedRecipe) recipe).getResult().create();
@@ -79,8 +88,15 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
         }
 
         for (int i = 0; i < ingredients.size(); i++) {
-            parent.renderIngredient(guiGraphics, recipeX + (i % wrap) * 19 + 3,
-                recipeY + (i / wrap) * 19 + 3, mouseX, mouseY, ingredients.get(i));
+            Ingredient ingredient = ingredients.get(i);
+            if (ingredient != null) {
+                parent.renderIngredient(guiGraphics, recipeX + (i % wrap) * 19 + 3,
+                    recipeY + (i / wrap) * 19 + 3, mouseX, mouseY, ingredients.get(i));
+            }
+            else {
+                parent.renderItemStack(guiGraphics, recipeX + (i % wrap) * 19 + 3, recipeY + (i / wrap) * 19 + 3,
+                    mouseX, mouseY, air);
+            }
         }
 
         parent.renderItemStack(guiGraphics, recipeX + 79, recipeY + 41, mouseX, mouseY, toastSymbol);
