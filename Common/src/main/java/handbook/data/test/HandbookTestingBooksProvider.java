@@ -564,7 +564,7 @@ public class HandbookTestingBooksProvider extends HandbookBookProvider {
             new ItemStackTemplate(Items.COOKED_SALMON)
         );
 
-        recipe.addCraftingPage(Identifier.fromNamespaceAndPath("minecraft", "diamond_sword"))
+        recipe.addCraftingPage(Identifier.fromNamespaceAndPath("minecraft", "diamond_spear"))
             .setRecipe2(Identifier.fromNamespaceAndPath("minecraft", "flint_and_steel"));
 
         recipe.addCraftingPage(Identifier.fromNamespaceAndPath("minecraft", "fletching_table"))

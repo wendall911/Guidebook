@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "handbook:crafting",
-      "recipe": "minecraft:diamond_sword",
+      "recipe": "minecraft:diamond_spear",
       "recipe2": "minecraft:flint_and_steel"
     },
     {
