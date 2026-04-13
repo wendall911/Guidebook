@@ -38,6 +38,8 @@ dependencies {
 
     // Testing mods
     //runtimeOnly "curse.maven:XXX-:"
+    //runtimeOnly "mezz.jei:jei-${jei_minecraft_version}-neoforge:${jei_version}"
+
 }
 
 sourceSets.main.resources {
