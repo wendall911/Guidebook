@@ -12,6 +12,7 @@ import net.minecraft.server.packs.PackType;
 import handbook.api.HandbookAPI;
 import handbook.client.base.ClientTicker;
 import handbook.client.base.PersistentData;
+import handbook.client.base.RecipeData;
 import handbook.client.book.BookContentResourceListenerLoader;
 import handbook.client.book.ClientBookRegistry;
 import handbook.client.handler.BookRightClickHandler;
@@ -19,6 +20,7 @@ import handbook.network.FabricMessageOpenBookGui;
 import handbook.network.FabricMessageReloadBookContents;
 import handbook.network.MessageOpenBookGui;
 import handbook.network.MessageReloadBookContents;
+import handbook.network.SendRecipe;
 
 public class HandbookClientFabric implements ClientModInitializer {
 
@@ -34,6 +36,9 @@ public class HandbookClientFabric implements ClientModInitializer {
             MessageReloadBookContents.TYPE,
             FabricMessageReloadBookContents::handle
         );
+        ClientPlayNetworking.registerGlobalReceiver(SendRecipe.TYPE, (data,  context) -> {
+            RecipeData.setRecipe(data.recipeId(), data.recipe());
+        });
         ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(
             BookContentResourceListenerLoader.ID,
             BookContentResourceListenerLoader.INSTANCE

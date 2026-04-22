@@ -4,8 +4,6 @@ import java.util.Optional;
 
 import org.jspecify.annotations.Nullable;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.context.ContextMap;
@@ -23,10 +21,10 @@ import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import net.minecraft.world.level.Level;
 
 import handbook.api.HandbookAPI;
+import handbook.client.base.RecipeData;
 import handbook.client.book.BookContentsBuilder;
 import handbook.client.book.BookEntry;
 import handbook.client.book.page.PageSmithing;
-import handbook.mixin.AccessorRecipeManager;
 import handbook.mixin.AccessorShapedRecipe;
 import handbook.mixin.AccessorShapelessRecipe;
 import handbook.mixin.AccessorSingleItemRecipe;
@@ -39,39 +37,28 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
         this.recipeType = recipeType;
     }
 
-    @SuppressWarnings("unchecked")
     @Nullable
-    private T getRecipe(Identifier id) {
-        IntegratedServer server = Minecraft.getInstance().getSingleplayerServer();
-
-        if (server == null) {
-            HandbookAPI.LOGGER.warn("Server is null, cannot get recipe");
-
-            return null;
-        }
-
-        AccessorRecipeManager manager = (AccessorRecipeManager) server.getRecipeManager();
-        RecipeHolder<?> recipeHolder = manager.getRecipes().values().stream().filter(
-            holder -> holder.id().identifier().equals(id) && holder.value().getType() == recipeType
-        ).findFirst().orElse(null);
-
-        return recipeHolder != null ? (T) recipeHolder.value() : null;
+    private RecipeHolder<?> getRecipe(Identifier id) {
+        return RecipeData.getRecipeHolder(id, recipeType);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected T loadRecipe(Level level, BookContentsBuilder builder, BookEntry entry,
                            Identifier res, boolean linkRecipe) {
         if (res == null || level == null) {
             return null;
         }
-        T tempRecipe = getRecipe(res);
+        RecipeHolder<?> recipeHolder = getRecipe(res);
 
         // this is hacky but it works around Forge requiring custom recipes to have the prefix of the adding mod
-        if (tempRecipe == null) {
-            tempRecipe = getRecipe(Identifier.fromNamespaceAndPath("crafttweaker", res.getPath()));
+        if (recipeHolder == null) {
+            recipeHolder = getRecipe(Identifier.fromNamespaceAndPath("crafttweaker", res.getPath()));
         }
 
-        if (tempRecipe != null) {
+        if (recipeHolder != null) {
+            T tempRecipe = (T) recipeHolder.value();
+
             if (linkRecipe) {
                 entry.addRelevantStack(builder, getAnyRecipeOutput(level, tempRecipe), pageNum);
             }
@@ -79,7 +66,7 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
             return tempRecipe;
         }
 
-        HandbookAPI.LOGGER.warn("Recipe {} (of type {}) not found", res, BuiltInRegistries.RECIPE_TYPE.getKey(recipeType));
+        HandbookAPI.LOGGER.debug("Recipe {} (of type {}) not found", res, BuiltInRegistries.RECIPE_TYPE.getKey(recipeType));
 
         return null;
     }

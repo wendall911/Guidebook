@@ -12,6 +12,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import handbook.api.HandbookAPI;
 import handbook.network.handler.NeoForgeClientPayloadHandler;
+import handbook.network.handler.NeoForgeServerPayloadHandler;
 
 public class NeoForgeNetworkHandler {
 
@@ -20,6 +21,8 @@ public class NeoForgeNetworkHandler {
 
         registrar.playToClient(MessageOpenBookGui.TYPE, MessageOpenBookGui.CODEC, NeoForgeClientPayloadHandler.getInstance()::handleData);
         registrar.playToClient(MessageReloadBookContents.TYPE, MessageReloadBookContents.CODEC, NeoForgeClientPayloadHandler.getInstance()::handleData);
+        registrar.playToServer(FetchRecipe.TYPE, FetchRecipe.STREAM_CODEC, NeoForgeServerPayloadHandler.getInstance()::processFetchRecipe);
+        registrar.playToClient(SendRecipe.TYPE, SendRecipe.STREAM_CODEC, NeoForgeClientPayloadHandler.getInstance()::processRecipe);
     }
 
     public static void sendOpenBook(ServerPlayer player, Identifier book, @Nullable Identifier entry, int page) {
@@ -28,6 +31,10 @@ public class NeoForgeNetworkHandler {
 
     public static void sendReloadBookContents(MinecraftServer server) {
         PacketDistributor.sendToAllPlayers(new MessageReloadBookContents());
+    }
+
+    public static void sendReloadBookContents(ServerPlayer player) {
+        PacketDistributor.sendToPlayer(player, new MessageReloadBookContents());
     }
 
 }

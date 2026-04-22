@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -23,8 +24,11 @@ import handbook.common.handler.ReloadContentsHandler;
 import handbook.common.item.HandbookBook;
 import handbook.common.item.HandbookDataComponents;
 import handbook.common.item.HandbookItems;
+import handbook.common.util.ServerRecipeUtil;
+import handbook.network.FetchRecipe;
 import handbook.network.MessageOpenBookGui;
 import handbook.network.MessageReloadBookContents;
+import handbook.network.SendRecipe;
 
 public class HandbookFabric implements ModInitializer {
 
@@ -39,6 +43,12 @@ public class HandbookFabric implements ModInitializer {
 
         PayloadTypeRegistry.clientboundPlay().register(MessageOpenBookGui.TYPE, MessageOpenBookGui.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(MessageReloadBookContents.TYPE, MessageReloadBookContents.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(FetchRecipe.TYPE, FetchRecipe.STREAM_CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(SendRecipe.TYPE, SendRecipe.STREAM_CODEC);
+
+        ServerPlayNetworking.registerGlobalReceiver(FetchRecipe.TYPE, ((data, context) -> {
+            ServerRecipeUtil.processFetchRecipe(data, context.player());
+        }));
 
         BookRegistry.INSTANCE.init();
 

@@ -14,15 +14,20 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforgespi.language.IModInfo;
 
+import handbook.network.FetchRecipe;
 import handbook.common.CommonModContainer;
 import handbook.common.NeoForgeModContainer;
 import handbook.event.BookDrawScreenEvent;
 import handbook.network.NeoForgeNetworkHandler;
+import handbook.network.SendRecipe;
 import handbook.platform.services.IBookHelper;
 
 public class NeoForgeBookHelper implements IBookHelper {
@@ -39,7 +44,18 @@ public class NeoForgeBookHelper implements IBookHelper {
 
     @Override
     public void sendOpenBookGui(ServerPlayer player, Identifier book, @Nullable Identifier entry, int page) {
+        NeoForgeNetworkHandler.sendReloadBookContents(player);
         NeoForgeNetworkHandler.sendOpenBook(player, book, entry, page);
+    }
+
+    @Override
+    public void fetchRecipe(Identifier recipeId) {
+        ClientPacketDistributor.sendToServer(new FetchRecipe(recipeId));
+    }
+
+    @Override
+    public void sendRecipe(ServerPlayer player, Identifier recipeId, RecipeHolder<?> recipe) {
+        PacketDistributor.sendToPlayer(player, new SendRecipe(recipeId, recipe));
     }
 
     @Override

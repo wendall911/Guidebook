@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.jspecify.annotations.Nullable;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -15,6 +17,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import handbook.common.CommonModContainer;
 import handbook.common.FabricModContainer;
@@ -22,6 +25,8 @@ import handbook.event.BookDrawScreenCallback;
 import handbook.integration.rei.ReiCompat;
 import handbook.network.FabricMessageOpenBookGui;
 import handbook.network.FabricMessageReloadBookContents;
+import handbook.network.FetchRecipe;
+import handbook.network.SendRecipe;
 import handbook.platform.services.IBookHelper;
 
 public class FabricBookHelper implements IBookHelper {
@@ -38,7 +43,18 @@ public class FabricBookHelper implements IBookHelper {
 
     @Override
     public void sendOpenBookGui(ServerPlayer player, Identifier book, @Nullable Identifier entry, int page) {
+        FabricMessageReloadBookContents.send(player);
         FabricMessageOpenBookGui.send(player, book, entry, page);
+    }
+
+    @Override
+    public void fetchRecipe(Identifier recipeId) {
+        ClientPlayNetworking.send(new FetchRecipe(recipeId));
+    }
+
+    @Override
+    public void sendRecipe(ServerPlayer player, Identifier recipeId, RecipeHolder<?> recipe) {
+        ServerPlayNetworking.send(player, new SendRecipe(recipeId, recipe));
     }
 
     @Override
