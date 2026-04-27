@@ -25,7 +25,7 @@ public class HandbookLanguageProvider extends FabricLanguageProvider {
         addBook(builder, INTRO_BOOK_TRANSLATION_KEY, "Handbook");
         addBookTranslation(builder, INTRO_BOOK_TRANSLATION_KEY + ".undefined", "Invalid book: no ID defined");
         addBookTranslation(builder, INTRO_BOOK_TRANSLATION_KEY + ".invalid", "Invalid book: %s");
-        addBookTranslation(builder, "subtitle", "Documentation for everyone");
+        addBookTranslation(builder, "subtitle", "Mod Documentation");
         addBookTranslation(builder, "landing", "With $(item)Handbook$(), " +
             "you can make easy to read, advancement unlockable $(thing)books$() for mods and modpacks!");
         addBookTranslation(builder, "introduction.name", "Introduction");

@@ -7,7 +7,7 @@
   "book.handbook.intro_book.introduction.welcome.intro": "This is a sample book made with Handbook.$(br)$(p)Handbook is a documentation mod for Minecraft that allows mod and modpack authors to easily create in-game documentation for their mods.$(br)$(p)This book is just a demonstration of what Handbook can do. Feel free to explore and see the various features it has to offer.$(br)$(p)If you're an author looking to create your own books, please refer to the wiki for documentation and tutorials.",
   "book.handbook.intro_book.introduction.welcome.name": "Welcome to Handbook",
   "book.handbook.intro_book.landing": "With $(item)Handbook$(), you can make easy to read, advancement unlockable $(thing)books$() for mods and modpacks!",
-  "book.handbook.intro_book.subtitle": "Documentation for everyone",
+  "book.handbook.intro_book.subtitle": "Mod Documentation",
   "handbook.configuration.disableadvancementlocking.description": "Set to on/true to disable advancement locking for ALL books, making all entries visible at all times. Config Flag: advancements_disabled",
   "handbook.configuration.disableadvancementlocking.name": "Disable Advancement Locking",
   "handbook.configuration.inventorybuttonbook.description": "Set this to the ID of a book to have it show up in players' inventories, replacing the recipe book.",
