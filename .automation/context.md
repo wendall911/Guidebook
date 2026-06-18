@@ -7,6 +7,7 @@ This mod is a fork of [Patchouli](https://github.com/VazkiiMods/Patchouli) and [
 
 ## License
 Original code and assets: CC-BY-NC-SA 3.0 Unported (inherited from Patchouli fork).
+
 Datagen and all new additions: MIT.
 
 ## Branch Convention
