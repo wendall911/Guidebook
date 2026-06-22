@@ -89,7 +89,10 @@ public class PageEntity extends PageWithText {
         if (entity != null) {
             float rotation = rotate ? ClientTicker.total : defaultRotation;
 
-            renderEntity(guiGraphics, entity, 58, 60, rotation, renderScale, offset, mouseX, mouseY);
+            try {
+                renderEntity(guiGraphics, entity, 58, 60, rotation, renderScale, offset, mouseX, mouseY);
+            }
+            catch (Exception _) {}
         }
 
         super.render(guiGraphics, mouseX, mouseY, partialTicks);

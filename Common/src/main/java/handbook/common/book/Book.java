@@ -222,7 +222,7 @@ public class Book {
             return Style.EMPTY;
         }
         else {
-            return Style.EMPTY.withFont(new FontDescription.Resource(Minecraft.UNIFORM_FONT));
+            return Style.EMPTY.withFont(new FontDescription.Resource(Identifier.withDefaultNamespace("uniform")));
         }
     }
 

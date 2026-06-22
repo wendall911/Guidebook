@@ -25,12 +25,12 @@ public class BookCrashHandler implements Supplier<String> {
             return;
         }
 
-        if (mc.screen != null && !(mc.screen instanceof GuiBook)) {
+        if (mc.gui.screen() != null && !(mc.gui.screen() instanceof GuiBook)) {
             return;
         }
 
         try {
-            report.setDetail(LABEL, new BookCrashHandler());
+            report.setDetail(LABEL, (new BookCrashHandler()).get());
         }
         catch (Exception e) {
             HandbookAPI.LOGGER.error("Failed to extend crash report system info", e);
@@ -46,11 +46,11 @@ public class BookCrashHandler implements Supplier<String> {
             return errorText;
         }
 
-        if (mc.screen != null && !(mc.screen instanceof GuiBook gui)) {
+        if (mc.gui.screen() != null && !(mc.gui.screen() instanceof GuiBook gui)) {
             return errorText;
         }
 
-        GuiBook gui = (GuiBook) mc.screen;
+        GuiBook gui = (GuiBook) mc.gui.screen();
 
         if (gui == null || gui.book == null) {
             return "Book GUI or book is null. Book not registered properly.";

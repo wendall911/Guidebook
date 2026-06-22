@@ -12,6 +12,7 @@ import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntitySpawnRequest;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 
@@ -66,7 +67,11 @@ public final class EntityUtil {
             Entity entity;
             try {
                 if (useNbt != null) {
-                    entity = EntityType.loadEntityRecursive(useNbt, level, EntitySpawnReason.LOAD, displayOnly -> displayOnly);
+                    entity = EntityType.loadEntityRecursive(useNbt, level, new EntitySpawnRequest(EntitySpawnReason.LOAD, true), displayOnly -> {
+                        displayOnly.setId(-1);
+
+                        return displayOnly;
+                    });
                 }
                 else {
                     entity = entityType.create(level, EntitySpawnReason.LOAD);

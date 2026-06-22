@@ -32,7 +32,7 @@ public class BookRightClickHandler {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
 
-        if (player != null && mc.screen == null) {
+        if (player != null && mc.gui.screen() == null) {
             ItemStack bookStack = player.getMainHandItem();
             Book book = ItemStackUtil.getBookFromStack(bookStack);
 

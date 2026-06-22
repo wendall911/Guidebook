@@ -173,7 +173,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
     @Override
     public boolean canBeOpened() {
-        return !entry.isLocked() && !equals(Minecraft.getInstance().screen);
+        return !entry.isLocked() && !equals(Minecraft.getInstance().gui.screen());
     }
 
     @Override

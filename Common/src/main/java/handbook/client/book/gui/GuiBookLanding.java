@@ -228,7 +228,7 @@ public class GuiBookLanding extends GuiBook {
 
     private void handleButtonAdvancements(Button button) {
         if (minecraft != null && minecraft.player != null) {
-            minecraft.setScreen(
+            minecraft.gui.setScreen(
                 new GuiAdvancementsExt(
                     minecraft.player.connection.getAdvancements(),
                     this,

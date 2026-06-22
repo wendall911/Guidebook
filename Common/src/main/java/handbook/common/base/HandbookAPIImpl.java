@@ -81,7 +81,7 @@ public class HandbookAPIImpl implements IHandbookAPI {
     @Override
     public Identifier getOpenBookGui() {
         assertPhysicalClient();
-        Screen gui = Minecraft.getInstance().screen;
+        Screen gui = Minecraft.getInstance().gui.screen();
         if (gui instanceof GuiBook) {
             return ((GuiBook) gui).book.id;
         }

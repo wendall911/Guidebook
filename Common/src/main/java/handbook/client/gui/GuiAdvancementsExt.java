@@ -26,7 +26,7 @@ public class GuiAdvancementsExt extends AdvancementsScreen {
     @Override
     public boolean keyPressed(KeyEvent keyEvent) {
         if (minecraft != null && (minecraft.options.keyAdvancements.matches(keyEvent) || keyEvent.scancode() == 1)) {
-            minecraft.setScreen(parent);
+            minecraft.gui.setScreen(parent);
 
             return true;
         }

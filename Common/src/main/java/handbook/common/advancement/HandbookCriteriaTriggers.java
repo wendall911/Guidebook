@@ -2,7 +2,7 @@ package handbook.common.advancement;
 
 import java.util.function.BiConsumer;
 
-import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.advancements.triggers.CriterionTrigger;
 import net.minecraft.resources.Identifier;
 
 public class HandbookCriteriaTriggers {

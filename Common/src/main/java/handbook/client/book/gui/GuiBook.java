@@ -653,12 +653,12 @@ public abstract class GuiBook extends Screen {
     public static void openWebLink(Screen prevScreen, String address) {
         Minecraft mc = Minecraft.getInstance();
 
-        mc.setScreen(new ConfirmLinkScreen(yes -> {
+        mc.gui.setScreen(new ConfirmLinkScreen(yes -> {
             if (yes) {
                 Util.getPlatform().openUri(address);
             }
 
-            mc.setScreen(prevScreen);
+            mc.gui.setScreen(prevScreen);
         }, address, false));
     }
 

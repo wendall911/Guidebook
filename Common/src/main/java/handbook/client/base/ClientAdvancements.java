@@ -61,7 +61,7 @@ public class ClientAdvancements {
 	}
 
 	public static void sendBookToast(Book book) {
-        ToastManager toastManager = Minecraft.getInstance().getToastManager();
+        ToastManager toastManager = Minecraft.getInstance().gui.toastManager();
 
         if (toastManager.getToast(LexiconToast.class, book) == null) {
             toastManager.addToast(new LexiconToast(book));

@@ -1,9 +1,9 @@
 package handbook.client.handler;
 
+import com.mojang.blaze3d.PrimitiveTopology;
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.ChatFormatting;
@@ -33,7 +33,7 @@ public class TooltipHandler {
         int tooltipX = mouseX;
         int tooltipY = mouseY - 4;
 
-        if (mc.player != null && !(mc.screen instanceof GuiBook)) {
+        if (mc.player != null && !(mc.gui.screen() instanceof GuiBook)) {
             int lexSlot = -1;
             ItemStack lexiconStack = ItemStack.EMPTY;
             Pair<BookEntry, Integer> lexiconEntry = null;
@@ -72,9 +72,8 @@ public class TooltipHandler {
                     float r = 12;
                     float requiredTime = HandbookConfig.Client.quickLookupTime();
                     float angles = lexiconLookupTime / requiredTime * 360F;
-
-                    BufferBuilder buf = Tesselator.getInstance()
-                        .begin(Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
+                    ByteBufferBuilder buffer = new ByteBufferBuilder(786432);
+                    BufferBuilder buf = new BufferBuilder(buffer, PrimitiveTopology.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
 
                     float a = 0.5F + 0.2F * ((float) Math.cos(ClientTicker.total / 10) * 0.5F + 0.5F);
                     buf.addVertex(cx, cy, 0).setColor(0F, 0.5F, 0F, a);
