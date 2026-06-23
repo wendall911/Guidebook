@@ -4,20 +4,21 @@ import java.util.concurrent.CompletableFuture;
 
 import org.jspecify.annotations.NonNull;
 
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
+
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 
 import handbook.common.item.HandbookItems;
 
-public class HandbookItemTagsProvider extends TagsProvider<Item> {
+public class HandbookItemTagsProvider extends FabricTagsProvider<Item> {
 
-    public HandbookItemTagsProvider(PackOutput output, CompletableFuture<Provider> lookupProvider) {
+    public HandbookItemTagsProvider(FabricPackOutput output, CompletableFuture<Provider> lookupProvider) {
         super(output, Registries.ITEM, lookupProvider);
     }
 
